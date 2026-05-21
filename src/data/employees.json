@@ -1,0 +1,709 @@
+[
+  {
+    "id": "EMP001",
+    "name": "김선영",
+    "age": 28,
+    "joinYear": 2023,
+    "currentJob": "JOB_MK_PERF",
+    "department": "디지털마케팅팀",
+    "businessUnit": "MC사업본부",
+    "grade": "사원",
+    "yearsInRole": 3,
+    "totalYears": 3,
+    "evaluationGrade": "A",
+    "leadershipPercentile": 62,
+    "primarySkill": "SKL_MK_001",
+    "skills": [
+      { "skillId": "SKL_MK_001", "level": 4, "name": "퍼포먼스광고" },
+      { "skillId": "SKL_MK_002", "level": 3, "name": "GA/데이터분석" },
+      { "skillId": "SKL_MK_004", "level": 2, "name": "콘텐츠기획" },
+      { "skillId": "SKL_CF_002", "level": 2, "name": "데이터분석" },
+      { "skillId": "SKL_MK_006", "level": 1, "name": "마케팅자동화" }
+    ],
+    "certifications": ["Google Ads 검색광고", "GA4 인증"],
+    "education": { "degree": "학사", "major": "경영학", "university": "성균관대학교" },
+    "careerIntent": "explorer",
+    "movementHistory": []
+  },
+  {
+    "id": "EMP002",
+    "name": "박지훈",
+    "age": 31,
+    "joinYear": 2021,
+    "currentJob": "JOB_HR_RECRUIT",
+    "department": "인재확보팀",
+    "businessUnit": "피플솔루션",
+    "grade": "선임",
+    "yearsInRole": 5,
+    "totalYears": 5,
+    "evaluationGrade": "A",
+    "leadershipPercentile": 55,
+    "primarySkill": "SKL_HR_002",
+    "skills": [
+      { "skillId": "SKL_HR_002", "level": 4, "name": "ATS운영" },
+      { "skillId": "SKL_HR_003", "level": 4, "name": "면접설계" },
+      { "skillId": "SKL_HR_004", "level": 3, "name": "채용브랜딩" },
+      { "skillId": "SKL_HR_001", "level": 3, "name": "채용전략" },
+      { "skillId": "SKL_CF_005", "level": 3, "name": "커뮤니케이션" }
+    ],
+    "certifications": ["PHR(Professional in HR)"],
+    "education": { "degree": "석사", "major": "인적자원관리", "university": "고려대학교" },
+    "careerIntent": "unsure",
+    "movementHistory": []
+  },
+  {
+    "id": "EMP003",
+    "name": "이수현",
+    "age": 35,
+    "joinYear": 2017,
+    "currentJob": "JOB_HR_HRBP",
+    "department": "MC사업부 HRBP",
+    "businessUnit": "MC사업본부",
+    "grade": "책임",
+    "yearsInRole": 3,
+    "totalYears": 9,
+    "evaluationGrade": "S",
+    "leadershipPercentile": 88,
+    "primarySkill": "SKL_HR_007",
+    "skills": [
+      { "skillId": "SKL_HR_007", "level": 4, "name": "조직진단" },
+      { "skillId": "SKL_HR_008", "level": 3, "name": "인사전략" },
+      { "skillId": "SKL_HR_001", "level": 3, "name": "채용전략" },
+      { "skillId": "SKL_CF_004", "level": 4, "name": "리더십" },
+      { "skillId": "SKL_CF_005", "level": 4, "name": "커뮤니케이션" }
+    ],
+    "certifications": ["SHRM-CP"],
+    "education": { "degree": "석사", "major": "조직심리학", "university": "서울대학교" },
+    "careerIntent": "leadership",
+    "movementHistory": [
+      { "year": 2017, "jobId": "JOB_HR_RECRUIT", "jobName": "채용" },
+      { "year": 2020, "jobId": "JOB_HR_HRD", "jobName": "HRD" },
+      { "year": 2023, "jobId": "JOB_HR_HRBP", "jobName": "HRBP" }
+    ]
+  },
+  {
+    "id": "EMP004",
+    "name": "정민석",
+    "age": 33,
+    "joinYear": 2019,
+    "currentJob": "JOB_MK_BRAND",
+    "department": "브랜드전략팀",
+    "businessUnit": "H&A사업본부",
+    "grade": "선임",
+    "yearsInRole": 3,
+    "totalYears": 7,
+    "evaluationGrade": "A",
+    "leadershipPercentile": 70,
+    "primarySkill": "SKL_MK_003",
+    "skills": [
+      { "skillId": "SKL_MK_003", "level": 4, "name": "브랜드전략" },
+      { "skillId": "SKL_MK_007", "level": 3, "name": "미디어플래닝" },
+      { "skillId": "SKL_MK_010", "level": 3, "name": "시장조사" },
+      { "skillId": "SKL_CF_003", "level": 4, "name": "프레젠테이션" },
+      { "skillId": "SKL_MK_004", "level": 2, "name": "콘텐츠기획" }
+    ],
+    "certifications": [],
+    "education": { "degree": "학사", "major": "시각디자인", "university": "홍익대학교" },
+    "careerIntent": "specialist",
+    "movementHistory": [
+      { "year": 2019, "jobId": "JOB_MK_CONTENT", "jobName": "콘텐츠마케팅" },
+      { "year": 2023, "jobId": "JOB_MK_BRAND", "jobName": "브랜드마케팅" }
+    ]
+  },
+  {
+    "id": "EMP005",
+    "name": "한예진",
+    "age": 30,
+    "joinYear": 2021,
+    "currentJob": "JOB_MK_CRM",
+    "department": "CRM팀",
+    "businessUnit": "MC사업본부",
+    "grade": "선임",
+    "yearsInRole": 2,
+    "totalYears": 5,
+    "evaluationGrade": "B+",
+    "leadershipPercentile": 48,
+    "primarySkill": "SKL_MK_005",
+    "skills": [
+      { "skillId": "SKL_MK_005", "level": 3, "name": "CRM운영" },
+      { "skillId": "SKL_MK_006", "level": 3, "name": "마케팅자동화" },
+      { "skillId": "SKL_MK_002", "level": 3, "name": "GA/데이터분석" },
+      { "skillId": "SKL_CF_002", "level": 3, "name": "데이터분석" }
+    ],
+    "certifications": ["HubSpot Inbound Marketing"],
+    "education": { "degree": "학사", "major": "통계학", "university": "이화여자대학교" },
+    "careerIntent": "explorer",
+    "movementHistory": [
+      { "year": 2021, "jobId": "JOB_MK_PERF", "jobName": "퍼포먼스마케팅" },
+      { "year": 2024, "jobId": "JOB_MK_CRM", "jobName": "CRM마케팅" }
+    ]
+  },
+  {
+    "id": "EMP006",
+    "name": "최동현",
+    "age": 38,
+    "joinYear": 2014,
+    "currentJob": "JOB_SL_KAM",
+    "department": "전략영업팀",
+    "businessUnit": "BS사업본부",
+    "grade": "책임",
+    "yearsInRole": 4,
+    "totalYears": 12,
+    "evaluationGrade": "S",
+    "leadershipPercentile": 92,
+    "primarySkill": "SKL_SL_002",
+    "skills": [
+      { "skillId": "SKL_SL_002", "level": 5, "name": "고객관계관리" },
+      { "skillId": "SKL_SL_001", "level": 4, "name": "B2B영업" },
+      { "skillId": "SKL_SL_006", "level": 4, "name": "협상스킬" },
+      { "skillId": "SKL_SL_005", "level": 4, "name": "제안서작성" },
+      { "skillId": "SKL_CF_005", "level": 4, "name": "커뮤니케이션" },
+      { "skillId": "SKL_CF_004", "level": 3, "name": "리더십" }
+    ],
+    "certifications": ["CPSP(Certified Professional Sales Person)"],
+    "education": { "degree": "학사", "major": "무역학", "university": "한국외국어대학교" },
+    "careerIntent": "leadership",
+    "movementHistory": [
+      { "year": 2014, "jobId": "JOB_SL_NEW", "jobName": "신규영업" },
+      { "year": 2017, "jobId": "JOB_SL_CHANNEL", "jobName": "채널영업" },
+      { "year": 2022, "jobId": "JOB_SL_KAM", "jobName": "KAM(핵심고객관리)" }
+    ]
+  },
+  {
+    "id": "EMP007",
+    "name": "윤서아",
+    "age": 27,
+    "joinYear": 2024,
+    "currentJob": "JOB_SL_NEW",
+    "department": "신사업영업팀",
+    "businessUnit": "MC사업본부",
+    "grade": "사원",
+    "yearsInRole": 2,
+    "totalYears": 2,
+    "evaluationGrade": "B+",
+    "leadershipPercentile": 45,
+    "primarySkill": "SKL_SL_001",
+    "skills": [
+      { "skillId": "SKL_SL_001", "level": 2, "name": "B2B영업" },
+      { "skillId": "SKL_SL_009", "level": 2, "name": "파이프라인관리" },
+      { "skillId": "SKL_SL_005", "level": 2, "name": "제안서작성" },
+      { "skillId": "SKL_CF_005", "level": 2, "name": "커뮤니케이션" }
+    ],
+    "certifications": [],
+    "education": { "degree": "학사", "major": "경영학", "university": "중앙대학교" },
+    "careerIntent": "explorer",
+    "movementHistory": []
+  },
+  {
+    "id": "EMP008",
+    "name": "김태호",
+    "age": 40,
+    "joinYear": 2012,
+    "currentJob": "JOB_RD_PLAN",
+    "department": "R&D전략실",
+    "businessUnit": "CTO부문",
+    "grade": "수석",
+    "yearsInRole": 3,
+    "totalYears": 14,
+    "evaluationGrade": "A",
+    "leadershipPercentile": 85,
+    "primarySkill": "SKL_RD_007",
+    "skills": [
+      { "skillId": "SKL_RD_007", "level": 5, "name": "R&D기획력" },
+      { "skillId": "SKL_RD_001", "level": 4, "name": "소재분석" },
+      { "skillId": "SKL_RD_010", "level": 4, "name": "특허관리" },
+      { "skillId": "SKL_CF_001", "level": 4, "name": "프로젝트관리" },
+      { "skillId": "SKL_CF_004", "level": 4, "name": "리더십" },
+      { "skillId": "SKL_CF_003", "level": 4, "name": "프레젠테이션" }
+    ],
+    "certifications": ["기술사(화학공학)", "PMP"],
+    "education": { "degree": "박사", "major": "화학공학", "university": "KAIST" },
+    "careerIntent": "leadership",
+    "movementHistory": [
+      { "year": 2012, "jobId": "JOB_RD_MATERIAL", "jobName": "소재연구" },
+      { "year": 2016, "jobId": "JOB_RD_PROCESS", "jobName": "공정개발" },
+      { "year": 2020, "jobId": "JOB_RD_QUALITY", "jobName": "품질R&D" },
+      { "year": 2023, "jobId": "JOB_RD_PLAN", "jobName": "R&D기획" }
+    ]
+  },
+  {
+    "id": "EMP009",
+    "name": "박현우",
+    "age": 32,
+    "joinYear": 2020,
+    "currentJob": "JOB_RD_PROCESS",
+    "department": "공정기술팀",
+    "businessUnit": "에너지솔루션",
+    "grade": "선임",
+    "yearsInRole": 3,
+    "totalYears": 6,
+    "evaluationGrade": "A",
+    "leadershipPercentile": 65,
+    "primarySkill": "SKL_RD_002",
+    "skills": [
+      { "skillId": "SKL_RD_002", "level": 4, "name": "공정설계" },
+      { "skillId": "SKL_RD_005", "level": 3, "name": "실험설계(DOE)" },
+      { "skillId": "SKL_RD_006", "level": 3, "name": "통계분석" },
+      { "skillId": "SKL_RD_003", "level": 2, "name": "양산관리" }
+    ],
+    "certifications": ["품질경영기사", "6시그마 GB"],
+    "education": { "degree": "석사", "major": "재료공학", "university": "포항공과대학교" },
+    "careerIntent": "specialist",
+    "movementHistory": [
+      { "year": 2020, "jobId": "JOB_RD_MATERIAL", "jobName": "소재연구" },
+      { "year": 2023, "jobId": "JOB_RD_PROCESS", "jobName": "공정개발" }
+    ]
+  },
+  {
+    "id": "EMP010",
+    "name": "강지은",
+    "age": 29,
+    "joinYear": 2022,
+    "currentJob": "JOB_RD_AISW",
+    "department": "AI기술팀",
+    "businessUnit": "CTO부문",
+    "grade": "선임",
+    "yearsInRole": 2,
+    "totalYears": 4,
+    "evaluationGrade": "S",
+    "leadershipPercentile": 78,
+    "primarySkill": "SKL_RD_008",
+    "skills": [
+      { "skillId": "SKL_RD_008", "level": 4, "name": "AI/ML" },
+      { "skillId": "SKL_RD_009", "level": 4, "name": "SW개발" },
+      { "skillId": "SKL_CF_002", "level": 3, "name": "데이터분석" },
+      { "skillId": "SKL_CF_008", "level": 3, "name": "애자일방법론" }
+    ],
+    "certifications": ["AWS ML Specialty", "정보처리기사"],
+    "education": { "degree": "석사", "major": "컴퓨터공학", "university": "서울대학교" },
+    "careerIntent": "specialist",
+    "movementHistory": [
+      { "year": 2022, "jobId": "JOB_RD_AISW", "jobName": "AI/SW개발" }
+    ]
+  },
+  {
+    "id": "EMP011",
+    "name": "오승준",
+    "age": 36,
+    "joinYear": 2016,
+    "currentJob": "JOB_HR_CNB",
+    "department": "보상기획팀",
+    "businessUnit": "피플솔루션",
+    "grade": "책임",
+    "yearsInRole": 4,
+    "totalYears": 10,
+    "evaluationGrade": "B+",
+    "leadershipPercentile": 52,
+    "primarySkill": "SKL_HR_009",
+    "skills": [
+      { "skillId": "SKL_HR_009", "level": 4, "name": "보상설계" },
+      { "skillId": "SKL_HR_010", "level": 4, "name": "급여관리" },
+      { "skillId": "SKL_CF_002", "level": 3, "name": "데이터분석" },
+      { "skillId": "SKL_HR_011", "level": 3, "name": "노동법" }
+    ],
+    "certifications": ["공인노무사"],
+    "education": { "degree": "학사", "major": "법학", "university": "연세대학교" },
+    "careerIntent": "unsure",
+    "movementHistory": [
+      { "year": 2016, "jobId": "JOB_HR_RECRUIT", "jobName": "채용" },
+      { "year": 2019, "jobId": "JOB_HR_LABOR", "jobName": "노무관리" },
+      { "year": 2022, "jobId": "JOB_HR_CNB", "jobName": "C&B" }
+    ]
+  },
+  {
+    "id": "EMP012",
+    "name": "신미래",
+    "age": 34,
+    "joinYear": 2018,
+    "currentJob": "JOB_MK_PM",
+    "department": "통합마케팅팀",
+    "businessUnit": "H&A사업본부",
+    "grade": "책임",
+    "yearsInRole": 2,
+    "totalYears": 8,
+    "evaluationGrade": "S",
+    "leadershipPercentile": 90,
+    "primarySkill": "SKL_MK_007",
+    "skills": [
+      { "skillId": "SKL_MK_007", "level": 4, "name": "미디어플래닝" },
+      { "skillId": "SKL_MK_009", "level": 3, "name": "마케팅전략" },
+      { "skillId": "SKL_MK_001", "level": 3, "name": "퍼포먼스광고" },
+      { "skillId": "SKL_CF_001", "level": 4, "name": "프로젝트관리" },
+      { "skillId": "SKL_CF_004", "level": 3, "name": "리더십" },
+      { "skillId": "SKL_CF_005", "level": 4, "name": "커뮤니케이션" }
+    ],
+    "certifications": [],
+    "education": { "degree": "석사", "major": "MBA", "university": "서강대학교" },
+    "careerIntent": "leadership",
+    "movementHistory": [
+      { "year": 2018, "jobId": "JOB_MK_PERF", "jobName": "퍼포먼스마케팅" },
+      { "year": 2021, "jobId": "JOB_MK_BRAND", "jobName": "브랜드마케팅" },
+      { "year": 2024, "jobId": "JOB_MK_PM", "jobName": "통합마케팅PM" }
+    ]
+  },
+  {
+    "id": "EMP013",
+    "name": "장원호",
+    "age": 42,
+    "joinYear": 2011,
+    "currentJob": "JOB_SL_PLAN",
+    "department": "영업전략실",
+    "businessUnit": "BS사업본부",
+    "grade": "수석",
+    "yearsInRole": 3,
+    "totalYears": 15,
+    "evaluationGrade": "A",
+    "leadershipPercentile": 87,
+    "primarySkill": "SKL_SL_003",
+    "skills": [
+      { "skillId": "SKL_SL_003", "level": 5, "name": "영업전략" },
+      { "skillId": "SKL_SL_010", "level": 4, "name": "영업분석" },
+      { "skillId": "SKL_SL_002", "level": 4, "name": "고객관계관리" },
+      { "skillId": "SKL_CF_001", "level": 4, "name": "프로젝트관리" },
+      { "skillId": "SKL_CF_004", "level": 4, "name": "리더십" }
+    ],
+    "certifications": ["PMP"],
+    "education": { "degree": "석사", "major": "MBA", "university": "KAIST" },
+    "careerIntent": "leadership",
+    "movementHistory": [
+      { "year": 2011, "jobId": "JOB_SL_NEW", "jobName": "신규영업" },
+      { "year": 2014, "jobId": "JOB_SL_KAM", "jobName": "KAM(핵심고객관리)" },
+      { "year": 2018, "jobId": "JOB_SL_GLOBAL", "jobName": "해외영업" },
+      { "year": 2023, "jobId": "JOB_SL_PLAN", "jobName": "영업기획" }
+    ]
+  },
+  {
+    "id": "EMP014",
+    "name": "배소연",
+    "age": 26,
+    "joinYear": 2025,
+    "currentJob": "JOB_MK_CONTENT",
+    "department": "콘텐츠마케팅팀",
+    "businessUnit": "MC사업본부",
+    "grade": "사원",
+    "yearsInRole": 1,
+    "totalYears": 1,
+    "evaluationGrade": "B+",
+    "leadershipPercentile": 38,
+    "primarySkill": "SKL_MK_004",
+    "skills": [
+      { "skillId": "SKL_MK_004", "level": 2, "name": "콘텐츠기획" },
+      { "skillId": "SKL_MK_008", "level": 2, "name": "소셜미디어관리" },
+      { "skillId": "SKL_MK_002", "level": 1, "name": "GA/데이터분석" }
+    ],
+    "certifications": [],
+    "education": { "degree": "학사", "major": "미디어커뮤니케이션", "university": "한양대학교" },
+    "careerIntent": "explorer",
+    "movementHistory": []
+  },
+  {
+    "id": "EMP015",
+    "name": "임재현",
+    "age": 37,
+    "joinYear": 2015,
+    "currentJob": "JOB_HR_PLAN",
+    "department": "인사기획팀",
+    "businessUnit": "피플솔루션",
+    "grade": "책임",
+    "yearsInRole": 3,
+    "totalYears": 11,
+    "evaluationGrade": "A",
+    "leadershipPercentile": 82,
+    "primarySkill": "SKL_HR_008",
+    "skills": [
+      { "skillId": "SKL_HR_008", "level": 4, "name": "인사전략" },
+      { "skillId": "SKL_HR_007", "level": 4, "name": "조직진단" },
+      { "skillId": "SKL_CF_001", "level": 4, "name": "프로젝트관리" },
+      { "skillId": "SKL_CF_004", "level": 4, "name": "리더십" },
+      { "skillId": "SKL_CF_003", "level": 4, "name": "프레젠테이션" }
+    ],
+    "certifications": ["SHRM-SCP", "PMP"],
+    "education": { "degree": "석사", "major": "경영학", "university": "서울대학교" },
+    "careerIntent": "leadership",
+    "movementHistory": [
+      { "year": 2015, "jobId": "JOB_HR_HRD", "jobName": "HRD" },
+      { "year": 2018, "jobId": "JOB_HR_HRBP", "jobName": "HRBP" },
+      { "year": 2023, "jobId": "JOB_HR_PLAN", "jobName": "인사기획" }
+    ]
+  },
+  {
+    "id": "EMP016",
+    "name": "조현진",
+    "age": 30,
+    "joinYear": 2022,
+    "currentJob": "JOB_HR_ANALYTICS",
+    "department": "HR디지털혁신팀",
+    "businessUnit": "피플솔루션",
+    "grade": "선임",
+    "yearsInRole": 2,
+    "totalYears": 4,
+    "evaluationGrade": "A",
+    "leadershipPercentile": 72,
+    "primarySkill": "SKL_HR_013",
+    "skills": [
+      { "skillId": "SKL_HR_013", "level": 3, "name": "피플애널리틱스" },
+      { "skillId": "SKL_HR_014", "level": 3, "name": "HRIS관리" },
+      { "skillId": "SKL_CF_002", "level": 4, "name": "데이터분석" },
+      { "skillId": "SKL_RD_006", "level": 2, "name": "통계분석" }
+    ],
+    "certifications": ["ADSP(데이터분석 준전문가)"],
+    "education": { "degree": "석사", "major": "산업공학", "university": "KAIST" },
+    "careerIntent": "specialist",
+    "movementHistory": [
+      { "year": 2022, "jobId": "JOB_HR_RECRUIT", "jobName": "채용" },
+      { "year": 2024, "jobId": "JOB_HR_ANALYTICS", "jobName": "HR Analytics" }
+    ]
+  },
+  {
+    "id": "EMP017",
+    "name": "황민지",
+    "age": 34,
+    "joinYear": 2018,
+    "currentJob": "JOB_SL_GLOBAL",
+    "department": "글로벌영업팀",
+    "businessUnit": "H&A사업본부",
+    "grade": "선임",
+    "yearsInRole": 3,
+    "totalYears": 8,
+    "evaluationGrade": "B+",
+    "leadershipPercentile": 58,
+    "primarySkill": "SKL_SL_007",
+    "skills": [
+      { "skillId": "SKL_SL_007", "level": 4, "name": "해외시장개척" },
+      { "skillId": "SKL_SL_001", "level": 3, "name": "B2B영업" },
+      { "skillId": "SKL_CF_006", "level": 4, "name": "비즈니스영어" },
+      { "skillId": "SKL_SL_006", "level": 3, "name": "협상스킬" }
+    ],
+    "certifications": ["무역영어1급"],
+    "education": { "degree": "학사", "major": "국제통상", "university": "부산대학교" },
+    "careerIntent": "explorer",
+    "movementHistory": [
+      { "year": 2018, "jobId": "JOB_SL_NEW", "jobName": "신규영업" },
+      { "year": 2021, "jobId": "JOB_SL_CHANNEL", "jobName": "채널영업" },
+      { "year": 2023, "jobId": "JOB_SL_GLOBAL", "jobName": "해외영업" }
+    ]
+  },
+  {
+    "id": "EMP018",
+    "name": "문정환",
+    "age": 39,
+    "joinYear": 2013,
+    "currentJob": "JOB_RD_QUALITY",
+    "department": "품질기술팀",
+    "businessUnit": "에너지솔루션",
+    "grade": "책임",
+    "yearsInRole": 4,
+    "totalYears": 13,
+    "evaluationGrade": "B",
+    "leadershipPercentile": 42,
+    "primarySkill": "SKL_RD_004",
+    "skills": [
+      { "skillId": "SKL_RD_004", "level": 5, "name": "품질관리" },
+      { "skillId": "SKL_RD_006", "level": 4, "name": "통계분석" },
+      { "skillId": "SKL_RD_005", "level": 3, "name": "실험설계(DOE)" },
+      { "skillId": "SKL_RD_002", "level": 3, "name": "공정설계" }
+    ],
+    "certifications": ["품질경영기사", "6시그마 MBB"],
+    "education": { "degree": "석사", "major": "화학공학", "university": "성균관대학교" },
+    "careerIntent": "unsure",
+    "movementHistory": [
+      { "year": 2013, "jobId": "JOB_RD_MATERIAL", "jobName": "소재연구" },
+      { "year": 2017, "jobId": "JOB_RD_PROCESS", "jobName": "공정개발" },
+      { "year": 2022, "jobId": "JOB_RD_QUALITY", "jobName": "품질R&D" }
+    ]
+  },
+  {
+    "id": "EMP019",
+    "name": "서지혜",
+    "age": 31,
+    "joinYear": 2020,
+    "currentJob": "JOB_HR_HRD",
+    "department": "조직개발팀",
+    "businessUnit": "피플솔루션",
+    "grade": "선임",
+    "yearsInRole": 4,
+    "totalYears": 6,
+    "evaluationGrade": "B+",
+    "leadershipPercentile": 50,
+    "primarySkill": "SKL_HR_005",
+    "skills": [
+      { "skillId": "SKL_HR_005", "level": 3, "name": "교육체계설계" },
+      { "skillId": "SKL_HR_006", "level": 3, "name": "리더십개발" },
+      { "skillId": "SKL_CF_007", "level": 3, "name": "디자인씽킹" },
+      { "skillId": "SKL_CF_003", "level": 3, "name": "프레젠테이션" }
+    ],
+    "certifications": ["평생교육사 2급"],
+    "education": { "degree": "석사", "major": "교육공학", "university": "이화여자대학교" },
+    "careerIntent": "explorer",
+    "movementHistory": [
+      { "year": 2020, "jobId": "JOB_HR_RECRUIT", "jobName": "채용" },
+      { "year": 2022, "jobId": "JOB_HR_HRD", "jobName": "HRD" }
+    ]
+  },
+  {
+    "id": "EMP020",
+    "name": "권도윤",
+    "age": 28,
+    "joinYear": 2023,
+    "currentJob": "JOB_RD_MASS",
+    "department": "양산기술팀",
+    "businessUnit": "에너지솔루션",
+    "grade": "사원",
+    "yearsInRole": 3,
+    "totalYears": 3,
+    "evaluationGrade": "B",
+    "leadershipPercentile": 35,
+    "primarySkill": "SKL_RD_003",
+    "skills": [
+      { "skillId": "SKL_RD_003", "level": 3, "name": "양산관리" },
+      { "skillId": "SKL_RD_002", "level": 2, "name": "공정설계" },
+      { "skillId": "SKL_RD_004", "level": 2, "name": "품질관리" }
+    ],
+    "certifications": [],
+    "education": { "degree": "학사", "major": "전자공학", "university": "경희대학교" },
+    "careerIntent": "unsure",
+    "movementHistory": []
+  },
+  {
+    "id": "EMP021",
+    "name": "남궁수정",
+    "age": 33,
+    "joinYear": 2019,
+    "currentJob": "JOB_SL_CHANNEL",
+    "department": "채널관리팀",
+    "businessUnit": "H&A사업본부",
+    "grade": "선임",
+    "yearsInRole": 3,
+    "totalYears": 7,
+    "evaluationGrade": "A",
+    "leadershipPercentile": 63,
+    "primarySkill": "SKL_SL_004",
+    "skills": [
+      { "skillId": "SKL_SL_004", "level": 4, "name": "채널관리" },
+      { "skillId": "SKL_SL_002", "level": 3, "name": "고객관계관리" },
+      { "skillId": "SKL_SL_006", "level": 3, "name": "협상스킬" },
+      { "skillId": "SKL_SL_008", "level": 2, "name": "매출관리" }
+    ],
+    "certifications": [],
+    "education": { "degree": "학사", "major": "경영학", "university": "건국대학교" },
+    "careerIntent": "explorer",
+    "movementHistory": [
+      { "year": 2019, "jobId": "JOB_SL_NEW", "jobName": "신규영업" },
+      { "year": 2023, "jobId": "JOB_SL_CHANNEL", "jobName": "채널영업" }
+    ]
+  },
+  {
+    "id": "EMP022",
+    "name": "양하준",
+    "age": 36,
+    "joinYear": 2016,
+    "currentJob": "JOB_MK_STRATEGY",
+    "department": "마케팅전략팀",
+    "businessUnit": "MC사업본부",
+    "grade": "책임",
+    "yearsInRole": 2,
+    "totalYears": 10,
+    "evaluationGrade": "A",
+    "leadershipPercentile": 80,
+    "primarySkill": "SKL_MK_009",
+    "skills": [
+      { "skillId": "SKL_MK_009", "level": 4, "name": "마케팅전략" },
+      { "skillId": "SKL_MK_010", "level": 4, "name": "시장조사" },
+      { "skillId": "SKL_MK_003", "level": 3, "name": "브랜드전략" },
+      { "skillId": "SKL_CF_002", "level": 3, "name": "데이터분석" },
+      { "skillId": "SKL_CF_003", "level": 4, "name": "프레젠테이션" },
+      { "skillId": "SKL_CF_004", "level": 3, "name": "리더십" }
+    ],
+    "certifications": ["경영지도사(마케팅)"],
+    "education": { "degree": "석사", "major": "MBA", "university": "연세대학교" },
+    "careerIntent": "leadership",
+    "movementHistory": [
+      { "year": 2016, "jobId": "JOB_MK_PERF", "jobName": "퍼포먼스마케팅" },
+      { "year": 2019, "jobId": "JOB_MK_BRAND", "jobName": "브랜드마케팅" },
+      { "year": 2022, "jobId": "JOB_MK_PM", "jobName": "통합마케팅PM" },
+      { "year": 2024, "jobId": "JOB_MK_STRATEGY", "jobName": "마케팅전략" }
+    ]
+  },
+  {
+    "id": "EMP023",
+    "name": "류성민",
+    "age": 35,
+    "joinYear": 2017,
+    "currentJob": "JOB_RD_MATERIAL",
+    "department": "소재연구팀",
+    "businessUnit": "에너지솔루션",
+    "grade": "선임",
+    "yearsInRole": 5,
+    "totalYears": 9,
+    "evaluationGrade": "B+",
+    "leadershipPercentile": 40,
+    "primarySkill": "SKL_RD_001",
+    "skills": [
+      { "skillId": "SKL_RD_001", "level": 4, "name": "소재분석" },
+      { "skillId": "SKL_RD_005", "level": 4, "name": "실험설계(DOE)" },
+      { "skillId": "SKL_RD_006", "level": 3, "name": "통계분석" },
+      { "skillId": "SKL_RD_010", "level": 2, "name": "특허관리" }
+    ],
+    "certifications": ["화학분석기사"],
+    "education": { "degree": "박사", "major": "화학", "university": "포항공과대학교" },
+    "careerIntent": "specialist",
+    "movementHistory": [
+      { "year": 2017, "jobId": "JOB_RD_MATERIAL", "jobName": "소재연구" }
+    ]
+  },
+  {
+    "id": "EMP024",
+    "name": "차은별",
+    "age": 37,
+    "joinYear": 2015,
+    "currentJob": "JOB_HR_LABOR",
+    "department": "노사협력팀",
+    "businessUnit": "피플솔루션",
+    "grade": "책임",
+    "yearsInRole": 6,
+    "totalYears": 11,
+    "evaluationGrade": "B",
+    "leadershipPercentile": 30,
+    "primarySkill": "SKL_HR_011",
+    "skills": [
+      { "skillId": "SKL_HR_011", "level": 5, "name": "노동법" },
+      { "skillId": "SKL_HR_012", "level": 4, "name": "노사관계" },
+      { "skillId": "SKL_CF_005", "level": 3, "name": "커뮤니케이션" }
+    ],
+    "certifications": ["공인노무사"],
+    "education": { "degree": "학사", "major": "법학", "university": "고려대학교" },
+    "careerIntent": "unsure",
+    "movementHistory": [
+      { "year": 2015, "jobId": "JOB_HR_CNB", "jobName": "C&B" },
+      { "year": 2020, "jobId": "JOB_HR_LABOR", "jobName": "노무관리" }
+    ]
+  },
+  {
+    "id": "EMP025",
+    "name": "안성호",
+    "age": 41,
+    "joinYear": 2012,
+    "currentJob": "JOB_SL_MGMT",
+    "department": "영업관리팀",
+    "businessUnit": "BS사업본부",
+    "grade": "책임",
+    "yearsInRole": 5,
+    "totalYears": 14,
+    "evaluationGrade": "C",
+    "leadershipPercentile": 22,
+    "primarySkill": "SKL_SL_008",
+    "skills": [
+      { "skillId": "SKL_SL_008", "level": 4, "name": "매출관리" },
+      { "skillId": "SKL_SL_010", "level": 3, "name": "영업분석" },
+      { "skillId": "SKL_CF_002", "level": 2, "name": "데이터분석" }
+    ],
+    "certifications": [],
+    "education": { "degree": "학사", "major": "경영학", "university": "단국대학교" },
+    "careerIntent": "unsure",
+    "movementHistory": [
+      { "year": 2012, "jobId": "JOB_SL_NEW", "jobName": "신규영업" },
+      { "year": 2016, "jobId": "JOB_SL_KAM", "jobName": "KAM(핵심고객관리)" },
+      { "year": 2021, "jobId": "JOB_SL_MGMT", "jobName": "영업관리" }
+    ]
+  }
+]

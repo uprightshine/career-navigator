@@ -1,0 +1,187 @@
+[
+  {
+    "id": "MNT_001",
+    "name": "임재현",
+    "currentJob": "JOB_HR_PLAN",
+    "currentJobName": "인사기획",
+    "yearsExperience": 11,
+    "department": "인사기획팀",
+    "businessUnit": "피플솔루션",
+    "movementHistory": [
+      { "year": 2015, "jobId": "JOB_HR_HRD", "jobName": "HRD" },
+      { "year": 2018, "jobId": "JOB_HR_HRBP", "jobName": "HRBP" },
+      { "year": 2023, "jobId": "JOB_HR_PLAN", "jobName": "인사기획" }
+    ],
+    "skills": [
+      { "skillId": "SKL_HR_008", "level": 4, "name": "인사전략" },
+      { "skillId": "SKL_HR_007", "level": 4, "name": "조직진단" },
+      { "skillId": "SKL_CF_001", "level": 4, "name": "프로젝트관리" },
+      { "skillId": "SKL_CF_004", "level": 4, "name": "리더십" }
+    ],
+    "specialties": ["HR전략수립", "조직설계", "HR Transformation"],
+    "mentorBio": "HRD에서 시작해 HRBP를 거쳐 인사기획까지, HR의 다양한 영역을 경험했습니다. 특히 HRBP 시절 사업부와의 밀착 협업을 통해 HR이 비즈니스에 가치를 더하는 방법을 배웠습니다. HR 커리어에서 방향을 고민하는 후배들에게 각 포지션의 장단점과 성장 경로를 솔직하게 나누고 싶습니다.",
+    "isAvailable": true
+  },
+  {
+    "id": "MNT_002",
+    "name": "이수현",
+    "currentJob": "JOB_HR_HRBP",
+    "currentJobName": "HRBP",
+    "yearsExperience": 9,
+    "department": "MC사업부 HRBP",
+    "businessUnit": "MC사업본부",
+    "movementHistory": [
+      { "year": 2017, "jobId": "JOB_HR_RECRUIT", "jobName": "채용" },
+      { "year": 2020, "jobId": "JOB_HR_HRD", "jobName": "HRD" },
+      { "year": 2023, "jobId": "JOB_HR_HRBP", "jobName": "HRBP" }
+    ],
+    "skills": [
+      { "skillId": "SKL_HR_007", "level": 4, "name": "조직진단" },
+      { "skillId": "SKL_HR_008", "level": 3, "name": "인사전략" },
+      { "skillId": "SKL_CF_004", "level": 4, "name": "리더십" },
+      { "skillId": "SKL_CF_005", "level": 4, "name": "커뮤니케이션" }
+    ],
+    "specialties": ["조직문화진단", "성과관리", "채용에서HRBP전환"],
+    "mentorBio": "채용 담당으로 HR에 입문해 HRD, HRBP까지 빠르게 성장한 경험이 있습니다. 채용 업무에서 쌓은 사람을 보는 눈이 HRBP에서 큰 자산이 되었어요. 채용 직무에서 다음 스텝을 고민하는 분들, 특히 HRBP나 HRD로의 전환을 생각하는 분들에게 도움이 되고 싶습니다.",
+    "isAvailable": true
+  },
+  {
+    "id": "MNT_003",
+    "name": "신미래",
+    "currentJob": "JOB_MK_PM",
+    "currentJobName": "통합마케팅PM",
+    "yearsExperience": 8,
+    "department": "통합마케팅팀",
+    "businessUnit": "H&A사업본부",
+    "movementHistory": [
+      { "year": 2018, "jobId": "JOB_MK_PERF", "jobName": "퍼포먼스마케팅" },
+      { "year": 2021, "jobId": "JOB_MK_BRAND", "jobName": "브랜드마케팅" },
+      { "year": 2024, "jobId": "JOB_MK_PM", "jobName": "통합마케팅PM" }
+    ],
+    "skills": [
+      { "skillId": "SKL_MK_007", "level": 4, "name": "미디어플래닝" },
+      { "skillId": "SKL_MK_009", "level": 3, "name": "마케팅전략" },
+      { "skillId": "SKL_MK_001", "level": 3, "name": "퍼포먼스광고" },
+      { "skillId": "SKL_CF_001", "level": 4, "name": "프로젝트관리" }
+    ],
+    "specialties": ["퍼포먼스→브랜드전환", "캠페인PM", "마케팅ROI"],
+    "mentorBio": "퍼포먼스 마케터로 시작해 브랜드를 거쳐 통합 마케팅 PM이 되었습니다. 숫자 중심의 퍼포먼스 경험이 브랜드 캠페인의 효과 측정에서 큰 차별점이 되었어요. 퍼포먼스 마케팅에서 더 넓은 마케팅 커리어를 꿈꾸는 분들과 이야기 나누고 싶습니다.",
+    "isAvailable": true
+  },
+  {
+    "id": "MNT_004",
+    "name": "양하준",
+    "currentJob": "JOB_MK_STRATEGY",
+    "currentJobName": "마케팅전략",
+    "yearsExperience": 10,
+    "department": "마케팅전략팀",
+    "businessUnit": "MC사업본부",
+    "movementHistory": [
+      { "year": 2016, "jobId": "JOB_MK_PERF", "jobName": "퍼포먼스마케팅" },
+      { "year": 2019, "jobId": "JOB_MK_BRAND", "jobName": "브랜드마케팅" },
+      { "year": 2022, "jobId": "JOB_MK_PM", "jobName": "통합마케팅PM" },
+      { "year": 2024, "jobId": "JOB_MK_STRATEGY", "jobName": "마케팅전략" }
+    ],
+    "skills": [
+      { "skillId": "SKL_MK_009", "level": 4, "name": "마케팅전략" },
+      { "skillId": "SKL_MK_010", "level": 4, "name": "시장조사" },
+      { "skillId": "SKL_MK_003", "level": 3, "name": "브랜드전략" },
+      { "skillId": "SKL_CF_003", "level": 4, "name": "프레젠테이션" }
+    ],
+    "specialties": ["마케팅전략수립", "시장분석", "리더십트랙"],
+    "mentorBio": "마케팅의 모든 단계를 거쳐 전략 리더 포지션에 올랐습니다. MBA를 병행하며 전략적 사고력을 키운 경험, 각 단계에서의 성장통과 돌파 방법을 나누고 싶습니다. 마케팅 리더십 트랙을 꿈꾸는 분들을 환영합니다.",
+    "isAvailable": true
+  },
+  {
+    "id": "MNT_005",
+    "name": "장원호",
+    "currentJob": "JOB_SL_PLAN",
+    "currentJobName": "영업기획",
+    "yearsExperience": 15,
+    "department": "영업전략실",
+    "businessUnit": "BS사업본부",
+    "movementHistory": [
+      { "year": 2011, "jobId": "JOB_SL_NEW", "jobName": "신규영업" },
+      { "year": 2014, "jobId": "JOB_SL_KAM", "jobName": "KAM(핵심고객관리)" },
+      { "year": 2018, "jobId": "JOB_SL_GLOBAL", "jobName": "해외영업" },
+      { "year": 2023, "jobId": "JOB_SL_PLAN", "jobName": "영업기획" }
+    ],
+    "skills": [
+      { "skillId": "SKL_SL_003", "level": 5, "name": "영업전략" },
+      { "skillId": "SKL_SL_010", "level": 4, "name": "영업분석" },
+      { "skillId": "SKL_SL_002", "level": 4, "name": "고객관계관리" },
+      { "skillId": "SKL_CF_004", "level": 4, "name": "리더십" }
+    ],
+    "specialties": ["영업전략수립", "글로벌영업", "KAM"],
+    "mentorBio": "15년간 영업 현장에서 시작해 전략까지, 영업의 A to Z를 경험했습니다. 신규영업의 거절에서 배운 끈기, KAM의 관계 관리, 해외영업의 문화적 도전을 거쳐 지금의 자리에 왔습니다. 영업 커리어의 다양한 가능성을 함께 탐색하고 싶습니다.",
+    "isAvailable": true
+  },
+  {
+    "id": "MNT_006",
+    "name": "최동현",
+    "currentJob": "JOB_SL_KAM",
+    "currentJobName": "KAM(핵심고객관리)",
+    "yearsExperience": 12,
+    "department": "전략영업팀",
+    "businessUnit": "BS사업본부",
+    "movementHistory": [
+      { "year": 2014, "jobId": "JOB_SL_NEW", "jobName": "신규영업" },
+      { "year": 2017, "jobId": "JOB_SL_CHANNEL", "jobName": "채널영업" },
+      { "year": 2022, "jobId": "JOB_SL_KAM", "jobName": "KAM(핵심고객관리)" }
+    ],
+    "skills": [
+      { "skillId": "SKL_SL_002", "level": 5, "name": "고객관계관리" },
+      { "skillId": "SKL_SL_001", "level": 4, "name": "B2B영업" },
+      { "skillId": "SKL_SL_006", "level": 4, "name": "협상스킬" },
+      { "skillId": "SKL_CF_005", "level": 4, "name": "커뮤니케이션" }
+    ],
+    "specialties": ["핵심고객관리", "채널→KAM전환", "B2B영업"],
+    "mentorBio": "채널영업에서 KAM으로 전환한 경험을 가지고 있습니다. 채널 파트너를 관리하며 쌓은 관계 관리 역량이 핵심 고객 관리에서 빛을 발했습니다. 영업 스페셜리스트로서의 깊이를 추구하는 분들에게 조언을 드리고 싶습니다.",
+    "isAvailable": true
+  },
+  {
+    "id": "MNT_007",
+    "name": "김태호",
+    "currentJob": "JOB_RD_PLAN",
+    "currentJobName": "R&D기획",
+    "yearsExperience": 14,
+    "department": "R&D전략실",
+    "businessUnit": "CTO부문",
+    "movementHistory": [
+      { "year": 2012, "jobId": "JOB_RD_MATERIAL", "jobName": "소재연구" },
+      { "year": 2016, "jobId": "JOB_RD_PROCESS", "jobName": "공정개발" },
+      { "year": 2020, "jobId": "JOB_RD_QUALITY", "jobName": "품질R&D" },
+      { "year": 2023, "jobId": "JOB_RD_PLAN", "jobName": "R&D기획" }
+    ],
+    "skills": [
+      { "skillId": "SKL_RD_007", "level": 5, "name": "R&D기획력" },
+      { "skillId": "SKL_RD_001", "level": 4, "name": "소재분석" },
+      { "skillId": "SKL_RD_010", "level": 4, "name": "특허관리" },
+      { "skillId": "SKL_CF_001", "level": 4, "name": "프로젝트관리" }
+    ],
+    "specialties": ["R&D전략", "기술로드맵", "소재→공정→품질 경로"],
+    "mentorBio": "소재연구에서 출발해 공정, 품질을 거쳐 R&D기획까지 R&D의 전체 밸류체인을 경험했습니다. 기술 깊이와 전략적 시야를 함께 키우는 것이 R&D 리더의 핵심이라고 믿습니다. R&D 엔지니어로서의 커리어 방향을 고민하는 분들을 멘토링합니다.",
+    "isAvailable": true
+  },
+  {
+    "id": "MNT_008",
+    "name": "강지은",
+    "currentJob": "JOB_RD_AISW",
+    "currentJobName": "AI/SW개발",
+    "yearsExperience": 4,
+    "department": "AI기술팀",
+    "businessUnit": "CTO부문",
+    "movementHistory": [
+      { "year": 2022, "jobId": "JOB_RD_AISW", "jobName": "AI/SW개발" }
+    ],
+    "skills": [
+      { "skillId": "SKL_RD_008", "level": 4, "name": "AI/ML" },
+      { "skillId": "SKL_RD_009", "level": 4, "name": "SW개발" },
+      { "skillId": "SKL_CF_002", "level": 3, "name": "데이터분석" },
+      { "skillId": "SKL_CF_008", "level": 3, "name": "애자일방법론" }
+    ],
+    "specialties": ["AI/ML", "제조AI적용", "커리어전환(IT→제조R&D)"],
+    "mentorBio": "IT 업계에서 제조 R&D의 AI 분야로 전환한 경험이 있습니다. 비록 경력은 짧지만, 커리어 전환의 실제 경험과 빠르게 성장하는 AI/SW 직무의 최신 트렌드를 공유할 수 있습니다. 특히 데이터/AI 쪽으로 커리어를 넓히고 싶은 타 직군 분들에게 도움이 되고 싶습니다.",
+    "isAvailable": true
+  }
+]

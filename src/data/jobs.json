@@ -1,0 +1,506 @@
+[
+  {
+    "id": "JOB_HR_RECRUIT",
+    "name": "채용",
+    "family": "HR",
+    "level": "실무자",
+    "description": "우수 인재 확보를 위한 채용 전략을 수립하고 실행합니다. 채용 소싱, 서류 심사, 면접 진행, 처우 협상, 온보딩까지 채용 전 과정을 관리하며, ATS를 활용한 데이터 기반 채용 프로세스를 운영합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_HR_001", "minLevel": 3 },
+      { "skillId": "SKL_HR_002", "minLevel": 2 },
+      { "skillId": "SKL_HR_003", "minLevel": 2 },
+      { "skillId": "SKL_HR_004", "minLevel": 2 },
+      { "skillId": "SKL_CF_005", "minLevel": 3 }
+    ],
+    "avgTenure": 3.2,
+    "headcount": 18,
+    "vacancies": 2,
+    "growthTrend": "stable",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_HR_HRD",
+    "name": "HRD",
+    "family": "HR",
+    "level": "실무자",
+    "description": "조직 구성원의 역량 개발을 위한 교육 체계를 설계하고 운영합니다. 직무교육, 리더십 프로그램, 신입사원 교육, 이러닝 콘텐츠를 기획하고 교육 효과성을 측정합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_HR_005", "minLevel": 3 },
+      { "skillId": "SKL_HR_006", "minLevel": 2 },
+      { "skillId": "SKL_CF_007", "minLevel": 2 },
+      { "skillId": "SKL_CF_003", "minLevel": 3 }
+    ],
+    "avgTenure": 3.8,
+    "headcount": 14,
+    "vacancies": 1,
+    "growthTrend": "growing",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_HR_HRBP",
+    "name": "HRBP",
+    "family": "HR",
+    "level": "선임",
+    "description": "사업 부문에 파견되어 현업 리더의 전략적 파트너로서 인사 이슈를 해결합니다. 조직 진단, 인력 계획, 성과 관리, 조직 변화 관리를 담당하며 본사 HR CoE와 현업의 가교 역할을 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_HR_007", "minLevel": 3 },
+      { "skillId": "SKL_HR_008", "minLevel": 2 },
+      { "skillId": "SKL_CF_005", "minLevel": 4 },
+      { "skillId": "SKL_CF_004", "minLevel": 3 },
+      { "skillId": "SKL_CF_001", "minLevel": 3 }
+    ],
+    "avgTenure": 2.8,
+    "headcount": 22,
+    "vacancies": 4,
+    "growthTrend": "growing",
+    "isHub": true,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_HR_CNB",
+    "name": "C&B",
+    "family": "HR",
+    "level": "선임",
+    "description": "보상 및 복리후생 제도를 설계·운영합니다. 직무 평가, 시장 보상 서베이, 급여 구조 설계, 인센티브 제도 운영, 복리후생 프로그램 관리 업무를 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_HR_009", "minLevel": 3 },
+      { "skillId": "SKL_HR_010", "minLevel": 3 },
+      { "skillId": "SKL_CF_002", "minLevel": 3 },
+      { "skillId": "SKL_HR_011", "minLevel": 2 }
+    ],
+    "avgTenure": 4.5,
+    "headcount": 10,
+    "vacancies": 0,
+    "growthTrend": "stable",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_HR_LABOR",
+    "name": "노무관리",
+    "family": "HR",
+    "level": "선임",
+    "description": "노사 관계를 관리하고 노동 관련 법규 준수를 담당합니다. 단체교섭, 노사협의회 운영, 징계 및 고충 처리, 근로감독 대응 업무를 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_HR_011", "minLevel": 4 },
+      { "skillId": "SKL_HR_012", "minLevel": 3 },
+      { "skillId": "SKL_CF_005", "minLevel": 3 }
+    ],
+    "avgTenure": 5.2,
+    "headcount": 8,
+    "vacancies": 0,
+    "growthTrend": "declining",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": true
+  },
+  {
+    "id": "JOB_HR_PLAN",
+    "name": "인사기획",
+    "family": "HR",
+    "level": "책임",
+    "description": "경영 전략과 연계한 중장기 인사 전략을 수립합니다. 조직 설계, 인력 운영 계획, 인사 제도 혁신, HR Transformation 프로젝트를 리드합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_HR_008", "minLevel": 4 },
+      { "skillId": "SKL_HR_007", "minLevel": 3 },
+      { "skillId": "SKL_CF_001", "minLevel": 4 },
+      { "skillId": "SKL_CF_004", "minLevel": 3 },
+      { "skillId": "SKL_CF_003", "minLevel": 4 }
+    ],
+    "avgTenure": 3.5,
+    "headcount": 6,
+    "vacancies": 1,
+    "growthTrend": "stable",
+    "isHub": false,
+    "isLeadership": true,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_HR_ANALYTICS",
+    "name": "HR Analytics",
+    "family": "HR",
+    "level": "선임",
+    "description": "인사 데이터를 분석하여 조직 인사이트를 도출합니다. 이직 예측 모델, 채용 효과성 분석, 조직 네트워크 분석, HR 대시보드 구축 등 데이터 기반 인사 의사결정을 지원합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_HR_013", "minLevel": 3 },
+      { "skillId": "SKL_HR_014", "minLevel": 3 },
+      { "skillId": "SKL_CF_002", "minLevel": 4 },
+      { "skillId": "SKL_RD_006", "minLevel": 2 }
+    ],
+    "avgTenure": 2.5,
+    "headcount": 5,
+    "vacancies": 2,
+    "growthTrend": "growing",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_MK_PERF",
+    "name": "퍼포먼스마케팅",
+    "family": "마케팅",
+    "level": "실무자",
+    "description": "디지털 광고 캠페인을 기획·운영하고 성과를 최적화합니다. Google, Meta, 네이버 등 광고 플랫폼 운영, A/B 테스트, ROAS 최적화, 전환율 개선 업무를 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_MK_001", "minLevel": 3 },
+      { "skillId": "SKL_MK_002", "minLevel": 3 },
+      { "skillId": "SKL_CF_002", "minLevel": 2 },
+      { "skillId": "SKL_MK_004", "minLevel": 2 }
+    ],
+    "avgTenure": 2.5,
+    "headcount": 15,
+    "vacancies": 3,
+    "growthTrend": "growing",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_MK_BRAND",
+    "name": "브랜드마케팅",
+    "family": "마케팅",
+    "level": "선임",
+    "description": "브랜드 전략을 수립하고 브랜드 가치를 제고합니다. 브랜드 캠페인 기획, ATL/BTL 광고 집행, 브랜드 건강도 조사, 스폰서십·이벤트 마케팅을 담당합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_MK_003", "minLevel": 3 },
+      { "skillId": "SKL_MK_007", "minLevel": 3 },
+      { "skillId": "SKL_MK_010", "minLevel": 2 },
+      { "skillId": "SKL_CF_003", "minLevel": 3 }
+    ],
+    "avgTenure": 3.5,
+    "headcount": 12,
+    "vacancies": 1,
+    "growthTrend": "stable",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_MK_CONTENT",
+    "name": "콘텐츠마케팅",
+    "family": "마케팅",
+    "level": "실무자",
+    "description": "브랜드와 제품을 알리는 콘텐츠를 기획·제작합니다. 블로그, 영상, SNS 콘텐츠 전략 수립, 인플루언서 협업, 콘텐츠 성과 측정 업무를 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_MK_004", "minLevel": 3 },
+      { "skillId": "SKL_MK_008", "minLevel": 3 },
+      { "skillId": "SKL_MK_002", "minLevel": 2 }
+    ],
+    "avgTenure": 2.8,
+    "headcount": 10,
+    "vacancies": 2,
+    "growthTrend": "growing",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_MK_CRM",
+    "name": "CRM마케팅",
+    "family": "마케팅",
+    "level": "선임",
+    "description": "고객 데이터를 기반으로 리텐션 전략을 수립하고 실행합니다. 고객 세그먼테이션, 라이프사이클 캠페인, 이메일/푸시 마케팅, LTV 분석 업무를 담당합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_MK_005", "minLevel": 3 },
+      { "skillId": "SKL_MK_006", "minLevel": 3 },
+      { "skillId": "SKL_CF_002", "minLevel": 3 },
+      { "skillId": "SKL_MK_002", "minLevel": 2 }
+    ],
+    "avgTenure": 3.0,
+    "headcount": 8,
+    "vacancies": 1,
+    "growthTrend": "growing",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_MK_PM",
+    "name": "통합마케팅PM",
+    "family": "마케팅",
+    "level": "책임",
+    "description": "제품/서비스의 통합 마케팅 캠페인을 기획하고 실행을 총괄합니다. 퍼포먼스·브랜드·콘텐츠·CRM 팀과 협업하여 마케팅 믹스를 최적화하고 캠페인 ROI를 관리합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_MK_007", "minLevel": 4 },
+      { "skillId": "SKL_MK_009", "minLevel": 3 },
+      { "skillId": "SKL_CF_001", "minLevel": 4 },
+      { "skillId": "SKL_CF_004", "minLevel": 3 },
+      { "skillId": "SKL_CF_005", "minLevel": 4 }
+    ],
+    "avgTenure": 2.5,
+    "headcount": 6,
+    "vacancies": 1,
+    "growthTrend": "growing",
+    "isHub": true,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_MK_STRATEGY",
+    "name": "마케팅전략",
+    "family": "마케팅",
+    "level": "책임",
+    "description": "시장 분석과 고객 인사이트를 바탕으로 마케팅 전략을 수립합니다. STP 전략, 마케팅 예산 관리, 마케팅 성과 체계 수립, 경쟁사 분석 업무를 담당합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_MK_009", "minLevel": 4 },
+      { "skillId": "SKL_MK_010", "minLevel": 3 },
+      { "skillId": "SKL_CF_002", "minLevel": 3 },
+      { "skillId": "SKL_CF_003", "minLevel": 4 },
+      { "skillId": "SKL_CF_004", "minLevel": 3 }
+    ],
+    "avgTenure": 3.0,
+    "headcount": 4,
+    "vacancies": 0,
+    "growthTrend": "stable",
+    "isHub": false,
+    "isLeadership": true,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_SL_NEW",
+    "name": "신규영업",
+    "family": "영업",
+    "level": "실무자",
+    "description": "신규 고객을 발굴하고 비즈니스 기회를 창출합니다. 콜드콜, 전시회, 네트워킹을 통한 리드 발굴, 고객 미팅, 니즈 파악, 초기 제안 업무를 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_SL_001", "minLevel": 3 },
+      { "skillId": "SKL_SL_005", "minLevel": 2 },
+      { "skillId": "SKL_SL_009", "minLevel": 2 },
+      { "skillId": "SKL_CF_005", "minLevel": 3 }
+    ],
+    "avgTenure": 2.5,
+    "headcount": 20,
+    "vacancies": 3,
+    "growthTrend": "stable",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_SL_KAM",
+    "name": "KAM(핵심고객관리)",
+    "family": "영업",
+    "level": "선임",
+    "description": "전략적 핵심 고객(Key Account)과의 파트너십을 관리합니다. 핵심 고객의 비즈니스를 깊이 이해하고, 맞춤형 솔루션을 제안하며, 장기 계약 및 매출 성장을 이끕니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_SL_002", "minLevel": 4 },
+      { "skillId": "SKL_SL_006", "minLevel": 3 },
+      { "skillId": "SKL_SL_001", "minLevel": 3 },
+      { "skillId": "SKL_SL_005", "minLevel": 3 },
+      { "skillId": "SKL_CF_005", "minLevel": 4 }
+    ],
+    "avgTenure": 4.0,
+    "headcount": 12,
+    "vacancies": 1,
+    "growthTrend": "stable",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_SL_PLAN",
+    "name": "영업기획",
+    "family": "영업",
+    "level": "책임",
+    "description": "영업 전략을 수립하고 영업 조직의 성과를 관리합니다. 시장 분석, 영업 목표 설정, 인센티브 설계, 영업 프로세스 혁신, CRM 고도화 업무를 담당합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_SL_003", "minLevel": 4 },
+      { "skillId": "SKL_SL_010", "minLevel": 3 },
+      { "skillId": "SKL_CF_002", "minLevel": 3 },
+      { "skillId": "SKL_CF_001", "minLevel": 3 },
+      { "skillId": "SKL_CF_004", "minLevel": 3 }
+    ],
+    "avgTenure": 3.0,
+    "headcount": 8,
+    "vacancies": 1,
+    "growthTrend": "growing",
+    "isHub": true,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_SL_CHANNEL",
+    "name": "채널영업",
+    "family": "영업",
+    "level": "선임",
+    "description": "대리점, 유통사, 리셀러 등 간접 판매 채널을 개발하고 관리합니다. 채널 파트너 모집, 교육, 실적 관리, 채널 갈등 조정 업무를 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_SL_004", "minLevel": 3 },
+      { "skillId": "SKL_SL_002", "minLevel": 2 },
+      { "skillId": "SKL_SL_006", "minLevel": 2 },
+      { "skillId": "SKL_SL_008", "minLevel": 2 }
+    ],
+    "avgTenure": 3.5,
+    "headcount": 10,
+    "vacancies": 0,
+    "growthTrend": "stable",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_SL_MGMT",
+    "name": "영업관리",
+    "family": "영업",
+    "level": "선임",
+    "description": "영업 행정 및 실적 관리를 담당합니다. 계약서 관리, 매출 정산, 영업 보고서 작성, 견적 관리, 주문 처리 등 영업 지원 업무를 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_SL_008", "minLevel": 3 },
+      { "skillId": "SKL_SL_010", "minLevel": 2 },
+      { "skillId": "SKL_CF_002", "minLevel": 2 }
+    ],
+    "avgTenure": 4.0,
+    "headcount": 8,
+    "vacancies": 0,
+    "growthTrend": "declining",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": true
+  },
+  {
+    "id": "JOB_SL_GLOBAL",
+    "name": "해외영업",
+    "family": "영업",
+    "level": "선임",
+    "description": "해외 시장을 개척하고 글로벌 고객 영업을 수행합니다. 해외 바이어 발굴, 수출입 실무, 현지 파트너 관리, 해외 전시회 참가 업무를 담당합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_SL_007", "minLevel": 3 },
+      { "skillId": "SKL_SL_001", "minLevel": 3 },
+      { "skillId": "SKL_CF_006", "minLevel": 4 },
+      { "skillId": "SKL_SL_006", "minLevel": 3 }
+    ],
+    "avgTenure": 3.0,
+    "headcount": 14,
+    "vacancies": 2,
+    "growthTrend": "growing",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_RD_MATERIAL",
+    "name": "소재연구",
+    "family": "R&D",
+    "level": "선임",
+    "description": "차세대 소재를 연구하고 신소재를 개발합니다. 소재 합성, 물성 분석, 실험 설계, 논문/특허 작성, 산학 협력 업무를 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_RD_001", "minLevel": 4 },
+      { "skillId": "SKL_RD_005", "minLevel": 3 },
+      { "skillId": "SKL_RD_006", "minLevel": 3 },
+      { "skillId": "SKL_RD_010", "minLevel": 2 }
+    ],
+    "avgTenure": 4.5,
+    "headcount": 25,
+    "vacancies": 3,
+    "growthTrend": "growing",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_RD_PROCESS",
+    "name": "공정개발",
+    "family": "R&D",
+    "level": "선임",
+    "description": "제품 양산을 위한 공정을 개발하고 최적화합니다. 공정 조건 설정, 스케일업, 공정 안정화, 수율 개선, 장비 스펙 설계 업무를 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_RD_002", "minLevel": 4 },
+      { "skillId": "SKL_RD_005", "minLevel": 3 },
+      { "skillId": "SKL_RD_006", "minLevel": 2 },
+      { "skillId": "SKL_RD_003", "minLevel": 2 }
+    ],
+    "avgTenure": 3.5,
+    "headcount": 20,
+    "vacancies": 2,
+    "growthTrend": "stable",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_RD_MASS",
+    "name": "양산기술",
+    "family": "R&D",
+    "level": "실무자",
+    "description": "양산 라인의 기술 지원과 수율 관리를 담당합니다. 양산 트러블슈팅, 수율 개선, 설비 관리, 양산 이관 지원 업무를 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_RD_003", "minLevel": 3 },
+      { "skillId": "SKL_RD_002", "minLevel": 2 },
+      { "skillId": "SKL_RD_004", "minLevel": 2 }
+    ],
+    "avgTenure": 3.8,
+    "headcount": 30,
+    "vacancies": 2,
+    "growthTrend": "stable",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": true
+  },
+  {
+    "id": "JOB_RD_QUALITY",
+    "name": "품질R&D",
+    "family": "R&D",
+    "level": "선임",
+    "description": "제품 및 공정 품질을 보증하고 개선합니다. 품질 규격 수립, SPC 관리, 불량 분석(8D), 신뢰성 시험, 고객 클레임 대응 업무를 담당합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_RD_004", "minLevel": 4 },
+      { "skillId": "SKL_RD_006", "minLevel": 3 },
+      { "skillId": "SKL_RD_005", "minLevel": 2 },
+      { "skillId": "SKL_CF_002", "minLevel": 2 }
+    ],
+    "avgTenure": 4.0,
+    "headcount": 15,
+    "vacancies": 1,
+    "growthTrend": "stable",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_RD_PLAN",
+    "name": "R&D기획",
+    "family": "R&D",
+    "level": "책임",
+    "description": "R&D 전략과 기술 로드맵을 수립합니다. 연구 과제 기획, R&D 예산 관리, 기술 동향 분석, 특허 전략, 산학/국책과제 관리 업무를 담당합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_RD_007", "minLevel": 4 },
+      { "skillId": "SKL_RD_010", "minLevel": 3 },
+      { "skillId": "SKL_CF_001", "minLevel": 4 },
+      { "skillId": "SKL_CF_003", "minLevel": 3 },
+      { "skillId": "SKL_CF_004", "minLevel": 3 }
+    ],
+    "avgTenure": 3.0,
+    "headcount": 6,
+    "vacancies": 1,
+    "growthTrend": "growing",
+    "isHub": true,
+    "isLeadership": true,
+    "isDeadEnd": false
+  },
+  {
+    "id": "JOB_RD_AISW",
+    "name": "AI/SW개발",
+    "family": "R&D",
+    "level": "선임",
+    "description": "AI·머신러닝 기반 제품 및 공정 최적화 솔루션을 개발합니다. ML 모델 개발, 데이터 파이프라인 구축, 제품 임베디드 SW 개발, MLOps 운영 업무를 수행합니다.",
+    "requiredSkills": [
+      { "skillId": "SKL_RD_008", "minLevel": 3 },
+      { "skillId": "SKL_RD_009", "minLevel": 4 },
+      { "skillId": "SKL_CF_002", "minLevel": 3 },
+      { "skillId": "SKL_CF_008", "minLevel": 3 }
+    ],
+    "avgTenure": 2.0,
+    "headcount": 18,
+    "vacancies": 5,
+    "growthTrend": "growing",
+    "isHub": false,
+    "isLeadership": false,
+    "isDeadEnd": false
+  }
+]

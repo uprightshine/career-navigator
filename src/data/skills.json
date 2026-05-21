@@ -1,0 +1,366 @@
+[
+  {
+    "id": "SKL_HR_001",
+    "name": "채용전략",
+    "family": "HR",
+    "category": "채용",
+    "description": "조직의 인력 수요를 분석하고 효과적인 채용 계획을 수립하는 역량. 채용 채널 다변화, 소싱 전략, 채용 프로세스 최적화를 포함한다."
+  },
+  {
+    "id": "SKL_HR_002",
+    "name": "ATS운영",
+    "family": "HR",
+    "category": "채용",
+    "description": "채용관리시스템(Applicant Tracking System)을 활용하여 채용 파이프라인을 관리하고 데이터 기반 채용 의사결정을 지원하는 역량."
+  },
+  {
+    "id": "SKL_HR_003",
+    "name": "면접설계",
+    "family": "HR",
+    "category": "채용",
+    "description": "구조화 면접, 역량기반 면접(BEI), 기술 면접 등 다양한 면접 방법론을 설계하고 면접관을 교육하는 역량."
+  },
+  {
+    "id": "SKL_HR_004",
+    "name": "채용브랜딩",
+    "family": "HR",
+    "category": "채용",
+    "description": "고용주 브랜드(Employer Brand)를 구축하고, 채용 마케팅 캠페인을 기획·실행하여 우수 인재를 유인하는 역량."
+  },
+  {
+    "id": "SKL_HR_005",
+    "name": "교육체계설계",
+    "family": "HR",
+    "category": "HRD",
+    "description": "조직 역량 모델에 기반하여 직급별·직무별 교육 체계를 설계하고 학습 로드맵을 수립하는 역량."
+  },
+  {
+    "id": "SKL_HR_006",
+    "name": "리더십개발",
+    "family": "HR",
+    "category": "HRD",
+    "description": "차세대 리더 양성을 위한 리더십 파이프라인 프로그램을 기획·운영하고 코칭/멘토링 체계를 구축하는 역량."
+  },
+  {
+    "id": "SKL_HR_007",
+    "name": "조직진단",
+    "family": "HR",
+    "category": "HRBP",
+    "description": "조직 건강도, 직원 몰입도, 조직문화를 진단하고 개선 방안을 도출하여 사업 부서의 조직 효과성을 높이는 역량."
+  },
+  {
+    "id": "SKL_HR_008",
+    "name": "인사전략",
+    "family": "HR",
+    "category": "인사기획",
+    "description": "경영 전략과 연계한 중장기 인사 전략을 수립하고, 인력계획(Workforce Planning), 조직설계, 인사제도를 기획하는 역량."
+  },
+  {
+    "id": "SKL_HR_009",
+    "name": "보상설계",
+    "family": "HR",
+    "category": "C&B",
+    "description": "직무 평가, 시장 보상 조사를 기반으로 급여 체계, 인센티브, 복리후생 제도를 설계하고 운영하는 역량."
+  },
+  {
+    "id": "SKL_HR_010",
+    "name": "급여관리",
+    "family": "HR",
+    "category": "C&B",
+    "description": "급여 산정, 4대 보험, 원천징수 등 급여 행정을 정확히 처리하고 관련 법규 준수를 관리하는 역량."
+  },
+  {
+    "id": "SKL_HR_011",
+    "name": "노동법",
+    "family": "HR",
+    "category": "노무",
+    "description": "근로기준법, 노동조합법 등 노동 관련 법령을 이해하고 사내 인사 제도의 법적 적정성을 검토하는 역량."
+  },
+  {
+    "id": "SKL_HR_012",
+    "name": "노사관계",
+    "family": "HR",
+    "category": "노무",
+    "description": "노동조합·노사협의회와의 관계를 관리하고, 단체교섭, 쟁의 조정, 고충처리 등을 수행하는 역량."
+  },
+  {
+    "id": "SKL_HR_013",
+    "name": "피플애널리틱스",
+    "family": "HR",
+    "category": "HR Analytics",
+    "description": "인사 데이터를 수집·분석하여 인력 유지율, 채용 효과성, 조직 생산성 등 HR 의사결정에 필요한 인사이트를 도출하는 역량."
+  },
+  {
+    "id": "SKL_HR_014",
+    "name": "HRIS관리",
+    "family": "HR",
+    "category": "HR Analytics",
+    "description": "인사정보시스템(SAP SuccessFactors, Workday 등)을 관리하고 데이터 품질을 유지하며 시스템 개선 요구사항을 도출하는 역량."
+  },
+  {
+    "id": "SKL_MK_001",
+    "name": "퍼포먼스광고",
+    "family": "마케팅",
+    "category": "퍼포먼스",
+    "description": "Google Ads, Meta Ads, 네이버 SA 등 디지털 광고 플랫폼을 활용하여 성과 기반 광고를 기획·최적화하는 역량."
+  },
+  {
+    "id": "SKL_MK_002",
+    "name": "GA/데이터분석",
+    "family": "마케팅",
+    "category": "퍼포먼스",
+    "description": "Google Analytics, Amplitude 등 분석 도구를 활용하여 유저 행동을 분석하고 마케팅 ROI를 측정·개선하는 역량."
+  },
+  {
+    "id": "SKL_MK_003",
+    "name": "브랜드전략",
+    "family": "마케팅",
+    "category": "브랜드",
+    "description": "브랜드 포지셔닝, 아이덴티티, 메시지 체계를 수립하고 일관된 브랜드 경험을 설계하는 역량."
+  },
+  {
+    "id": "SKL_MK_004",
+    "name": "콘텐츠기획",
+    "family": "마케팅",
+    "category": "콘텐츠",
+    "description": "타겟 오디언스에 맞는 콘텐츠 전략을 수립하고, 블로그·영상·SNS 콘텐츠를 기획·제작 관리하는 역량."
+  },
+  {
+    "id": "SKL_MK_005",
+    "name": "CRM운영",
+    "family": "마케팅",
+    "category": "CRM",
+    "description": "고객 세그먼테이션, 라이프사이클 마케팅, 리텐션 전략을 수립하고 CRM 시스템을 운영하는 역량."
+  },
+  {
+    "id": "SKL_MK_006",
+    "name": "마케팅자동화",
+    "family": "마케팅",
+    "category": "CRM",
+    "description": "HubSpot, Braze 등 마케팅 자동화 도구를 활용하여 고객 여정 기반 캠페인을 설계·운영하는 역량."
+  },
+  {
+    "id": "SKL_MK_007",
+    "name": "미디어플래닝",
+    "family": "마케팅",
+    "category": "통합",
+    "description": "온·오프라인 미디어 믹스를 최적화하고, 캠페인 예산 배분 및 매체 효율을 관리하는 역량."
+  },
+  {
+    "id": "SKL_MK_008",
+    "name": "소셜미디어관리",
+    "family": "마케팅",
+    "category": "콘텐츠",
+    "description": "인스타그램, 유튜브, 틱톡 등 소셜 채널 운영 전략을 수립하고 커뮤니티를 관리하는 역량."
+  },
+  {
+    "id": "SKL_MK_009",
+    "name": "마케팅전략",
+    "family": "마케팅",
+    "category": "전략",
+    "description": "시장 분석, 경쟁사 분석, STP 전략을 기반으로 통합 마케팅 전략을 수립하고 실행 로드맵을 관리하는 역량."
+  },
+  {
+    "id": "SKL_MK_010",
+    "name": "시장조사",
+    "family": "마케팅",
+    "category": "전략",
+    "description": "정량·정성 리서치를 기획·수행하여 시장 트렌드, 고객 니즈, 경쟁 환경을 분석하는 역량."
+  },
+  {
+    "id": "SKL_SL_001",
+    "name": "B2B영업",
+    "family": "영업",
+    "category": "세일즈",
+    "description": "기업 고객 대상 솔루션 영업을 수행하고, 의사결정자(DMU) 매핑, 관계 구축, 제안·수주를 이끄는 역량."
+  },
+  {
+    "id": "SKL_SL_002",
+    "name": "고객관계관리",
+    "family": "영업",
+    "category": "세일즈",
+    "description": "핵심 고객과의 장기적 파트너십을 구축하고 고객 만족도·재구매율을 높이는 전략적 어카운트 관리 역량."
+  },
+  {
+    "id": "SKL_SL_003",
+    "name": "영업전략",
+    "family": "영업",
+    "category": "기획",
+    "description": "시장 분석 기반 영업 목표를 수립하고, 영역별·제품별·고객별 Go-to-Market 전략을 기획하는 역량."
+  },
+  {
+    "id": "SKL_SL_004",
+    "name": "채널관리",
+    "family": "영업",
+    "category": "채널",
+    "description": "대리점, 유통사, 온라인 채널 등 간접 판매 채널을 개발·관리하고 채널 파트너와의 협업을 이끄는 역량."
+  },
+  {
+    "id": "SKL_SL_005",
+    "name": "제안서작성",
+    "family": "영업",
+    "category": "세일즈",
+    "description": "고객 요구사항에 맞는 솔루션 제안서를 기획·작성하고, 프레젠테이션을 통해 고객을 설득하는 역량."
+  },
+  {
+    "id": "SKL_SL_006",
+    "name": "협상스킬",
+    "family": "영업",
+    "category": "세일즈",
+    "description": "가격, 조건, 계약 등 비즈니스 협상을 전략적으로 수행하여 Win-Win 결과를 도출하는 역량."
+  },
+  {
+    "id": "SKL_SL_007",
+    "name": "해외시장개척",
+    "family": "영업",
+    "category": "해외",
+    "description": "해외 시장 조사, 현지 파트너 발굴, 수출입 실무, 글로벌 고객 관리를 수행하는 역량."
+  },
+  {
+    "id": "SKL_SL_008",
+    "name": "매출관리",
+    "family": "영업",
+    "category": "관리",
+    "description": "매출 실적 분석, 매출 예측(Forecasting), 판매 보고서 작성 등 영업 성과를 관리하는 역량."
+  },
+  {
+    "id": "SKL_SL_009",
+    "name": "파이프라인관리",
+    "family": "영업",
+    "category": "세일즈",
+    "description": "CRM 시스템을 활용하여 영업 파이프라인을 체계적으로 관리하고 전환율을 최적화하는 역량."
+  },
+  {
+    "id": "SKL_SL_010",
+    "name": "영업분석",
+    "family": "영업",
+    "category": "기획",
+    "description": "영업 데이터를 분석하여 트렌드, 기회, 리스크를 식별하고 데이터 기반 영업 의사결정을 지원하는 역량."
+  },
+  {
+    "id": "SKL_RD_001",
+    "name": "소재분석",
+    "family": "R&D",
+    "category": "소재",
+    "description": "XRD, SEM, TEM 등 분석 장비를 활용하여 소재의 구조, 조성, 물성을 분석하고 평가하는 역량."
+  },
+  {
+    "id": "SKL_RD_002",
+    "name": "공정설계",
+    "family": "R&D",
+    "category": "공정",
+    "description": "제조 공정의 조건, 파라미터, 장비 스펙을 설계하고 공정 최적화를 수행하는 역량."
+  },
+  {
+    "id": "SKL_RD_003",
+    "name": "양산관리",
+    "family": "R&D",
+    "category": "양산",
+    "description": "양산 라인의 수율, 품질, 생산성을 관리하고 양산 이관 과정에서 기술 이전을 수행하는 역량."
+  },
+  {
+    "id": "SKL_RD_004",
+    "name": "품질관리",
+    "family": "R&D",
+    "category": "품질",
+    "description": "SPC, FMEA, 8D 등 품질 관리 기법을 활용하여 제품 품질을 보증하고 불량을 개선하는 역량."
+  },
+  {
+    "id": "SKL_RD_005",
+    "name": "실험설계(DOE)",
+    "family": "R&D",
+    "category": "공통",
+    "description": "실험 계획법(Design of Experiments)을 적용하여 효율적인 실험을 설계하고 최적 조건을 도출하는 역량."
+  },
+  {
+    "id": "SKL_RD_006",
+    "name": "통계분석",
+    "family": "R&D",
+    "category": "공통",
+    "description": "Minitab, JMP 등 통계 도구를 활용하여 실험·공정 데이터를 분석하고 유의미한 결론을 도출하는 역량."
+  },
+  {
+    "id": "SKL_RD_007",
+    "name": "R&D기획력",
+    "family": "R&D",
+    "category": "기획",
+    "description": "기술 로드맵 수립, R&D 포트폴리오 관리, 연구 과제 기획 및 예산 배분을 수행하는 역량."
+  },
+  {
+    "id": "SKL_RD_008",
+    "name": "AI/ML",
+    "family": "R&D",
+    "category": "AI/SW",
+    "description": "머신러닝, 딥러닝 모델을 설계·학습시키고 제품·공정에 AI 기술을 적용하는 역량."
+  },
+  {
+    "id": "SKL_RD_009",
+    "name": "SW개발",
+    "family": "R&D",
+    "category": "AI/SW",
+    "description": "Python, C++, Java 등 프로그래밍 언어를 활용하여 소프트웨어를 설계·개발·테스트하는 역량."
+  },
+  {
+    "id": "SKL_RD_010",
+    "name": "특허관리",
+    "family": "R&D",
+    "category": "기획",
+    "description": "특허 출원·등록 프로세스를 이해하고, IP 전략 수립 및 특허 포트폴리오를 관리하는 역량."
+  },
+  {
+    "id": "SKL_CF_001",
+    "name": "프로젝트관리",
+    "family": "공통",
+    "category": "관리",
+    "description": "프로젝트 범위, 일정, 리소스, 리스크를 관리하고 이해관계자와 소통하여 목표를 달성하는 역량."
+  },
+  {
+    "id": "SKL_CF_002",
+    "name": "데이터분석",
+    "family": "공통",
+    "category": "분석",
+    "description": "Excel, SQL, Python 등을 활용하여 데이터를 수집·정제·분석하고 비즈니스 인사이트를 도출하는 역량."
+  },
+  {
+    "id": "SKL_CF_003",
+    "name": "프레젠테이션",
+    "family": "공통",
+    "category": "소통",
+    "description": "복잡한 정보를 효과적으로 구조화하여 청중에 맞는 설득력 있는 발표 자료를 작성하고 전달하는 역량."
+  },
+  {
+    "id": "SKL_CF_004",
+    "name": "리더십",
+    "family": "공통",
+    "category": "관리",
+    "description": "팀원의 동기를 부여하고, 목표를 설정하며, 성과를 관리하여 조직 성과를 이끌어내는 역량."
+  },
+  {
+    "id": "SKL_CF_005",
+    "name": "커뮤니케이션",
+    "family": "공통",
+    "category": "소통",
+    "description": "구두·서면으로 아이디어를 명확히 전달하고, 경청과 피드백을 통해 효과적인 의사소통을 하는 역량."
+  },
+  {
+    "id": "SKL_CF_006",
+    "name": "비즈니스영어",
+    "family": "공통",
+    "category": "글로벌",
+    "description": "영어로 비즈니스 미팅, 이메일, 보고서 작성 등 업무 커뮤니케이션을 수행하는 역량."
+  },
+  {
+    "id": "SKL_CF_007",
+    "name": "디자인씽킹",
+    "family": "공통",
+    "category": "혁신",
+    "description": "사용자 중심의 문제 정의, 아이디어 발산, 프로토타이핑, 테스트 과정을 통해 혁신적 솔루션을 도출하는 역량."
+  },
+  {
+    "id": "SKL_CF_008",
+    "name": "애자일방법론",
+    "family": "공통",
+    "category": "혁신",
+    "description": "스크럼, 칸반 등 애자일 프레임워크를 이해하고 빠른 반복과 지속적 개선을 통해 업무를 수행하는 역량."
+  }
+]

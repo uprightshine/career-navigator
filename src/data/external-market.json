@@ -1,0 +1,298 @@
+{
+  "lastUpdated": "2026-05-01",
+  "source": "내부 분석 (외부 채용 공고 및 시장 데이터 기반 추정)",
+  "jobs": [
+    {
+      "jobId": "JOB_HR_RECRUIT",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 4000, "max": 6500, "unit": "만원/연" },
+      "linkedinCount": 1240,
+      "trendingSkills": ["ATS운영", "채용브랜딩", "피플애널리틱스"],
+      "relatedExternalRoles": ["채용 담당자", "Talent Acquisition Specialist", "리쿠르터", "HR Coordinator"]
+    },
+    {
+      "jobId": "JOB_HR_HRD",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 4200, "max": 7000, "unit": "만원/연" },
+      "linkedinCount": 890,
+      "trendingSkills": ["교육체계설계", "LMS운영", "디자인씽킹"],
+      "relatedExternalRoles": ["교육 담당자", "L&D Specialist", "조직개발 담당", "HRD Manager"]
+    },
+    {
+      "jobId": "JOB_HR_HRBP",
+      "marketDemand": "high",
+      "avgSalaryRange": { "min": 5500, "max": 9000, "unit": "만원/연" },
+      "linkedinCount": 2150,
+      "trendingSkills": ["조직진단", "피플애널리틱스", "변화관리"],
+      "relatedExternalRoles": ["HRBP", "HR Business Partner", "HR Manager", "People Partner"]
+    },
+    {
+      "jobId": "JOB_HR_CNB",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 5000, "max": 8000, "unit": "만원/연" },
+      "linkedinCount": 650,
+      "trendingSkills": ["보상설계", "Job Architecture", "총보상전략"],
+      "relatedExternalRoles": ["보상 담당", "C&B Specialist", "Total Rewards Analyst", "급여 담당"]
+    },
+    {
+      "jobId": "JOB_HR_LABOR",
+      "marketDemand": "low",
+      "avgSalaryRange": { "min": 4500, "max": 7500, "unit": "만원/연" },
+      "linkedinCount": 320,
+      "trendingSkills": ["노동법", "ESG노무", "근로감독대응"],
+      "relatedExternalRoles": ["노무 담당", "ER Specialist", "Labor Relations Manager"]
+    },
+    {
+      "jobId": "JOB_HR_PLAN",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 7000, "max": 12000, "unit": "만원/연" },
+      "linkedinCount": 480,
+      "trendingSkills": ["인사전략", "조직설계", "HR Transformation"],
+      "relatedExternalRoles": ["인사기획", "HR Strategy Manager", "CHRO 후보", "Head of HR"]
+    },
+    {
+      "jobId": "JOB_HR_ANALYTICS",
+      "marketDemand": "high",
+      "avgSalaryRange": { "min": 5500, "max": 9500, "unit": "만원/연" },
+      "linkedinCount": 1850,
+      "trendingSkills": ["피플애널리틱스", "Python/R", "이직예측모델"],
+      "relatedExternalRoles": ["People Analytics Specialist", "HR Data Analyst", "Workforce Analytics Manager"]
+    },
+    {
+      "jobId": "JOB_MK_PERF",
+      "marketDemand": "high",
+      "avgSalaryRange": { "min": 4000, "max": 7000, "unit": "만원/연" },
+      "linkedinCount": 3200,
+      "trendingSkills": ["퍼포먼스광고", "GA4", "마케팅자동화"],
+      "relatedExternalRoles": ["퍼포먼스 마케터", "Growth Marketer", "디지털 마케터", "Paid Media Specialist"]
+    },
+    {
+      "jobId": "JOB_MK_BRAND",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 4500, "max": 7500, "unit": "만원/연" },
+      "linkedinCount": 1800,
+      "trendingSkills": ["브랜드전략", "IMC", "브랜드콘텐츠"],
+      "relatedExternalRoles": ["브랜드 매니저", "Brand Marketing Manager", "마케팅 커뮤니케이션 담당"]
+    },
+    {
+      "jobId": "JOB_MK_CONTENT",
+      "marketDemand": "high",
+      "avgSalaryRange": { "min": 3500, "max": 6000, "unit": "만원/연" },
+      "linkedinCount": 2800,
+      "trendingSkills": ["콘텐츠기획", "숏폼영상", "AI콘텐츠생성"],
+      "relatedExternalRoles": ["콘텐츠 마케터", "Content Strategist", "SNS 마케터", "에디터"]
+    },
+    {
+      "jobId": "JOB_MK_CRM",
+      "marketDemand": "high",
+      "avgSalaryRange": { "min": 4500, "max": 7500, "unit": "만원/연" },
+      "linkedinCount": 1950,
+      "trendingSkills": ["CRM운영", "마케팅자동화", "고객데이터플랫폼(CDP)"],
+      "relatedExternalRoles": ["CRM 마케터", "Lifecycle Marketing Manager", "리텐션 마케터"]
+    },
+    {
+      "jobId": "JOB_MK_PM",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 6000, "max": 10000, "unit": "만원/연" },
+      "linkedinCount": 920,
+      "trendingSkills": ["캠페인PM", "미디어플래닝", "마케팅ROI"],
+      "relatedExternalRoles": ["통합마케팅 PM", "Campaign Manager", "Marketing Lead", "마케팅 팀장"]
+    },
+    {
+      "jobId": "JOB_MK_STRATEGY",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 7000, "max": 12000, "unit": "만원/연" },
+      "linkedinCount": 550,
+      "trendingSkills": ["마케팅전략", "시장분석", "AI마케팅전략"],
+      "relatedExternalRoles": ["마케팅 전략 매니저", "CMO 후보", "Head of Marketing", "Marketing Director"]
+    },
+    {
+      "jobId": "JOB_SL_NEW",
+      "marketDemand": "high",
+      "avgSalaryRange": { "min": 3500, "max": 6000, "unit": "만원/연" },
+      "linkedinCount": 4200,
+      "trendingSkills": ["B2B영업", "SaaS영업", "소셜셀링"],
+      "relatedExternalRoles": ["신규영업 담당", "Account Executive", "Sales Representative", "BDR"]
+    },
+    {
+      "jobId": "JOB_SL_KAM",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 5500, "max": 9000, "unit": "만원/연" },
+      "linkedinCount": 1400,
+      "trendingSkills": ["고객관계관리", "전략적어카운트관리", "가치기반영업"],
+      "relatedExternalRoles": ["Key Account Manager", "Strategic Account Manager", "Enterprise Sales"]
+    },
+    {
+      "jobId": "JOB_SL_PLAN",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 6500, "max": 10000, "unit": "만원/연" },
+      "linkedinCount": 780,
+      "trendingSkills": ["영업전략", "RevOps", "CRM고도화"],
+      "relatedExternalRoles": ["영업기획", "Sales Strategy Manager", "Revenue Operations", "Sales Director"]
+    },
+    {
+      "jobId": "JOB_SL_CHANNEL",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 4500, "max": 7000, "unit": "만원/연" },
+      "linkedinCount": 950,
+      "trendingSkills": ["채널관리", "파트너십", "D2C전환"],
+      "relatedExternalRoles": ["채널영업 담당", "Channel Sales Manager", "Partner Manager"]
+    },
+    {
+      "jobId": "JOB_SL_MGMT",
+      "marketDemand": "low",
+      "avgSalaryRange": { "min": 4000, "max": 6000, "unit": "만원/연" },
+      "linkedinCount": 420,
+      "trendingSkills": ["매출관리", "영업자동화", "BI도구"],
+      "relatedExternalRoles": ["영업관리 담당", "Sales Operations Analyst", "Sales Admin"]
+    },
+    {
+      "jobId": "JOB_SL_GLOBAL",
+      "marketDemand": "high",
+      "avgSalaryRange": { "min": 5000, "max": 8500, "unit": "만원/연" },
+      "linkedinCount": 2100,
+      "trendingSkills": ["해외시장개척", "크로스보더영업", "현지화전략"],
+      "relatedExternalRoles": ["해외영업 담당", "International Sales Manager", "Global Account Manager"]
+    },
+    {
+      "jobId": "JOB_RD_MATERIAL",
+      "marketDemand": "high",
+      "avgSalaryRange": { "min": 5000, "max": 8500, "unit": "만원/연" },
+      "linkedinCount": 1600,
+      "trendingSkills": ["소재분석", "전고체전지소재", "AI신소재탐색"],
+      "relatedExternalRoles": ["소재 연구원", "Materials Scientist", "R&D Researcher"]
+    },
+    {
+      "jobId": "JOB_RD_PROCESS",
+      "marketDemand": "high",
+      "avgSalaryRange": { "min": 5000, "max": 8000, "unit": "만원/연" },
+      "linkedinCount": 1400,
+      "trendingSkills": ["공정설계", "스마트팩토리", "디지털트윈"],
+      "relatedExternalRoles": ["공정 엔지니어", "Process Engineer", "Manufacturing Engineer"]
+    },
+    {
+      "jobId": "JOB_RD_MASS",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 4000, "max": 6500, "unit": "만원/연" },
+      "linkedinCount": 1100,
+      "trendingSkills": ["양산관리", "수율개선", "설비자동화"],
+      "relatedExternalRoles": ["양산기술 엔지니어", "Production Engineer", "Manufacturing Technologist"]
+    },
+    {
+      "jobId": "JOB_RD_QUALITY",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 4500, "max": 7500, "unit": "만원/연" },
+      "linkedinCount": 1300,
+      "trendingSkills": ["품질관리", "IATF16949", "AI불량검출"],
+      "relatedExternalRoles": ["품질 엔지니어", "Quality Engineer", "QA/QC Manager", "Reliability Engineer"]
+    },
+    {
+      "jobId": "JOB_RD_PLAN",
+      "marketDemand": "medium",
+      "avgSalaryRange": { "min": 7000, "max": 12000, "unit": "만원/연" },
+      "linkedinCount": 520,
+      "trendingSkills": ["R&D기획력", "기술사업화", "오픈이노베이션"],
+      "relatedExternalRoles": ["R&D 기획", "Technology Strategy Manager", "CTO 후보", "VP of Engineering"]
+    },
+    {
+      "jobId": "JOB_RD_AISW",
+      "marketDemand": "high",
+      "avgSalaryRange": { "min": 6000, "max": 12000, "unit": "만원/연" },
+      "linkedinCount": 5200,
+      "trendingSkills": ["AI/ML", "LLM", "MLOps", "Edge AI"],
+      "relatedExternalRoles": ["AI 엔지니어", "ML Engineer", "AI Researcher", "SW 개발자", "Data Scientist"]
+    }
+  ],
+  "externalProfiles": [
+    {
+      "family": "HR",
+      "profiles": [
+        {
+          "name": "A씨 (가명)",
+          "currentTitle": "HRBP Manager",
+          "company": "외국계 IT기업",
+          "careerSequence": ["대기업 채용 담당 (3년)", "스타트업 HR 매니저 (2년)", "외국계 HRBP (4년)", "HRBP Manager (현재)"],
+          "keyInsight": "대기업에서 기본기를 다진 후 스타트업에서 HR 전반을 경험한 것이 HRBP 역할에서 큰 차별점이 됨"
+        },
+        {
+          "name": "B씨 (가명)",
+          "currentTitle": "People Analytics Lead",
+          "company": "글로벌 테크기업",
+          "careerSequence": ["대기업 C&B 담당 (4년)", "HR Analytics 전환 (3년)", "People Analytics Lead (현재)"],
+          "keyInsight": "보상 업무에서의 데이터 분석 경험이 People Analytics로의 자연스러운 전환을 이끔"
+        },
+        {
+          "name": "C씨 (가명)",
+          "currentTitle": "HR 컨설턴트",
+          "company": "글로벌 컨설팅펌",
+          "careerSequence": ["대기업 HRD 담당 (3년)", "대기업 HRBP (4년)", "HR 컨설턴트 전환 (현재)"],
+          "keyInsight": "인하우스 HR 경험이 컨설팅에서의 실전 감각을 높여줌"
+        }
+      ]
+    },
+    {
+      "family": "마케팅",
+      "profiles": [
+        {
+          "name": "D씨 (가명)",
+          "currentTitle": "CMO",
+          "company": "유니콘 스타트업",
+          "careerSequence": ["대기업 퍼포먼스 마케터 (3년)", "스타트업 그로스 마케터 (2년)", "마케팅 팀장 (3년)", "CMO (현재)"],
+          "keyInsight": "대기업의 체계적 마케팅 경험 + 스타트업의 빠른 실행력이 결합된 커리어"
+        },
+        {
+          "name": "E씨 (가명)",
+          "currentTitle": "마케팅 전략 디렉터",
+          "company": "글로벌 소비재 기업",
+          "careerSequence": ["대기업 콘텐츠 마케터 (2년)", "브랜드 매니저 (4년)", "통합마케팅 PM (3년)", "전략 디렉터 (현재)"],
+          "keyInsight": "콘텐츠에서 브랜드, PM, 전략까지 마케팅의 모든 단계를 거친 정석적 경로"
+        }
+      ]
+    },
+    {
+      "family": "영업",
+      "profiles": [
+        {
+          "name": "F씨 (가명)",
+          "currentTitle": "VP of Sales",
+          "company": "SaaS 스타트업",
+          "careerSequence": ["대기업 신규영업 (4년)", "대기업 KAM (3년)", "SaaS Enterprise Sales (3년)", "VP of Sales (현재)"],
+          "keyInsight": "전통 B2B 영업 역량에 SaaS 세일즈 방법론을 결합하여 빠르게 리더십 포지션 확보"
+        },
+        {
+          "name": "G씨 (가명)",
+          "currentTitle": "해외영업 본부장",
+          "company": "중견 제조기업",
+          "careerSequence": ["대기업 채널영업 (3년)", "대기업 해외영업 (5년)", "해외법인 주재원 (3년)", "해외영업 본부장 (현재)"],
+          "keyInsight": "국내 채널 관리 경험이 해외 파트너 관리에서 큰 강점으로 작용"
+        }
+      ]
+    },
+    {
+      "family": "R&D",
+      "profiles": [
+        {
+          "name": "H씨 (가명)",
+          "currentTitle": "CTO",
+          "company": "딥테크 스타트업",
+          "careerSequence": ["대기업 소재연구 (5년)", "대기업 공정개발 (3년)", "스타트업 R&D 리드 (3년)", "CTO (현재)"],
+          "keyInsight": "대기업의 연구 깊이와 스타트업의 비즈니스 감각을 동시에 갖춘 기술 리더"
+        },
+        {
+          "name": "I씨 (가명)",
+          "currentTitle": "AI Research Scientist",
+          "company": "글로벌 테크기업",
+          "careerSequence": ["대기업 SW개발 (3년)", "대기업 AI연구 (2년)", "글로벌 테크기업 AI Researcher (현재)"],
+          "keyInsight": "제조 도메인 AI 경험이 글로벌 테크기업에서의 차별화된 연구 주제로 이어짐"
+        },
+        {
+          "name": "J씨 (가명)",
+          "currentTitle": "품질혁신 임원",
+          "company": "글로벌 자동차부품사",
+          "careerSequence": ["대기업 양산기술 (4년)", "대기업 품질R&D (5년)", "R&D기획 (3년)", "품질혁신 임원 (현재)"],
+          "keyInsight": "현장 경험이 품질 혁신 리더십의 핵심 자산이 됨"
+        }
+      ]
+    }
+  ]
+}
