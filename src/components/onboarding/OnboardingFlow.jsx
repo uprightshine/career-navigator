@@ -63,10 +63,14 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
 
   // Step 1: 기본 정보 입력
   const [name, setName] = useState('')
+  const [orgLevel, setOrgLevel] = useState('본부') // 본사/본부/사업부
   const [department, setDepartment] = useState('')
   const [grade, setGrade] = useState('선임')
   const [yearsInRole, setYearsInRole] = useState(3)
-  const [evaluationGrade, setEvaluationGrade] = useState('A')
+  // 3개년 평가 등급 (N-2년, N-1년, N년)
+  const [evalYear1, setEvalYear1] = useState('A') // N-2
+  const [evalYear2, setEvalYear2] = useState('A') // N-1
+  const [evalYear3, setEvalYear3] = useState('A') // N (최근)
 
   // Step 2: 직무 & 역량 자가진단
   const [jobFamily, setJobFamily] = useState('마케팅') // HR, 마케팅, 영업, R&D
@@ -150,6 +154,16 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
     const allSkills = [...mainSkills, ...commonSkills]
     const primarySkillName = mainSkills[0]?.name || '실무 핵심 역량'
 
+    // orgLevel → businessUnit 매핑 (careerDiagnosis.js의 STEP 2 계층 분류와 연동)
+    const businessUnitMap = {
+      '본사': 'HQ 본사',
+      '본부': 'HS HR 본부',
+      '사업부': 'R&D HR 사업부'
+    }
+
+    // 최근 평가 등급: 가장 최신 연도 기준 (N년)
+    const latestEval = evalYear3
+
     return {
       id: 'EMP_CUSTOM_' + Math.floor(Math.random() * 1000),
       name: name.trim() || '사용자',
@@ -158,11 +172,17 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
       currentJobId: selectedJobId,
       currentJobName: JOB_NODES[selectedJobId]?.name || '선택 직무',
       department: department.trim() || jobFamily + '팀',
-      businessUnit: '본사',
+      businessUnit: businessUnitMap[orgLevel] || '본부',
+      orgLevel,
       grade,
       yearsInRole: Number(yearsInRole),
       totalYears: Number(yearsInRole),
-      evaluationGrade,
+      evaluationGrade: latestEval,
+      evaluationHistory: [
+        { year: new Date().getFullYear() - 2, grade: evalYear1 },
+        { year: new Date().getFullYear() - 1, grade: evalYear2 },
+        { year: new Date().getFullYear(), grade: evalYear3 },
+      ],
       leadershipPercentile: 50 + Math.floor(Math.random() * 20),
       primarySkill: primarySkillName,
       skills: allSkills,
@@ -369,34 +389,57 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '32px' }}>
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <div style={{ flex: 1 }}>
-                  <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '6px' }}>이름</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="예: 홍길동"
-                    style={{
-                      width: '100%',
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: '8px',
-                      padding: '10px 14px',
-                      color: 'var(--text-primary)',
-                      fontSize: '13px'
-                    }}
-                  />
-                </div>
-                <div style={{ flex: 1.5 }}>
-                  <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '6px' }}>소속 부서</label>
+              {/* 이름 입력 */}
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '6px' }}>이름</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="예: 홍길동"
+                  style={{
+                    width: '100%',
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '8px',
+                    padding: '10px 14px',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px'
+                  }}
+                />
+              </div>
+
+              {/* 소속 부서: 본사/본부/사업부 + 부서명 */}
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '8px' }}>소속 부서</label>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'stretch' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', flex: '0 0 auto', width: '220px' }}>
+                    {['본사', '본부', '사업부'].map(lv => (
+                      <button
+                        key={lv}
+                        type="button"
+                        className={`btn ${orgLevel === lv ? 'btn-primary' : 'btn-ghost'}`}
+                        style={{
+                          padding: '10px 0',
+                          fontSize: '12px',
+                          background: orgLevel === lv ? 'var(--accent-cyan)' : 'rgba(255,255,255,0.02)',
+                          border: orgLevel === lv ? 'none' : '1px solid rgba(255,255,255,0.05)',
+                          color: orgLevel === lv ? '#0a0e1a' : '#f1f5f9',
+                          whiteSpace: 'nowrap'
+                        }}
+                        onClick={() => setOrgLevel(lv)}
+                      >
+                        {lv}
+                      </button>
+                    ))}
+                  </div>
                   <input
                     type="text"
                     value={department}
                     onChange={(e) => setDepartment(e.target.value)}
                     placeholder="예: 품질개발실, 인사혁신팀"
                     style={{
-                      width: '100%',
+                      flex: 1,
                       background: 'rgba(255,255,255,0.03)',
                       border: '1px solid rgba(255,255,255,0.1)',
                       borderRadius: '8px',
@@ -408,10 +451,11 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
                 </div>
               </div>
 
+              {/* 현재 직급: 사원 / 선임 / 책임 / 리더 */}
               <div>
                 <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '8px' }}>현재 직급</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
-                  {['실무자', '선임', '책임', '수석', '리더'].map(g => (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+                  {['사원', '선임', '책임', '리더'].map(g => (
                     <button
                       key={g}
                       type="button"
@@ -431,6 +475,7 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
                 </div>
               </div>
 
+              {/* 현 직무 년차 슬라이더 */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                   <label style={{ fontSize: '11px', color: '#64748b' }}>현 직무 년차</label>
@@ -459,25 +504,38 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
                 </div>
               </div>
 
+              {/* 3개년 평가 등급 (S/A/B/C/D 5등급) */}
               <div>
-                <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '8px' }}>최근 평가 등급</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
-                  {['S', 'A', 'B', 'C'].map(eg => (
-                    <button
-                      key={eg}
-                      type="button"
-                      className={`btn ${evaluationGrade === eg ? 'btn-primary' : 'btn-ghost'}`}
-                      style={{
-                        padding: '10px 0',
-                        fontSize: '12px',
-                        background: evaluationGrade === eg ? 'var(--accent-cyan)' : 'rgba(255,255,255,0.02)',
-                        border: eg === evaluationGrade ? 'none' : '1px solid rgba(255,255,255,0.05)',
-                        color: eg === evaluationGrade ? '#0a0e1a' : '#f1f5f9'
-                      }}
-                      onClick={() => setEvaluationGrade(eg)}
-                    >
-                      {eg} 등급
-                    </button>
+                <label style={{ display: 'block', fontSize: '11px', color: '#64748b', marginBottom: '12px' }}>3개년 평가 등급</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {[
+                    { label: `${new Date().getFullYear() - 2}년 (N-2)`, value: evalYear1, setter: setEvalYear1 },
+                    { label: `${new Date().getFullYear() - 1}년 (N-1)`, value: evalYear2, setter: setEvalYear2 },
+                    { label: `${new Date().getFullYear()}년 (N, 최근)`, value: evalYear3, setter: setEvalYear3 },
+                  ].map(row => (
+                    <div key={row.label} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span style={{ fontSize: '11px', color: '#94a3b8', minWidth: '110px', textAlign: 'right', flexShrink: 0 }}>{row.label}</span>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px', flex: 1 }}>
+                        {['S', 'A', 'B', 'C', 'D'].map(eg => (
+                          <button
+                            key={eg}
+                            type="button"
+                            className={`btn ${row.value === eg ? 'btn-primary' : 'btn-ghost'}`}
+                            style={{
+                              padding: '8px 0',
+                              fontSize: '11px',
+                              background: row.value === eg ? 'var(--accent-cyan)' : 'rgba(255,255,255,0.02)',
+                              border: row.value === eg ? 'none' : '1px solid rgba(255,255,255,0.05)',
+                              color: row.value === eg ? '#0a0e1a' : '#f1f5f9',
+                              fontWeight: row.value === eg ? 'bold' : 'normal'
+                            }}
+                            onClick={() => row.setter(eg)}
+                          >
+                            {eg}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -676,13 +734,15 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '12px', color: '#cbd5e1' }}>
                 <div>
-                  🏢 소속: <strong style={{ color: '#fff' }}>{department || '소속 부서'}</strong>
+                  🏢 소속: <strong style={{ color: '#fff' }}>{orgLevel}</strong> — {department || '소속 부서'}
                 </div>
                 <div>
                   💼 현 직무: <strong style={{ color: '#fff' }}>{JOB_NODES[selectedJobId]?.name || '상세 직무'}</strong> ({jobFamily} 직무군)
                 </div>
                 <div>
-                  🏆 최근 평가: <strong style={{ color: '#fff' }}>{evaluationGrade} 등급</strong>
+                  🏆 3개년 평가: <strong style={{ color: '#fff' }}>
+                    {new Date().getFullYear() - 2}년 {evalYear1} → {new Date().getFullYear() - 1}년 {evalYear2} → {new Date().getFullYear()}년 {evalYear3}
+                  </strong>
                 </div>
                 <div style={{ borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '12px', marginTop: '4px' }}>
                   <div style={{ fontWeight: 'bold', color: 'var(--accent-cyan)', marginBottom: '8px' }}>📊 입력한 핵심 역량 수준:</div>

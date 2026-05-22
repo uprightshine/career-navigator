@@ -29,6 +29,11 @@ const PERSONAS = {
     yearsInRole: 3,
     totalYears: 3,
     evaluationGrade: 'A',
+    evaluationHistory: [
+      { year: 2024, grade: 'B' },
+      { year: 2025, grade: 'A' },
+      { year: 2026, grade: 'A' },
+    ],
     leadershipPercentile: 65,
     primarySkill: '퍼포먼스 마케팅',
     skills: [
@@ -62,6 +67,11 @@ const PERSONAS = {
     yearsInRole: 5,
     totalYears: 5,
     evaluationGrade: 'A',
+    evaluationHistory: [
+      { year: 2024, grade: 'A' },
+      { year: 2025, grade: 'A' },
+      { year: 2026, grade: 'A' },
+    ],
     leadershipPercentile: 58,
     primarySkill: '채용',
     skills: [
