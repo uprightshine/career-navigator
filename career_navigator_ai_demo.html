@@ -2601,6 +2601,7 @@
     let wizardStep = 0;
     let entryMode = "preset"; // preset or custom
     let activeTab = "dashboard";
+    let cachedDiagnosis = null; // AI diagnosis caching for Progressive Disclosure
     
     // ==================== 5.3 RUN-TIME LAUNCH SYSTEM ====================
     
@@ -2919,14 +2920,24 @@
       document.getElementById("stat-eval").innerText = `${currentPersona.eval} 등급`;
       document.getElementById("stat-cohort").innerText = `상위 ${Math.floor(100 - currentPersona.cohort)}%`;
       
-      // 3. Dynamic SVG Radar chart drawing
+      // 3. Dynamic SVG Radar chart drawing (First Contentful Paint)
       drawRadarChart();
       
       // 4. Primary skill label update
       document.getElementById("radar-primary-skill").innerText = `주특기: ${currentPersona.primary}`;
       
-      // 5. Drawing simple interactive mini graph map
-      drawMiniGraph();
+      // [Progressive Disclosure Step 1] 미니 그래프 지연 연산 (Skeleton UI 적용)
+      const miniGraphContainer = document.getElementById("mini-graph");
+      if (miniGraphContainer) {
+        miniGraphContainer.innerHTML = `
+          <div style="font-size:11.5px; color: var(--text-muted); animation: pulse 1.5s infinite; text-align:center; padding: 40px; margin: auto;">
+            🌐 AI 경력 노드 네트워크 분석 중...
+          </div>
+        `;
+      }
+      setTimeout(() => {
+        drawMiniGraph();
+      }, 400); // 400ms 뒤로 렌더링 스터터링 분산
       
       // 6. Rendering cohort position marker position
       const percentage = currentPersona.cohort;
@@ -2938,19 +2949,32 @@
       }
       
       // 7. Core Dynamic AI Coaching Engine Generation (Pseudo-AI Mode)
-      const diagnosis = runCareerDiagnosis();
+      cachedDiagnosis = runCareerDiagnosis();
       
-      document.getElementById("diag-position").innerHTML = diagnosis.positionDiagnosis;
-      document.getElementById("diag-phase").innerText = `${diagnosis.careerPhase} 단계`;
-      document.getElementById("diag-phase-desc").innerText = diagnosis.phaseDescription;
-      document.getElementById("diag-advice").innerText = diagnosis.coachAdvice;
+      document.getElementById("diag-position").innerHTML = cachedDiagnosis.positionDiagnosis;
+      document.getElementById("diag-phase").innerText = `${cachedDiagnosis.careerPhase} 단계`;
+      document.getElementById("diag-phase-desc").innerText = cachedDiagnosis.phaseDescription;
+      document.getElementById("diag-advice").innerText = cachedDiagnosis.coachAdvice;
       
-      // Renders scenarios list inside Tab 2 Coaching
-      renderCoachingScenarios(diagnosis.recommendations);
+      // [Progressive Disclosure Step 2] AI 상세 탭 연산 전면 지연 (Skeleton UI 적용)
+      // 최초에는 Overview 탭만 채우고, 시나리오 및 타임라인 탭은 클릭 시까지 비워둠
+      document.getElementById("scenario-cards-container").innerHTML = `
+        <div class="sc-card skeleton" style="opacity: 0.6; border-style: dashed; grid-column: 1 / -1; min-height: 100px; display: flex; align-items: center; justify-content: center; width:100%;">
+          <div style="font-size: 11px; text-align:center; padding: 30px; color: var(--text-secondary); width:100%;">
+            🎯 '3대 시나리오 이직률' 탭을 클릭하시는 순간 상세 성공률이 실시간 런타임 계산됩니다. (점진적 로딩)
+          </div>
+        </div>
+      `;
+      document.getElementById("timeline-steps-container").innerHTML = `
+        <div class="timeline-item skeleton" style="opacity: 0.6; border-style: dashed; display: flex; align-items: center; justify-content: center; min-height: 100px; width:100%;">
+          <div style="font-size: 11px; text-align:center; padding: 30px; color: var(--text-secondary); width:100%;">
+            ⏰ '180일 실행 플랜' 탭을 클릭하시는 순간 30일/90일/6개월 실행 지침이 실시간 지연 생성됩니다. (점진적 로딩)
+          </div>
+        </div>
+      `;
       
-      // Renders execution roadmap timeline inside Tab 3 Timeline
-      document.getElementById("timeline-optimal-title").innerText = diagnosis.actionPlan.optimalTitle;
-      renderCoachingTimeline(diagnosis.actionPlan);
+      // Reset sub-tab display to overview
+      switchCoachingTab('overview');
       
       // Sync chat greeting contextual text
       const box = document.getElementById("chat-message-box");
@@ -3144,6 +3168,40 @@
         if (tab.id === `co-${subTabId}`) tab.classList.add("active");
         else tab.classList.remove("active");
       });
+      
+      // [Progressive Disclosure Step 3] 사용자가 실제로 탭을 선택했을 때만 연산 & 그리기 시작!
+      if (cachedDiagnosis) {
+        if (subTabId === "scenarios") {
+          const container = document.getElementById("scenario-cards-container");
+          // 이미 렌더링된 스켈레톤이 있을 때에만 연산 수행
+          if (container && container.querySelector(".skeleton")) {
+            // Skeleton visual feedback delay
+            container.innerHTML = `
+              <div style="grid-column:1/-1; text-align:center; padding:30px; font-size:11px; color:var(--accent-cyan); animation:pulse 1s infinite; width:100%;">
+                🎯 AI 시나리오 성공률 매핑 분석 중...
+              </div>
+            `;
+            setTimeout(() => {
+              renderCoachingScenarios(cachedDiagnosis.recommendations);
+              showToast("🎯 3대 커리어 경로별 전보 성공률 연산이 점진적으로 공개 완료되었습니다.", "🟢");
+            }, 350);
+          }
+        } else if (subTabId === "timeline") {
+          const container = document.getElementById("timeline-steps-container");
+          if (container && container.querySelector(".skeleton")) {
+            container.innerHTML = `
+              <div style="text-align:center; padding:30px; font-size:11px; color:var(--accent-purple); animation:pulse 1s infinite; width:100%;">
+                ⏰ 180일 AI 밀착 액션 가이드라인 생성 중...
+              </div>
+            `;
+            setTimeout(() => {
+              document.getElementById("timeline-optimal-title").innerText = cachedDiagnosis.actionPlan.optimalTitle;
+              renderCoachingTimeline(cachedDiagnosis.actionPlan);
+              showToast("⏰ 3단계 180일 커리어 로드맵 빌드가 점진적으로 완료되었습니다.", "🟢");
+            }, 350);
+          }
+        }
+      }
     }
     
     // Render the 3 Scenario Cards in Coaching Tab
