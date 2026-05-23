@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePersona } from '../App'
 import { useNavigate } from 'react-router-dom'
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts'
@@ -9,6 +9,41 @@ export default function Dashboard() {
   const { persona } = usePersona()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('summary')
+
+  // Progressive Disclosure Lazy States
+  const [isMiniGraphLoading, setIsMiniGraphLoading] = useState(true)
+  const [isScenariosLoading, setIsScenariosLoading] = useState(false)
+  const [isTimelineLoading, setIsTimelineLoading] = useState(false)
+  const [renderedScenarios, setRenderedScenarios] = useState(false)
+  const [renderedTimeline, setRenderedTimeline] = useState(false)
+
+  // 400ms delay to offload initial main thread paint
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsMiniGraphLoading(false)
+    }, 400)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Lazy tabs rendering trigger
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId)
+    if (tabId === 'scenarios' && !renderedScenarios) {
+      setIsScenariosLoading(true)
+      const timer = setTimeout(() => {
+        setIsScenariosLoading(false)
+        setRenderedScenarios(true)
+      }, 350)
+      return () => clearTimeout(timer)
+    } else if (tabId === 'timeline' && !renderedTimeline) {
+      setIsTimelineLoading(true)
+      const timer = setTimeout(() => {
+        setIsTimelineLoading(false)
+        setRenderedTimeline(true)
+      }, 350)
+      return () => clearTimeout(timer)
+    }
+  }
 
   // 커리어 AI 정밀 진단 획득
   const diagnosis = diagnoseCareer(persona)
@@ -116,7 +151,7 @@ export default function Dashboard() {
       </div>
 
       {/* Center Column: Career Graph Mini Preview */}
-      <div className="glass-card glow-cyan" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+      <div className="glass-card glow-cyan" style={{ display: 'flex', flexDirection: 'column', justifycontent: 'space-between' }}>
         <div>
           <div className="card-header">
             <div>
@@ -125,159 +160,178 @@ export default function Dashboard() {
             </div>
           </div>
           
-          {/* CSS-only Mini Graph Visualization */}
-          <div style={{ 
-            position: 'relative', 
-            height: '240px', 
-            margin: '20px 0', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            background: 'rgba(255, 255, 255, 0.01)',
-            borderRadius: 'var(--radius-md)',
-            border: '1px dashed rgba(255, 255, 255, 0.05)'
-          }}>
-            {/* Center Node (Current) */}
-            <div style={{
-              position: 'absolute',
-              width: '80px',
-              height: '80px',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, #06b6d4 0%, #0891b2 100%)',
-              border: '3px solid #22d3ee',
-              boxShadow: '0 0 15px rgba(6, 182, 212, 0.6)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+          {/* CSS-only Mini Graph Visualization with Progressive Disclosure */}
+          {isMiniGraphLoading ? (
+            <div style={{ 
+              height: '240px', 
+              margin: '20px 0', 
+              display: 'flex', 
+              alignItems: 'center', 
               justifyContent: 'center',
-              zIndex: 3,
-              textAlign: 'center',
-              padding: '5px'
+              background: 'rgba(255, 255, 255, 0.01)',
+              borderRadius: 'var(--radius-md)',
+              border: '1px dashed rgba(255, 255, 255, 0.05)',
+              color: '#94a3b8',
+              fontSize: '11.5px',
+              fontStyle: 'italic'
             }}>
-              <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.8)', fontWeight: 'bold' }}>현재</span>
-              <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'white', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', width: '70px' }}>
-                {currentJob?.name || persona.currentJobName}
-              </span>
+              <span style={{ animation: 'pulse 1.5s infinite' }}>🌐 AI 경력 노드 네트워크 분석 중...</span>
             </div>
+          ) : (
+            <div style={{ 
+              position: 'relative', 
+              height: '240px', 
+              margin: '20px 0', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              background: 'rgba(255, 255, 255, 0.01)',
+              borderRadius: 'var(--radius-md)',
+              border: '1px dashed rgba(255, 255, 255, 0.05)',
+              animation: 'fadeIn 0.5s ease'
+            }}>
+              {/* Center Node (Current) */}
+              <div style={{
+                position: 'absolute',
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, #06b6d4 0%, #0891b2 100%)',
+                border: '3px solid #22d3ee',
+                boxShadow: '0 0 15px rgba(6, 182, 212, 0.6)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 3,
+                textAlign: 'center',
+                padding: '5px'
+              }}>
+                <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.8)', fontWeight: 'bold' }}>현재</span>
+                <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'white', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', width: '70px' }}>
+                  {currentJob?.name || persona.currentJobName}
+                </span>
+              </div>
 
-            {/* Target 1 (Safe) - Top Left */}
-            {miniTargets[0] && (
-              <>
-                <div style={{
-                  position: 'absolute',
-                  width: '2px',
-                  height: '70px',
-                  background: 'dashed rgba(52, 211, 153, 0.4)',
-                  borderLeft: '2px dashed #34d399',
-                  transform: 'rotate(-45deg)',
-                  transformOrigin: '0 0',
-                  top: '120px',
-                  left: '120px',
-                  zIndex: 1
-                }} />
-                <div style={{
-                  position: 'absolute',
-                  top: '30px',
-                  left: '25px',
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '50%',
-                  background: 'rgba(17, 24, 39, 0.9)',
-                  border: '2px solid #34d399',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 2,
-                  textAlign: 'center',
-                  padding: '4px',
-                  boxShadow: '0 0 10px rgba(52, 211, 153, 0.2)'
-                }}>
-                  <span style={{ fontSize: '8px', color: '#34d399', fontWeight: 'bold' }}>안전형</span>
-                  <span style={{ fontSize: '10px', color: '#f1f5f9', fontWeight: '500', display: 'block', maxHeight: '28px', overflow: 'hidden' }}>
-                    {miniTargets[0].name.replace(' 시니어', '').replace(' 전환', '')}
-                  </span>
-                </div>
-              </>
-            )}
+              {/* Target 1 (Safe) - Top Left */}
+              {miniTargets[0] && (
+                <>
+                  <div style={{
+                    position: 'absolute',
+                    width: '2px',
+                    height: '70px',
+                    background: 'dashed rgba(52, 211, 153, 0.4)',
+                    borderLeft: '2px dashed #34d399',
+                    transform: 'rotate(-45deg)',
+                    transformOrigin: '0 0',
+                    top: '120px',
+                    left: '120px',
+                    zIndex: 1
+                  }} />
+                  <div style={{
+                    position: 'absolute',
+                    top: '30px',
+                    left: '25px',
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '50%',
+                    background: 'rgba(17, 24, 39, 0.9)',
+                    border: '2px solid #34d399',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 2,
+                    textAlign: 'center',
+                    padding: '4px',
+                    boxShadow: '0 0 10px rgba(52, 211, 153, 0.2)'
+                  }}>
+                    <span style={{ fontSize: '8px', color: '#34d399', fontWeight: 'bold' }}>안전형</span>
+                    <span style={{ fontSize: '10px', color: '#f1f5f9', fontWeight: '500', display: 'block', maxHeight: '28px', overflow: 'hidden' }}>
+                      {miniTargets[0].name.replace(' 시니어', '').replace(' 전환', '')}
+                    </span>
+                  </div>
+                </>
+              )}
 
-            {/* Target 2 (Challenge) - Top Right */}
-            {miniTargets[1] && (
-              <>
-                <div style={{
-                  position: 'absolute',
-                  width: '2px',
-                  height: '70px',
-                  borderLeft: '2px dashed #f59e0b',
-                  transform: 'rotate(45deg)',
-                  transformOrigin: '0 0',
-                  top: '120px',
-                  left: '120px',
-                  zIndex: 1
-                }} />
-                <div style={{
-                  position: 'absolute',
-                  top: '30px',
-                  right: '25px',
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '50%',
-                  background: 'rgba(17, 24, 39, 0.9)',
-                  border: '2px solid #f59e0b',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 2,
-                  textAlign: 'center',
-                  padding: '4px',
-                  boxShadow: '0 0 10px rgba(245, 158, 11, 0.2)'
-                }}>
-                  <span style={{ fontSize: '8px', color: '#f59e0b', fontWeight: 'bold' }}>도전형</span>
-                  <span style={{ fontSize: '10px', color: '#f1f5f9', fontWeight: '500', display: 'block', maxHeight: '28px', overflow: 'hidden' }}>
-                    {miniTargets[1].name.replace(' 시니어', '').replace(' 전환', '')}
-                  </span>
-                </div>
-              </>
-            )}
+              {/* Target 2 (Challenge) - Top Right */}
+              {miniTargets[1] && (
+                <>
+                  <div style={{
+                    position: 'absolute',
+                    width: '2px',
+                    height: '70px',
+                    borderLeft: '2px dashed #f59e0b',
+                    transform: 'rotate(45deg)',
+                    transformOrigin: '0 0',
+                    top: '120px',
+                    left: '120px',
+                    zIndex: 1
+                  }} />
+                  <div style={{
+                    position: 'absolute',
+                    top: '30px',
+                    right: '25px',
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '50%',
+                    background: 'rgba(17, 24, 39, 0.9)',
+                    border: '2px solid #f59e0b',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 2,
+                    textAlign: 'center',
+                    padding: '4px',
+                    boxShadow: '0 0 10px rgba(245, 158, 11, 0.2)'
+                  }}>
+                    <span style={{ fontSize: '8px', color: '#f59e0b', fontWeight: 'bold' }}>도전형</span>
+                    <span style={{ fontSize: '10px', color: '#f1f5f9', fontWeight: '500', display: 'block', maxHeight: '28px', overflow: 'hidden' }}>
+                      {miniTargets[1].name.replace(' 시니어', '').replace(' 전환', '')}
+                    </span>
+                  </div>
+                </>
+              )}
 
-            {/* Target 3 (T-Shape) - Bottom Center */}
-            {miniTargets[2] && (
-              <>
-                <div style={{
-                  position: 'absolute',
-                  width: '2px',
-                  height: '60px',
-                  borderLeft: '2px dashed #a78bfa',
-                  top: '120px',
-                  left: '172px',
-                  zIndex: 1
-                }} />
-                <div style={{
-                  position: 'absolute',
-                  bottom: '25px',
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '50%',
-                  background: 'rgba(17, 24, 39, 0.9)',
-                  border: '2px solid #a78bfa',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 2,
-                  textAlign: 'center',
-                  padding: '4px',
-                  boxShadow: '0 0 10px rgba(167, 139, 250, 0.2)'
-                }}>
-                  <span style={{ fontSize: '8px', color: '#a78bfa', fontWeight: 'bold' }}>T자형</span>
-                  <span style={{ fontSize: '10px', color: '#f1f5f9', fontWeight: '500', display: 'block', maxHeight: '28px', overflow: 'hidden' }}>
-                    {miniTargets[2].name.replace(' 시니어', '').replace(' 전환', '')}
-                  </span>
-                </div>
-              </>
-            )}
-          </div>
+              {/* Target 3 (T-Shape) - Bottom Center */}
+              {miniTargets[2] && (
+                <>
+                  <div style={{
+                    position: 'absolute',
+                    width: '2px',
+                    height: '60px',
+                    borderLeft: '2px dashed #a78bfa',
+                    top: '120px',
+                    left: '172px',
+                    zIndex: 1
+                  }} />
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '25px',
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '50%',
+                    background: 'rgba(17, 24, 39, 0.9)',
+                    border: '2px solid #a78bfa',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 2,
+                    textAlign: 'center',
+                    padding: '4px',
+                    boxShadow: '0 0 10px rgba(167, 139, 250, 0.2)'
+                  }}>
+                    <span style={{ fontSize: '8px', color: '#a78bfa', fontWeight: 'bold' }}>T자형</span>
+                    <span style={{ fontSize: '10px', color: '#f1f5f9', fontWeight: '500', display: 'block', maxHeight: '28px', overflow: 'hidden' }}>
+                      {miniTargets[2].name.replace(' 시니어', '').replace(' 전환', '')}
+                    </span>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         <button 
@@ -321,7 +375,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* AI 맞춤형 커리어 코칭 리포트 (Career Coaching Report - STEP 8 구조) */}
+      {/* AI 맞춤형 커리어 코칭 리포트 */}
       <div 
         className="glass-card glow-purple animate-fade-in-up" 
         style={{ 
@@ -351,7 +405,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* STEP 8 대응형 핵심 요약 블록 (📍 현재 위치 / 📊 커리어 단계 / 👥 유사 경로) */}
+        {/* 요약 블록 */}
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
@@ -402,7 +456,7 @@ export default function Dashboard() {
         {/* 탭 네비게이션 */}
         <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', paddingBottom: '12px' }}>
           <button
-            onClick={() => setActiveTab('summary')}
+            onClick={() => handleTabChange('summary')}
             className={`btn ${activeTab === 'summary' ? 'btn-primary' : 'btn-ghost'}`}
             style={{
               padding: '10px 18px',
@@ -420,7 +474,7 @@ export default function Dashboard() {
             💬 AI 코치 제언 & 요약
           </button>
           <button
-            onClick={() => setActiveTab('scenarios')}
+            onClick={() => handleTabChange('scenarios')}
             className={`btn ${activeTab === 'scenarios' ? 'btn-primary' : 'btn-ghost'}`}
             style={{
               padding: '10px 18px',
@@ -438,7 +492,7 @@ export default function Dashboard() {
             🎯 추천 경로 (3대 시나리오)
           </button>
           <button
-            onClick={() => setActiveTab('timeline')}
+            onClick={() => handleTabChange('timeline')}
             className={`btn ${activeTab === 'timeline' ? 'btn-primary' : 'btn-ghost'}`}
             style={{
               padding: '10px 18px',
@@ -509,165 +563,177 @@ export default function Dashboard() {
 
           {/* TAB 2: SCENARIOS (🎯 추천 경로) */}
           {activeTab === 'scenarios' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-              {diagnosis.recommendations.map((rec, idx) => (
-                <div 
-                  key={idx} 
-                  className="glass-card" 
-                  style={{ 
-                    margin: 0, 
-                    padding: '24px', 
-                    border: rec.type === 'optimal' ? '1.5px solid rgba(167, 139, 250, 0.4)' : '1px solid rgba(255,255,255,0.06)',
-                    background: rec.type === 'optimal' ? 'rgba(167, 139, 250, 0.03)' : 'rgba(255,255,255,0.01)',
-                    boxShadow: rec.type === 'optimal' ? '0 4px 20px rgba(167, 139, 250, 0.08)' : 'none',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    gap: '16px'
-                  }}
-                >
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                      <span className={`badge ${rec.type === 'optimal' ? 'badge-purple' : rec.type === 'safe' ? 'badge-cyan' : 'badge-ghost'}`} style={{ fontSize: '10px', padding: '4px 8px' }}>
-                        {rec.type === 'optimal' ? '최적 성장 경로 ⭐' : rec.type === 'safe' ? '안정 경로' : '대안 경로'}
-                      </span>
-                      <div style={{ textAlign: 'right' }}>
-                        <span style={{ fontSize: '10px', color: '#94a3b8', display: 'block' }}>성공 확률</span>
-                        <strong style={{ fontSize: '14px', color: rec.type === 'optimal' ? 'var(--accent-purple)' : 'var(--accent-cyan)' }}>
-                          {rec.probability}
-                        </strong>
+            isScenariosLoading ? (
+              <div style={{ textAlign: 'center', padding: '40px', color: '#06b6d4', fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '150px', width: '100%' }}>
+                <span style={{ animation: 'pulse 1s infinite', fontSize: '12px', fontWeight: 'bold' }}>🎯 AI 시나리오 성공률 매핑 분석 중...</span>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', animation: 'fadeIn 0.5s ease', width: '100%' }}>
+                {diagnosis.recommendations.map((rec, idx) => (
+                  <div 
+                    key={idx} 
+                    className="glass-card" 
+                    style={{ 
+                      margin: 0, 
+                      padding: '24px', 
+                      border: rec.type === 'optimal' ? '1.5px solid rgba(167, 139, 250, 0.4)' : '1px solid rgba(255,255,255,0.06)',
+                      background: rec.type === 'optimal' ? 'rgba(167, 139, 250, 0.03)' : 'rgba(255,255,255,0.01)',
+                      boxShadow: rec.type === 'optimal' ? '0 4px 20px rgba(167, 139, 250, 0.08)' : 'none',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      gap: '16px'
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                        <span className={`badge ${rec.type === 'optimal' ? 'badge-purple' : rec.type === 'safe' ? 'badge-cyan' : 'badge-ghost'}`} style={{ fontSize: '10px', padding: '4px 8px' }}>
+                          {rec.type === 'optimal' ? '최적 성장 경로 ⭐' : rec.type === 'safe' ? '안정 경로' : '대안 경로'}
+                        </span>
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: '10px', color: '#94a3b8', display: 'block' }}>성공 확률</span>
+                          <strong style={{ fontSize: '14px', color: rec.type === 'optimal' ? 'var(--accent-purple)' : 'var(--accent-cyan)' }}>
+                            {rec.probability}
+                          </strong>
+                        </div>
+                      </div>
+
+                      <h4 style={{ fontSize: '15px', fontWeight: 'bold', color: '#fff', marginBottom: '8px' }}>
+                        {rec.title}
+                      </h4>
+                      <p style={{ fontSize: '12px', color: '#cbd5e1', lineHeight: '1.5', marginBottom: '14px' }}>
+                        {rec.description}
+                      </p>
+
+                      {/* 확률 프로그레스 바 */}
+                      <div style={{ background: 'rgba(255,255,255,0.05)', height: '6px', borderRadius: '3px', overflow: 'hidden', marginBottom: '16px' }}>
+                        <div 
+                          style={{ 
+                            width: rec.successRate, 
+                            height: '100%', 
+                            background: rec.type === 'optimal' ? 'linear-gradient(90deg, var(--accent-cyan), var(--accent-purple))' : 'var(--accent-cyan)',
+                            borderRadius: '3px'
+                          }}
+                        />
                       </div>
                     </div>
 
-                    <h4 style={{ fontSize: '15px', fontWeight: 'bold', color: '#fff', marginBottom: '8px' }}>
-                      {rec.title}
-                    </h4>
-                    <p style={{ fontSize: '12px', color: '#cbd5e1', lineHeight: '1.5', marginBottom: '14px' }}>
-                      {rec.description}
-                    </p>
-
-                    {/* 확률 프로그레스 바 */}
-                    <div style={{ background: 'rgba(255,255,255,0.05)', height: '6px', borderRadius: '3px', overflow: 'hidden', marginBottom: '16px' }}>
-                      <div 
-                        style={{ 
-                          width: rec.successRate, 
-                          height: '100%', 
-                          background: rec.type === 'optimal' ? 'linear-gradient(90deg, var(--accent-cyan), var(--accent-purple))' : 'var(--accent-cyan)',
-                          borderRadius: '3px'
-                        }}
-                      />
+                    <div style={{ background: 'rgba(0,0,0,0.15)', padding: '12px', borderRadius: '8px', fontSize: '11px', color: '#94a3b8', lineHeight: '1.5', borderLeft: `3px solid ${rec.type === 'optimal' ? 'var(--accent-purple)' : 'var(--accent-cyan)'}` }}>
+                      <strong>현재 상태와의 연결 이유:</strong><br/>
+                      {rec.reason}
                     </div>
                   </div>
-
-                  <div style={{ background: 'rgba(0,0,0,0.15)', padding: '12px', borderRadius: '8px', fontSize: '11px', color: '#94a3b8', lineHeight: '1.5', borderLeft: `3px solid ${rec.type === 'optimal' ? 'var(--accent-purple)' : 'var(--accent-cyan)'}` }}>
-                    <strong>현재 상태와의 연결 이유:</strong><br/>
-                    {rec.reason}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )
           )}
 
           {/* TAB 3: TIMELINE (🚀 실행 가이드) */}
           {activeTab === 'timeline' && diagnosis.actionPlan && (
-            <div>
-              <div style={{ background: 'rgba(167, 139, 250, 0.05)', border: '1px solid rgba(167, 139, 250, 0.15)', padding: '16px 20px', borderRadius: '10px', marginBottom: '24px' }}>
-                <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#fff', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>🎯</span> 실행 로드맵 대상: <strong style={{ color: 'var(--accent-purple)' }}>{diagnosis.actionPlan.optimalTitle}</strong>
-                </h4>
-                <p style={{ fontSize: '11px', color: '#94a3b8', margin: '4px 0 0 0' }}>
-                  성공 확률이 가장 높고 강력한 성장을 돕는 1순위 최적 경로로의 안착을 위한 단계별 180일 실행 가이드입니다.
-                </p>
+            isTimelineLoading ? (
+              <div style={{ textAlign: 'center', padding: '40px', color: '#a78bfa', fontStyle: 'italic', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '150px', width: '100%' }}>
+                <span style={{ animation: 'pulse 1s infinite', fontSize: '12px', fontWeight: 'bold' }}>⏰ 180일 AI 밀착 액션 가이드라인 생성 중...</span>
               </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
-                
-                {/* 30일 카드 */}
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', position: 'relative' }}>
-                  <div style={{ 
-                    position: 'absolute', top: '-10px', left: '20px', 
-                    background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)', 
-                    color: '#0a0e1a', fontWeight: '800', fontSize: '11px', padding: '4px 12px', borderRadius: '20px',
-                    boxShadow: '0 0 10px rgba(6, 182, 212, 0.4)'
-                  }}>
-                    [30일]
-                  </div>
-                  <div style={{ marginTop: '6px' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--accent-cyan)', fontWeight: 'bold', display: 'block', textTransform: 'uppercase' }}>현재 (Current)</span>
-                    <p style={{ fontSize: '12px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['30day'].current}</p>
-                  </div>
-                  <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 'bold', display: 'block' }}>목표 (Target)</span>
-                    <p style={{ fontSize: '12px', color: '#fff', fontWeight: '600', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['30day'].target}</p>
-                  </div>
-                  <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
-                    <span style={{ fontSize: '10px', color: '#f87171', fontWeight: 'bold', display: 'block' }}>💡 Gap (역량 격차)</span>
-                    <p style={{ fontSize: '12px', color: '#fca5a5', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['30day'].gap}</p>
-                  </div>
-                  <div style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px dashed rgba(6, 182, 212, 0.15)', padding: '12px', borderRadius: '8px', marginTop: '4px' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--accent-cyan)', fontWeight: 'bold', display: 'block' }}>🚀 실행 행동 (Action)</span>
-                    <p style={{ fontSize: '11px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.5' }}>{diagnosis.actionPlan['30day'].action}</p>
-                  </div>
+            ) : (
+              <div style={{ animation: 'fadeIn 0.5s ease', width: '100%' }}>
+                <div style={{ background: 'rgba(167, 139, 250, 0.05)', border: '1px solid rgba(167, 139, 250, 0.15)', padding: '16px 20px', borderRadius: '10px', marginBottom: '24px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#fff', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>🎯</span> 실행 로드맵 대상: <strong style={{ color: 'var(--accent-purple)' }}>{diagnosis.actionPlan.optimalTitle}</strong>
+                  </h4>
+                  <p style={{ fontSize: '11px', color: '#94a3b8', margin: '4px 0 0 0' }}>
+                    성공 확률이 가장 높고 강력한 성장을 돕는 1순위 최적 경로로의 안착을 위한 단계별 180일 실행 가이드입니다.
+                  </p>
                 </div>
 
-                {/* 90일 카드 */}
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', position: 'relative' }}>
-                  <div style={{ 
-                    position: 'absolute', top: '-10px', left: '20px', 
-                    background: 'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)', 
-                    color: '#0a0e1a', fontWeight: '800', fontSize: '11px', padding: '4px 12px', borderRadius: '20px',
-                    boxShadow: '0 0 10px rgba(167, 139, 250, 0.4)'
-                  }}>
-                    [90일]
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+                  
+                  {/* 30일 카드 */}
+                  <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', position: 'relative' }}>
+                    <div style={{ 
+                      position: 'absolute', top: '-10px', left: '20px', 
+                      background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)', 
+                      color: '#0a0e1a', fontWeight: '800', fontSize: '11px', padding: '4px 12px', borderRadius: '20px',
+                      boxShadow: '0 0 10px rgba(6, 182, 212, 0.4)'
+                    }}>
+                      [30일]
+                    </div>
+                    <div style={{ marginTop: '6px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--accent-cyan)', fontWeight: 'bold', display: 'block', textTransform: 'uppercase' }}>현재 (Current)</span>
+                      <p style={{ fontSize: '12px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['30day'].current}</p>
+                    </div>
+                    <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 'bold', display: 'block' }}>목표 (Target)</span>
+                      <p style={{ fontSize: '12px', color: '#fff', fontWeight: '600', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['30day'].target}</p>
+                    </div>
+                    <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
+                      <span style={{ fontSize: '10px', color: '#f87171', fontWeight: 'bold', display: 'block' }}>💡 Gap (역량 격차)</span>
+                      <p style={{ fontSize: '12px', color: '#fca5a5', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['30day'].gap}</p>
+                    </div>
+                    <div style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px dashed rgba(6, 182, 212, 0.15)', padding: '12px', borderRadius: '8px', marginTop: '4px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--accent-cyan)', fontWeight: 'bold', display: 'block' }}>🚀 실행 행동 (Action)</span>
+                      <p style={{ fontSize: '11px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.5' }}>{diagnosis.actionPlan['30day'].action}</p>
+                    </div>
                   </div>
-                  <div style={{ marginTop: '6px' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--accent-cyan)', fontWeight: 'bold', display: 'block', textTransform: 'uppercase' }}>현재 (Current)</span>
-                    <p style={{ fontSize: '12px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['90day'].current}</p>
-                  </div>
-                  <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 'bold', display: 'block' }}>목표 (Target)</span>
-                    <p style={{ fontSize: '12px', color: '#fff', fontWeight: '600', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['90day'].target}</p>
-                  </div>
-                  <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
-                    <span style={{ fontSize: '10px', color: '#f87171', fontWeight: 'bold', display: 'block' }}>💡 Gap (역량 격차)</span>
-                    <p style={{ fontSize: '12px', color: '#fca5a5', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['90day'].gap}</p>
-                  </div>
-                  <div style={{ background: 'rgba(167, 139, 250, 0.05)', border: '1px dashed rgba(167, 139, 250, 0.15)', padding: '12px', borderRadius: '8px', marginTop: '4px' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 'bold', display: 'block' }}>🚀 실행 행동 (Action)</span>
-                    <p style={{ fontSize: '11px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.5' }}>{diagnosis.actionPlan['90day'].action}</p>
-                  </div>
-                </div>
 
-                {/* 6개월 카드 */}
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', position: 'relative' }}>
-                  <div style={{ 
-                    position: 'absolute', top: '-10px', left: '20px', 
-                    background: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)', 
-                    color: '#fff', fontWeight: '800', fontSize: '11px', padding: '4px 12px', borderRadius: '20px',
-                    boxShadow: '0 0 10px rgba(236, 72, 153, 0.4)'
-                  }}>
-                    [6개월]
+                  {/* 90일 카드 */}
+                  <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', position: 'relative' }}>
+                    <div style={{ 
+                      position: 'absolute', top: '-10px', left: '20px', 
+                      background: 'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)', 
+                      color: '#0a0e1a', fontWeight: '800', fontSize: '11px', padding: '4px 12px', borderRadius: '20px',
+                      boxShadow: '0 0 10px rgba(167, 139, 250, 0.4)'
+                    }}>
+                      [90일]
+                    </div>
+                    <div style={{ marginTop: '6px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--accent-cyan)', fontWeight: 'bold', display: 'block', textTransform: 'uppercase' }}>현재 (Current)</span>
+                      <p style={{ fontSize: '12px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['90day'].current}</p>
+                    </div>
+                    <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 'bold', display: 'block' }}>목표 (Target)</span>
+                      <p style={{ fontSize: '12px', color: '#fff', fontWeight: '600', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['90day'].target}</p>
+                    </div>
+                    <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
+                      <span style={{ fontSize: '10px', color: '#f87171', fontWeight: 'bold', display: 'block' }}>💡 Gap (역량 격차)</span>
+                      <p style={{ fontSize: '12px', color: '#fca5a5', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['90day'].gap}</p>
+                    </div>
+                    <div style={{ background: 'rgba(167, 139, 250, 0.05)', border: '1px dashed rgba(167, 139, 250, 0.15)', padding: '12px', borderRadius: '8px', marginTop: '4px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 'bold', display: 'block' }}>🚀 실행 행동 (Action)</span>
+                      <p style={{ fontSize: '11px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.5' }}>{diagnosis.actionPlan['90day'].action}</p>
+                    </div>
                   </div>
-                  <div style={{ marginTop: '6px' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--accent-cyan)', fontWeight: 'bold', display: 'block', textTransform: 'uppercase' }}>현재 (Current)</span>
-                    <p style={{ fontSize: '12px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['6month'].current}</p>
-                  </div>
-                  <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 'bold', display: 'block' }}>목표 (Target)</span>
-                    <p style={{ fontSize: '12px', color: '#fff', fontWeight: '600', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['6month'].target}</p>
-                  </div>
-                  <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
-                    <span style={{ fontSize: '10px', color: '#f87171', fontWeight: 'bold', display: 'block' }}>💡 Gap (역량 격차)</span>
-                    <p style={{ fontSize: '12px', color: '#fca5a5', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['6month'].gap}</p>
-                  </div>
-                  <div style={{ background: 'rgba(236, 72, 153, 0.05)', border: '1px dashed rgba(236, 72, 153, 0.15)', padding: '12px', borderRadius: '8px', marginTop: '4px' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--accent-pink)', fontWeight: 'bold', display: 'block' }}>🚀 실행 행동 (Action)</span>
-                    <p style={{ fontSize: '11px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.5' }}>{diagnosis.actionPlan['6month'].action}</p>
-                  </div>
-                </div>
 
+                  {/* 6개월 카드 */}
+                  <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', position: 'relative' }}>
+                    <div style={{ 
+                      position: 'absolute', top: '-10px', left: '20px', 
+                      background: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)', 
+                      color: '#fff', fontWeight: '800', fontSize: '11px', padding: '4px 12px', borderRadius: '20px',
+                      boxShadow: '0 0 10px rgba(236, 72, 153, 0.4)'
+                    }}>
+                      [6개월]
+                    </div>
+                    <div style={{ marginTop: '6px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--accent-cyan)', fontWeight: 'bold', display: 'block', textTransform: 'uppercase' }}>현재 (Current)</span>
+                      <p style={{ fontSize: '12px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['6month'].current}</p>
+                    </div>
+                    <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--accent-purple)', fontWeight: 'bold', display: 'block' }}>목표 (Target)</span>
+                      <p style={{ fontSize: '12px', color: '#fff', fontWeight: '600', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['6month'].target}</p>
+                    </div>
+                    <div style={{ borderTop: '1px dashed rgba(255,255,255,0.06)', paddingTop: '10px' }}>
+                      <span style={{ fontSize: '10px', color: '#f87171', fontWeight: 'bold', display: 'block' }}>💡 Gap (역량 격차)</span>
+                      <p style={{ fontSize: '12px', color: '#fca5a5', margin: '2px 0 0 0', lineHeight: '1.4' }}>{diagnosis.actionPlan['6month'].gap}</p>
+                    </div>
+                    <div style={{ background: 'rgba(236, 72, 153, 0.05)', border: '1px dashed rgba(236, 72, 153, 0.15)', padding: '12px', borderRadius: '8px', marginTop: '4px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--accent-pink)', fontWeight: 'bold', display: 'block' }}>🚀 실행 행동 (Action)</span>
+                      <p style={{ fontSize: '11px', color: '#cbd5e1', margin: '2px 0 0 0', lineHeight: '1.5' }}>{diagnosis.actionPlan['6month'].action}</p>
+                    </div>
+                  </div>
+
+                </div>
               </div>
-            </div>
+            )
           )}
 
         </div>
