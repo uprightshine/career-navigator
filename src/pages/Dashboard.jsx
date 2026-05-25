@@ -1,14 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { usePersona } from '../App'
 import { useNavigate } from 'react-router-dom'
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts'
 import { JOB_NODES, getScenarioRecommendations } from '../data/careerData'
 import { diagnoseCareer } from '../data/careerDiagnosis'
+import { useGeminiContext } from '../hooks/GeminiContext'
 
 export default function Dashboard() {
   const { persona } = usePersona()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('summary')
+  const { generateWithLoading, apiStatus } = useGeminiContext()
+
+  // AI Report state
+  const [aiReport, setAiReport] = useState('')
+  const [isAiGenerating, setIsAiGenerating] = useState(false)
+  const [aiTypingIdx, setAiTypingIdx] = useState(0)
+  const aiTypingRef = useRef(null)
 
   // Progressive Disclosure Lazy States
   const [isMiniGraphLoading, setIsMiniGraphLoading] = useState(true)
@@ -47,6 +55,52 @@ export default function Dashboard() {
 
   // 커리어 AI 정밀 진단 획득
   const diagnosis = diagnoseCareer(persona)
+
+  // Gemini AI 리포트 생성
+  const handleGenerateAiReport = async () => {
+    if (isAiGenerating) return
+    setIsAiGenerating(true)
+    setAiReport('')
+
+    const currentJob = JOB_NODES?.[persona.currentJobId]
+    const currentJobName = currentJob?.name || persona.currentJobName
+    const skillsStr = persona.skills.map((sk) => `${sk.name}: L${sk.level}`).join(', ')
+
+    const systemInstruction = `
+당신은 국내 대기업 HR 20년 실무진급 경력을 가진 '초정밀 AI 커리어 성과 코칭 리포터' 에이전트입니다.
+사용자가 입력하는 커리어 조건을 읽어내어, 실제 인사 전보 심사 수준으로 정교하고 동기부여가 확실히 되는 1:1 리포트 레터를 한글 3-4문장으로 작성하십시오.
+규칙:
+1. 첫 줄은 사용자의 이름과 경력을 요약하고, 사내 코호트 수준의 현재 위치를 강하게 인정합니다.
+2. 두 번째 줄은 현재 보유 스킬에 따른 핵심 '역량 격차(Skill Gap)'를 데이터 분석 느낌으로 냉정히 진단합니다.
+3. 세 번째 줄은 이를 극복하고 180일 내에 전보를 성공시키기 위해 당장 수행해야 할 LMS 교육이나 멘토 네트워킹 방향을 명시합니다.
+4. 전체 길이는 한글 350자 이내로 콤팩트하게 마침표로 끝내십시오.
+    `.trim()
+
+    const userPrompt = `
+이름: ${persona.name}
+소속: ${persona.department}
+직급: ${persona.grade}
+직무체류년수: ${persona.totalYears}년
+최근평가: ${persona.evaluationGrade}등급
+현재직무: ${currentJobName}
+자가진단 스킬셋: ${skillsStr}
+    `.trim()
+
+    try {
+      const result = await generateWithLoading(systemInstruction, userPrompt)
+      if (result === 'LIMIT_EXCEEDED') {
+        setAiReport('🛡️ 세션 API 호출 한도에 도달했습니다. 페이지를 새로고침 후 다시 시도해 주세요.')
+      } else if (result) {
+        setAiReport(result)
+      } else {
+        setAiReport('오프라인 모드입니다. 상단 배지를 클릭해 Gemini API Key를 등록하시면 실시간 AI 코칭 리포트를 받으실 수 있습니다.')
+      }
+    } catch (err) {
+      setAiReport('❌ AI 리포트 생성 중 오류가 발생했습니다. API Key와 네트워크 상태를 확인해 주세요.')
+    } finally {
+      setIsAiGenerating(false)
+    }
+  }
 
   // 역량 레이더 차트 데이터 포맷팅
   const radarData = persona.skills.map(skill => ({
@@ -540,23 +594,51 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* 우측 코칭 멘트 및 가이드 */}
-              <div style={{ background: 'linear-gradient(135deg, rgba(167, 139, 250, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%)', border: '1px solid rgba(255,255,255,0.06)', padding: '24px', borderRadius: '12px', height: '100%' }}>
-                <h4 style={{ color: '#fff', fontSize: '14px', fontWeight: 'bold', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span>💬</span> AI 커리어 코치의 제언
-                </h4>
-                <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.7', fontStyle: 'italic', margin: 0 }}>
-                  {diagnosis.coachAdvice ? (
-                    diagnosis.coachAdvice.split('\n\n').map((paragraph, pIdx) => (
-                      <span key={pIdx} style={{ display: 'block', marginBottom: pIdx < 2 ? '14px' : '0' }}>
-                        {paragraph}
+              {/* 우측 코칭 멘트 및 가이드 + 실시간 AI 버튼 */}
+              <div style={{ background: 'linear-gradient(135deg, rgba(167, 139, 250, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%)', border: '1px solid rgba(255,255,255,0.06)', padding: '24px', borderRadius: '12px', height: '100%', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <h4 style={{ color: '#fff', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
+                    <span>💬</span> AI 커리어 코치의 제언
+                  </h4>
+                  {/* ✨ Gemini AI 리포트 생성 버튼 */}
+                  <button
+                    id="btn-ai-report"
+                    className={`btn-ai-report ${isAiGenerating ? 'loading' : ''}`}
+                    onClick={handleGenerateAiReport}
+                    disabled={isAiGenerating}
+                    title={apiStatus ? '실시간 Gemini AI 리포트 생성' : 'API Key를 등록하면 실시간 AI 분석을 받을 수 있습니다'}
+                  >
+                    {isAiGenerating ? (
+                      <><span className="ai-btn-dot" /><span className="ai-btn-dot" /><span className="ai-btn-dot" /></>
+                    ) : (
+                      <>{apiStatus ? '✨ 실시간 AI 리포트 생성' : '✨ AI 리포트 생성'}</>
+                    )}
+                  </button>
+                </div>
+
+                {/* AI 리포트 표시 영역 */}
+                {aiReport ? (
+                  <div className="ai-report-result">
+                    {aiReport.split('\n').map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        {i < aiReport.split('\n').length - 1 && <br />}
                       </span>
-                    ))
-                  ) : (
-                    `"조직의 거버넌스를 설계하고 현업의 애로사항을 조율하는 HR 전문가로서, ${persona.name} 님이 닦아오신 ${persona.primarySkill} 전문성은 매우 소중한 자산입니다. 
-                    \n\n현재 사용자님은 ${diagnosis.careerPhase === 'Transition Ready' ? '현장 파트너로서 쌓아온 탄탄한 문제해결 노하우를 바탕으로, 본사/본부 차원의 조직 거버넌스 확장이나 전사 인사기획으로의 피벗을 시도하기에 인생에서 가장 황홀한 전환 기로에 서 계십니다.' : '보유하신 핵심 역량을 정량화하고 가치화하여 본사/본부 HR로의 계층 확장과 인사 전략 기획가로서의 역할 전환을 동시에 꾀할 수 있는 최적의 성장 궤도에 진입하셨습니다.'}\n\n데이터 기반의 이동 경로가 제안하는 시나리오를 나침반 삼아, 더 큰 성장을 향해 두려움 없이 나아가십시오. AI 코칭 리포트가 그 여정을 온전히 응원하겠습니다."`
-                  )}
-                </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.7', fontStyle: 'italic', margin: 0 }}>
+                    {diagnosis.coachAdvice ? (
+                      diagnosis.coachAdvice.split('\n\n').map((paragraph, pIdx) => (
+                        <span key={pIdx} style={{ display: 'block', marginBottom: pIdx < 2 ? '14px' : '0' }}>
+                          {paragraph}
+                        </span>
+                      ))
+                    ) : (
+                      `${persona.name} 님의 커리어 데이터를 기반으로 한 AI 진단 코멘트가 이곳에 표시됩니다. 우측 상단 버튼을 눌러 실시간 Gemini AI 리포트를 생성해 보세요.`
+                    )}
+                  </p>
+                )}
               </div>
             </div>
           )}

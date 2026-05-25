@@ -1,3 +1,5 @@
+import LINKEDIN_PROFILES from './linkedin-profiles.json'
+
 // ============================================================
 // Career Graph 데이터 — 직무 네트워크 (Fake Data)
 // ============================================================
@@ -610,35 +612,7 @@ export const MENTORS = [
 ]
 
 // 외부 프로파일 (LinkedIn 대체)
-export const EXTERNAL_PROFILES = [
-  {
-    id: 'EXT_01',
-    name: 'Sarah Kim',
-    currentCompany: 'Google Korea',
-    currentRole: 'Marketing Manager',
-    careerSequence: ['Performance Marketing → Brand Marketing → Marketing Manager'],
-    skills: ['Digital Marketing', 'Brand Strategy', 'Data Analytics', 'Team Leadership'],
-    yearsExperience: 7,
-  },
-  {
-    id: 'EXT_02',
-    name: 'David Park',
-    currentCompany: 'Samsung Electronics',
-    currentRole: 'Integrated Marketing Lead',
-    careerSequence: ['Digital Marketer → CRM Specialist → Integrated Marketing Lead'],
-    skills: ['CRM', 'Campaign Management', 'Budget Planning', 'Cross-functional Leadership'],
-    yearsExperience: 9,
-  },
-  {
-    id: 'EXT_03',
-    name: 'Jenny Lee',
-    currentCompany: 'Kakao',
-    currentRole: 'HR Business Partner',
-    careerSequence: ['Talent Acquisition → HR Generalist → HRBP'],
-    skills: ['Organizational Development', 'Talent Management', 'HR Analytics', 'Change Management'],
-    yearsExperience: 8,
-  },
-]
+export const EXTERNAL_PROFILES = LINKEDIN_PROFILES
 
 // 학습 리소스 추천
 export const LEARNING_RESOURCES = {
