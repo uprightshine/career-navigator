@@ -4,6 +4,102 @@ import CytoscapeComponent from 'react-cytoscapejs'
 import { usePersona } from '../App'
 import { JOB_NODES, toCytoscapeElements, getScenarioRecommendations } from '../data/careerData'
 
+// Cytoscape 스타일시트 (외부 격리를 통한 메모리/GC 및 렌더링 성능 최적화)
+const CYTOSCAPE_STYLESHEET = [
+  {
+    selector: 'node',
+    style: {
+      'label': 'data(label)',
+      'text-valign': 'center',
+      'text-halign': 'center',
+      'background-color': '#1f2937',
+      'color': '#f1f5f9',
+      'font-size': '11px',
+      'width': 55,
+      'height': 55,
+      'border-width': 2,
+      'border-color': 'rgba(255, 255, 255, 0.1)',
+      'text-wrap': 'wrap',
+      'text-max-width': '80px',
+      'font-family': 'Inter, sans-serif',
+      'overlay-opacity': 0,
+    }
+  },
+  {
+    selector: 'node[nodeType="current"]',
+    style: {
+      'background-color': '#06b6d4',
+      'border-color': '#22d3ee',
+      'border-width': 4,
+      'width': 70,
+      'height': 70,
+      'font-size': '12px',
+      'font-weight': 'bold',
+    }
+  },
+  {
+    selector: 'node[nodeType="hub"]',
+    style: {
+      'background-color': '#059669',
+      'border-color': '#34d399',
+      'border-width': 3,
+      'width': 65,
+      'height': 65,
+      'font-size': '11px',
+      'font-weight': 'bold',
+    }
+  },
+  {
+    selector: 'node[nodeType="leadership"]',
+    style: {
+      'background-color': '#2563eb',
+      'border-color': '#60a5fa',
+      'border-width': 3,
+      'shape': 'diamond',
+      'width': 65,
+      'height': 65,
+      'font-size': '11px',
+      'font-weight': 'bold',
+    }
+  },
+  {
+    selector: 'node[nodeType="deadend"]',
+    style: {
+      'background-color': '#dc2626',
+      'border-color': '#f87171',
+      'border-width': 2,
+      'width': 50,
+      'height': 50,
+      'font-size': '10px',
+    }
+  },
+  {
+    selector: 'edge',
+    style: {
+      'width': 'data(width)',
+      'line-color': 'rgba(255, 255, 255, 0.15)',
+      'target-arrow-color': 'rgba(255, 255, 255, 0.25)',
+      'target-arrow-shape': 'triangle',
+      'curve-style': 'bezier',
+      'arrow-scale': 0.8,
+      'overlay-opacity': 0,
+    }
+  }
+]
+
+// Cytoscape cose 레이아웃 설정 (외부 격리를 통한 메모리/GC 및 렌더링 성능 최적화)
+const CYTOSCAPE_LAYOUT = {
+  name: 'cose',
+  animate: true,
+  animationDuration: 400,
+  nodeRepulsion: 6500,
+  idealEdgeLength: 100,
+  nodeOverlap: 20,
+  refresh: 20,
+  fit: true,
+  padding: 30,
+}
+
 export default function CareerGraphPage() {
   const { persona, selectedScenario, setSelectedScenario, setTargetJobId } = usePersona()
   const [selectedNode, setSelectedNode] = useState(null)
@@ -19,101 +115,6 @@ export default function CareerGraphPage() {
     return toCytoscapeElements(persona.currentJobId, selectedScenario)
   }, [persona.currentJobId, selectedScenario])
 
-  // Cytoscape 스타일시트
-  const cytoscapeStylesheet = [
-    {
-      selector: 'node',
-      style: {
-        'label': 'data(label)',
-        'text-valign': 'center',
-        'text-halign': 'center',
-        'background-color': '#1f2937',
-        'color': '#f1f5f9',
-        'font-size': '11px',
-        'width': 55,
-        'height': 55,
-        'border-width': 2,
-        'border-color': 'rgba(255, 255, 255, 0.1)',
-        'text-wrap': 'wrap',
-        'text-max-width': '80px',
-        'font-family': 'Inter, sans-serif',
-        'overlay-opacity': 0,
-      }
-    },
-    {
-      selector: 'node[nodeType="current"]',
-      style: {
-        'background-color': '#06b6d4',
-        'border-color': '#22d3ee',
-        'border-width': 4,
-        'width': 70,
-        'height': 70,
-        'font-size': '12px',
-        'font-weight': 'bold',
-      }
-    },
-    {
-      selector: 'node[nodeType="hub"]',
-      style: {
-        'background-color': '#059669',
-        'border-color': '#34d399',
-        'border-width': 3,
-        'width': 65,
-        'height': 65,
-        'font-size': '11px',
-        'font-weight': 'bold',
-      }
-    },
-    {
-      selector: 'node[nodeType="leadership"]',
-      style: {
-        'background-color': '#2563eb',
-        'border-color': '#60a5fa',
-        'border-width': 3,
-        'shape': 'diamond',
-        'width': 65,
-        'height': 65,
-        'font-size': '11px',
-        'font-weight': 'bold',
-      }
-    },
-    {
-      selector: 'node[nodeType="deadend"]',
-      style: {
-        'background-color': '#dc2626',
-        'border-color': '#f87171',
-        'border-width': 2,
-        'width': 50,
-        'height': 50,
-        'font-size': '10px',
-      }
-    },
-    {
-      selector: 'edge',
-      style: {
-        'width': 'data(width)',
-        'line-color': 'rgba(255, 255, 255, 0.15)',
-        'target-arrow-color': 'rgba(255, 255, 255, 0.25)',
-        'target-arrow-shape': 'triangle',
-        'curve-style': 'bezier',
-        'arrow-scale': 0.8,
-        'overlay-opacity': 0,
-      }
-    }
-  ]
-
-  // Cytoscape cose 레이아웃 설정
-  const layout = {
-    name: 'cose',
-    animate: true,
-    animationDuration: 400,
-    nodeRepulsion: 6500,
-    idealEdgeLength: 100,
-    nodeOverlap: 20,
-    refresh: 20,
-    fit: true,
-    padding: 30,
-  }
 
   // Cytoscape 초기화 콜백
   const handleCyInit = useCallback((cy) => {
@@ -238,8 +239,8 @@ export default function CareerGraphPage() {
         <CytoscapeComponent
           key={`${persona.currentJobId}-${selectedScenario}`}
           elements={elements}
-          stylesheet={cytoscapeStylesheet}
-          layout={layout}
+          stylesheet={CYTOSCAPE_STYLESHEET}
+          layout={CYTOSCAPE_LAYOUT}
           style={{ width: '100%', height: '100%' }}
           cy={handleCyInit}
         />

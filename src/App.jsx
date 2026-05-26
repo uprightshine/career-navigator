@@ -1,12 +1,29 @@
-import { useState, createContext, useContext } from 'react'
+import { useState, createContext, useContext, lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/layout/Layout'
-import Dashboard from './pages/Dashboard'
-import CareerGraphPage from './pages/CareerGraphPage'
-import SkillGapPage from './pages/SkillGapPage'
-import AdvisorPage from './pages/AdvisorPage'
-import DataRequirementsPage from './pages/DataRequirementsPage'
 import OnboardingFlow from './components/onboarding/OnboardingFlow'
+
+// lazy-loaded pages for routing-level code splitting
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const CareerGraphPage = lazy(() => import('./pages/CareerGraphPage'))
+const SkillGapPage = lazy(() => import('./pages/SkillGapPage'))
+const AdvisorPage = lazy(() => import('./pages/AdvisorPage'))
+const DataRequirementsPage = lazy(() => import('./pages/DataRequirementsPage'))
+
+// Premium loading spinner fallback for route transitions
+function PageLoader() {
+  return (
+    <div className="premium-spinner-container">
+      <div className="premium-spinner">
+        <div className="premium-spinner-outer" />
+        <div className="premium-spinner-inner" />
+        <div className="premium-spinner-core" />
+      </div>
+      <div className="premium-spinner-text">LOADING CAREER PATHWAY...</div>
+    </div>
+  )
+}
+
 
 // Persona context
 const PersonaContext = createContext()
@@ -140,14 +157,16 @@ function App() {
         />
       )}
       <Layout>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/graph" element={<CareerGraphPage />} />
-          <Route path="/skill-gap" element={<SkillGapPage />} />
-          <Route path="/advisor" element={<AdvisorPage />} />
-          <Route path="/data-requirements" element={<DataRequirementsPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/graph" element={<CareerGraphPage />} />
+            <Route path="/skill-gap" element={<SkillGapPage />} />
+            <Route path="/advisor" element={<AdvisorPage />} />
+            <Route path="/data-requirements" element={<DataRequirementsPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </Layout>
     </PersonaContext.Provider>
   )

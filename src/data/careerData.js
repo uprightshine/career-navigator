@@ -1,5 +1,3 @@
-import LINKEDIN_PROFILES from './linkedin-profiles.json'
-
 // ============================================================
 // Career Graph 데이터 — 직무 네트워크 (Fake Data)
 // ============================================================
@@ -611,8 +609,7 @@ export const MENTORS = [
   }
 ]
 
-// 외부 프로파일 (LinkedIn 대체)
-export const EXTERNAL_PROFILES = LINKEDIN_PROFILES
+
 
 // 학습 리소스 추천
 export const LEARNING_RESOURCES = {

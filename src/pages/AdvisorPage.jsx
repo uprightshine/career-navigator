@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePersona } from '../App'
-import { MENTORS, EXTERNAL_PROFILES, JOB_NODES } from '../data/careerData'
+import { MENTORS, JOB_NODES } from '../data/careerData'
 
 export default function AdvisorPage() {
   const { persona } = usePersona()
@@ -24,8 +24,28 @@ export default function AdvisorPage() {
   // 페르소나 맞춤형 사내 멘토 필터링 (동적 직무군 매핑)
   const filteredMentors = MENTORS.filter(mentor => mentor.family === userFamily)
 
+  const [externalProfiles, setExternalProfiles] = useState([])
+  const [isLoadingProfiles, setIsLoadingProfiles] = useState(true)
+
+  // 외부 600명 LinkedIn 프로파일 비동기 로딩 (번들 크기 최적화)
+  useEffect(() => {
+    fetch('/data/linkedin-profiles.json')
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch profiles')
+        return res.json()
+      })
+      .then(data => {
+        setExternalProfiles(data)
+        setIsLoadingProfiles(false)
+      })
+      .catch(err => {
+        console.error('LinkedIn 데이터 로딩 실패:', err)
+        setIsLoadingProfiles(false)
+      })
+  }, [])
+
   // 페르소나 맞춤형 외부 LinkedIn 프로파일 필터링 및 매칭 점수순 정렬
-  const filteredExternalProfiles = EXTERNAL_PROFILES
+  const filteredExternalProfiles = externalProfiles
     .filter(profile => profile.family === userFamily)
     .sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0))
 
@@ -219,104 +239,117 @@ export default function AdvisorPage() {
       {/* External Market Benchmarks Panel */}
       {activeTab === 'external' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div style={{ fontSize: '12px', color: '#94a3b8', background: 'rgba(255,255,255,0.02)', padding: '12px 18px', borderRadius: '8px', borderLeft: '3px solid var(--accent-purple)' }}>
-            📊 <strong>{userFamily}</strong> 직무군의 가상 LinkedIn 시장 데이터 총 <strong>{filteredExternalProfiles.length}개</strong>를 로드했습니다. 회원님의 자가진단 프로필과 커리어 유사도가 높은 순서로 정렬되었습니다.
-          </div>
-
-          {displayedExternalProfiles.map(profile => (
-            <div key={profile.id} className="glass-card glow-purple animate-fade-in-up" style={{ padding: '24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '16px' }}>
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                  {/* LinkedIn 스타일 멋진 이니셜 아바타 */}
-                  <div style={{ width: '48px', height: '48px', fontSize: '16px', ...getAvatarStyle(profile.name) }}>
-                    {profile.name[0]}
-                  </div>
-                  <div>
-                    <h3 style={{ fontSize: '16px', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      {profile.name}
-                      <span className="badge badge-purple" style={{ fontSize: '10px' }}>매칭률 {profile.matchScore}%</span>
-                    </h3>
-                    <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px', fontWeight: 'bold' }}>
-                      {profile.currentCompany} • {profile.currentRole} ({profile.yearsExperience}년 경력)
-                    </div>
-                  </div>
-                </div>
-                
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button
-                    className="btn btn-secondary btn-sm"
-                    onClick={() => openModal(profile, 'details')}
-                  >
-                    🔍 상세 이력
-                  </button>
-                  <button
-                    className="btn btn-primary btn-sm"
-                    style={{ background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)', borderColor: '#8b5cf6' }}
-                    onClick={() => openModal(profile, 'coffeechat')}
-                  >
-                    ☕ 커피챗 제안
-                  </button>
-                </div>
+          {isLoadingProfiles ? (
+            <div style={{ textAlign: 'center', padding: '60px 0' }}>
+              <div className="chat-loading-dots" style={{ margin: '0 auto 15px auto', display: 'inline-flex', gap: '6px' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-purple)', animation: 'bounce 1.4s infinite ease-in-out both' }} />
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-purple)', animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0.2s' }} />
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-purple)', animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0.4s' }} />
               </div>
-
-              {/* Headline */}
-              <div style={{ fontSize: '12px', color: '#e2e8f0', fontStyle: 'italic', marginBottom: '16px', background: 'rgba(255, 255, 255, 0.02)', padding: '10px 14px', borderRadius: '6px', borderLeft: '3px solid #7c3aed' }}>
-                "{profile.headline}"
-              </div>
-
-              {/* Path sequence */}
-              <div style={{ marginBottom: '16px' }}>
-                <h4 style={{ fontSize: '11px', color: '#64748b', marginBottom: '8px' }}>LinkedIn 커리어 패스 경로</h4>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                  {profile.careerSequence.map((step, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div style={{ 
-                        background: idx === profile.careerSequence.length - 1 ? 'rgba(167, 139, 250, 0.12)' : 'var(--bg-glass)',
-                        border: idx === profile.careerSequence.length - 1 ? '1px solid var(--accent-purple)' : '1px solid var(--border-subtle)',
-                        borderRadius: '6px',
-                        padding: '6px 12px',
-                        fontSize: '11px',
-                        fontWeight: idx === profile.careerSequence.length - 1 ? 'bold' : 'normal',
-                        color: idx === profile.careerSequence.length - 1 ? 'var(--accent-purple)' : '#f1f5f9'
-                      }}>
-                        {step}
-                      </div>
-                      {idx < profile.careerSequence.length - 1 && (
-                        <span style={{ color: '#475569', fontSize: '14px' }}>→</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Skills */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '10px', color: '#64748b', marginRight: '4px' }}>보유 역량:</span>
-                {profile.skills.map((skill, index) => (
-                  <span key={index} className="badge badge-cyan" style={{ fontSize: '9px', background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.08)', color: '#94a3b8' }}>
-                    {skill}
-                  </span>
-                ))}
-              </div>
+              <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '10px' }}>가상 LinkedIn 시장 데이터 600명 로드 중...</div>
             </div>
-          ))}
+          ) : (
+            <>
+              <div style={{ fontSize: '12px', color: '#94a3b8', background: 'rgba(255,255,255,0.02)', padding: '12px 18px', borderRadius: '8px', borderLeft: '3px solid var(--accent-purple)' }}>
+                📊 <strong>{userFamily}</strong> 직무군의 가상 LinkedIn 시장 데이터 총 <strong>{filteredExternalProfiles.length}개</strong>를 로드했습니다. 회원님의 자가진단 프로필과 커리어 유사도가 높은 순서로 정렬되었습니다.
+              </div>
 
-          {/* 더 보기 버튼 */}
-          {visibleExternalCount < filteredExternalProfiles.length && (
-            <button 
-              className="btn btn-secondary" 
-              style={{ alignSelf: 'center', margin: '10px 0' }}
-              onClick={() => setVisibleExternalCount(prev => prev + 6)}
-            >
-              전체 {filteredExternalProfiles.length}명 중 남은 {filteredExternalProfiles.length - visibleExternalCount}명 더 보기 🔽
-            </button>
+              {displayedExternalProfiles.map(profile => (
+                <div key={profile.id} className="glass-card glow-purple animate-fade-in-up" style={{ padding: '24px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                      {/* LinkedIn 스타일 멋진 이니셜 아바타 */}
+                      <div style={{ width: '48px', height: '48px', fontSize: '16px', ...getAvatarStyle(profile.name) }}>
+                        {profile.name[0]}
+                      </div>
+                      <div>
+                        <h3 style={{ fontSize: '16px', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          {profile.name}
+                          <span className="badge badge-purple" style={{ fontSize: '10px' }}>매칭률 {profile.matchScore}%</span>
+                        </h3>
+                        <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px', fontWeight: 'bold' }}>
+                          {profile.currentCompany} • {profile.currentRole} ({profile.yearsExperience}년 경력)
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => openModal(profile, 'details')}
+                      >
+                        🔍 상세 이력
+                      </button>
+                      <button
+                        className="btn btn-primary btn-sm"
+                        style={{ background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)', borderColor: '#8b5cf6' }}
+                        onClick={() => openModal(profile, 'coffeechat')}
+                      >
+                        ☕ 커피챗 제안
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Headline */}
+                  <div style={{ fontSize: '12px', color: '#e2e8f0', fontStyle: 'italic', marginBottom: '16px', background: 'rgba(255, 255, 255, 0.02)', padding: '10px 14px', borderRadius: '6px', borderLeft: '3px solid #7c3aed' }}>
+                    "{profile.headline}"
+                  </div>
+
+                  {/* Path sequence */}
+                  <div style={{ marginBottom: '16px' }}>
+                    <h4 style={{ fontSize: '11px', color: '#64748b', marginBottom: '8px' }}>LinkedIn 커리어 패스 경로</h4>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                      {profile.careerSequence.map((step, idx) => (
+                        <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ 
+                            background: idx === profile.careerSequence.length - 1 ? 'rgba(167, 139, 250, 0.12)' : 'var(--bg-glass)',
+                            border: idx === profile.careerSequence.length - 1 ? '1px solid var(--accent-purple)' : '1px solid var(--border-subtle)',
+                            borderRadius: '6px',
+                            padding: '6px 12px',
+                            fontSize: '11px',
+                            fontWeight: idx === profile.careerSequence.length - 1 ? 'bold' : 'normal',
+                            color: idx === profile.careerSequence.length - 1 ? 'var(--accent-purple)' : '#f1f5f9'
+                          }}>
+                            {step}
+                          </div>
+                          {idx < profile.careerSequence.length - 1 && (
+                            <span style={{ color: '#475569', fontSize: '14px' }}>→</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Skills */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '10px', color: '#64748b', marginRight: '4px' }}>보유 역량:</span>
+                    {profile.skills.map((skill, index) => (
+                      <span key={index} className="badge badge-cyan" style={{ fontSize: '9px', background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.08)', color: '#94a3b8' }}>
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {/* 더 보기 버튼 */}
+              {visibleExternalCount < filteredExternalProfiles.length && (
+                <button 
+                  className="btn btn-secondary" 
+                  style={{ alignSelf: 'center', margin: '10px 0' }}
+                  onClick={() => setVisibleExternalCount(prev => prev + 6)}
+                >
+                  전체 {filteredExternalProfiles.length}명 중 남은 {filteredExternalProfiles.length - visibleExternalCount}명 더 보기 🔽
+                </button>
+              )}
+
+              {/* Alert / Notice */}
+              <div style={{ background: 'rgba(167, 139, 250, 0.05)', border: '1px dashed rgba(167, 139, 250, 0.2)', padding: '16px', borderRadius: 'var(--radius-lg)', textAlign: 'center', fontSize: '12px', color: '#94a3b8' }}>
+                * 본 화면에 연동된 {filteredExternalProfiles.length}명의 외부 프로필은 LinkedIn API 데이터 시뮬레이션입니다. <br />
+                실제 운영 환경에서는 <strong>LinkedIn Talent API 및 사외 매칭 엔진</strong>과 통신하여, 로그인한 구성원의 직무 도메인에 부합하는 사외 우수 인재들의 이동 궤적을 실시간 수집 및 벤치마킹합니다.
+              </div>
+            </>
           )}
-
-          {/* Alert / Notice */}
-          <div style={{ background: 'rgba(167, 139, 250, 0.05)', border: '1px dashed rgba(167, 139, 250, 0.2)', padding: '16px', borderRadius: 'var(--radius-lg)', textAlign: 'center', fontSize: '12px', color: '#94a3b8' }}>
-            * 본 화면에 연동된 {filteredExternalProfiles.length}명의 외부 프로필은 LinkedIn API 데이터 시뮬레이션입니다. <br />
-            실제 운영 환경에서는 <strong>LinkedIn Talent API 및 사외 매칭 엔진</strong>과 통신하여, 로그인한 구성원의 직무 도메인에 부합하는 사외 우수 인재들의 이동 궤적을 실시간 수집 및 벤치마킹합니다.
-          </div>
         </div>
       )}
 

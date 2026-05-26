@@ -220,7 +220,7 @@ for (let i = 1; i <= 600; i++) {
 }
 
 // ───────────── 파일 쓰기 ─────────────
-const DATA_DIR = './src/data';
+const DATA_DIR = './public/data';
 const FILE_PATH = join(DATA_DIR, 'linkedin-profiles.json');
 
 try {
