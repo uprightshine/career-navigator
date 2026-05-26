@@ -24,6 +24,15 @@ export default function Dashboard() {
   const [isTimelineLoading, setIsTimelineLoading] = useState(false)
   const [renderedScenarios, setRenderedScenarios] = useState(false)
   const [renderedTimeline, setRenderedTimeline] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
+
+  const handleExportReport = () => {
+    setIsExporting(true)
+    setTimeout(() => {
+      setIsExporting(false)
+      alert(`📄 [AI 커리어 코칭 리포트 내보내기 완료]\n\n회원님의 맞춤 커리어 패스 리포트가 성공적으로 PDF 및 이미지 양식으로 변환되어 저장되었습니다.\n\n파일명: Career_Coaching_Report_${persona.name}.pdf`)
+    }, 1500)
+  }
 
   // 400ms delay to offload initial main thread paint
   useEffect(() => {
@@ -436,26 +445,49 @@ export default function Dashboard() {
           gridColumn: '1 / -1', 
           marginTop: '24px', 
           padding: '30px', 
-          border: '1px solid rgba(167, 139, 250, 0.25)',
-          background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(10, 14, 26, 0.95) 100%)'
+          border: '1px solid rgba(124, 92, 246, 0.15)',
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(245, 243, 255, 0.85) 100%)'
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '20px', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', borderBottom: '1px solid var(--border-medium)', paddingBottom: '20px', marginBottom: '24px' }}>
           <div>
-            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', display: 'flex', alignItems: 'center', gap: '10px', margin: 0 }}>
+            <h2 style={{ fontSize: '20px', fontWeight: '700', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px', margin: 0 }}>
               <span>🔮</span> AI 맞춤형 커리어 코칭 리포트
             </h2>
-            <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0' }}>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
               사용자님의 직무 특성, 조직 레벨, 연차 및 사내 직무 이동 확률 모델에 기초한 실시간 맞춤 분석 리포트입니다.
             </p>
           </div>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
             <span className="badge badge-cyan" style={{ padding: '6px 12px', fontSize: '11px', fontWeight: 'bold' }}>
               📍 {diagnosis.currentLevel} {diagnosis.currentTrack}
             </span>
             <span className="badge badge-purple" style={{ padding: '6px 12px', fontSize: '11px', fontWeight: 'bold' }}>
               📊 {diagnosis.careerPhase}
             </span>
+            <button
+              onClick={handleExportReport}
+              style={{
+                background: 'linear-gradient(135deg, var(--accent-purple) 0%, #7c3aed 100%)',
+                color: '#ffffff',
+                border: 'none',
+                padding: '6px 14px',
+                borderRadius: '6px',
+                fontSize: '11px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: 'var(--shadow-sm)',
+                transition: 'all var(--transition-fast) ease'
+              }}
+              onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
+              onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+              title="리포트를 PDF 파일로 저장"
+            >
+              📄 리포트 저장
+            </button>
           </div>
         </div>
 
@@ -820,6 +852,45 @@ export default function Dashboard() {
 
         </div>
       </div>
+
+      {/* 리포트 내보내기 시뮬레이션 로딩 오버레이 팝업 */}
+      {isExporting && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.4)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999,
+          animation: 'fadeIn 0.3s ease'
+        }}>
+          <div className="glass-card glow-purple" style={{
+            padding: '40px',
+            textAlign: 'center',
+            maxWidth: '400px',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-medium)',
+            boxShadow: 'var(--shadow-lg)'
+          }}>
+            <div className="premium-spinner" style={{ margin: '0 auto 20px auto' }}>
+              <div className="premium-spinner-outer" />
+              <div className="premium-spinner-inner" />
+              <div className="premium-spinner-core" />
+            </div>
+            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '8px' }}>
+              리포트 고해상도 변환 중...
+            </h3>
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+              개인화 성장 궤도 및 실행 타임라인을 고화질 PDF 템플릿으로 출력하는 중입니다. 잠시만 기다려주세요.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

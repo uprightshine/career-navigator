@@ -5,60 +5,60 @@
 /* ---- CSS Custom Properties (Design Tokens) ---- */
 :root {
   /* Background */
-  --bg-primary: #0a0e1a;
-  --bg-secondary: #111827;
-  --bg-card: rgba(17, 24, 39, 0.7);
-  --bg-card-hover: rgba(30, 41, 59, 0.8);
-  --bg-glass: rgba(255, 255, 255, 0.03);
-  --bg-glass-hover: rgba(255, 255, 255, 0.06);
-  --bg-sidebar: #080c16;
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-card: rgba(255, 255, 255, 0.65);
+  --bg-card-hover: rgba(255, 255, 255, 0.9);
+  --bg-glass: rgba(0, 0, 0, 0.02);
+  --bg-glass-hover: rgba(0, 0, 0, 0.04);
+  --bg-sidebar: #ffffff;
 
   /* Text */
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
   --text-tertiary: #64748b;
-  --text-muted: #475569;
+  --text-muted: #94a3b8;
 
-  /* Accent — Cyan/Purple gradient system */
-  --accent-cyan: #06b6d4;
-  --accent-cyan-light: #22d3ee;
-  --accent-purple: #a78bfa;
-  --accent-purple-light: #c4b5fd;
-  --accent-blue: #3b82f6;
-  --accent-pink: #ec4899;
+  /* Accent — adjusted for premium light mode legibility and pops */
+  --accent-cyan: #0891b2;
+  --accent-cyan-light: #06b6d4;
+  --accent-purple: #7c3aed;
+  --accent-purple-light: #8b5cf6;
+  --accent-blue: #2563eb;
+  --accent-pink: #db2777;
 
   /* Scenario Colors */
-  --scenario-safe: #34d399;
-  --scenario-safe-bg: rgba(52, 211, 153, 0.1);
-  --scenario-challenge: #f59e0b;
-  --scenario-challenge-bg: rgba(245, 158, 11, 0.1);
-  --scenario-t-shape: #a78bfa;
-  --scenario-t-shape-bg: rgba(167, 139, 250, 0.1);
+  --scenario-safe: #10b981;
+  --scenario-safe-bg: rgba(16, 185, 129, 0.08);
+  --scenario-challenge: #ea580c;
+  --scenario-challenge-bg: rgba(234, 88, 12, 0.08);
+  --scenario-t-shape: #7c3aed;
+  --scenario-t-shape-bg: rgba(124, 58, 237, 0.08);
 
   /* Status */
-  --status-success: #34d399;
-  --status-warning: #fbbf24;
-  --status-danger: #f87171;
-  --status-info: #60a5fa;
+  --status-success: #10b981;
+  --status-warning: #ea580c;
+  --status-danger: #ef4444;
+  --status-info: #2563eb;
 
   /* Hub / Leadership / Dead-end */
-  --node-hub: #34d399;
-  --node-leadership: #60a5fa;
-  --node-normal: #94a3b8;
-  --node-deadend: #f87171;
-  --node-current: #06b6d4;
+  --node-hub: #10b981;
+  --node-leadership: #3b82f6;
+  --node-normal: #64748b;
+  --node-deadend: #ef4444;
+  --node-current: #0891b2;
 
   /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-medium: rgba(255, 255, 255, 0.1);
-  --border-accent: rgba(6, 182, 212, 0.3);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-medium: rgba(0, 0, 0, 0.08);
+  --border-accent: rgba(8, 145, 178, 0.2);
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.15);
-  --shadow-glow-purple: 0 0 20px rgba(167, 139, 250, 0.15);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 30px rgba(31, 38, 135, 0.07);
+  --shadow-glow-cyan: 0 0 20px rgba(8, 145, 178, 0.08);
+  --shadow-glow-purple: 0 0 20px rgba(124, 58, 237, 0.08);
 
   /* Spacing */
   --space-xs: 4px;
@@ -192,7 +192,7 @@ h4 { font-size: var(--font-size-lg); }
 
 .app-header {
   height: var(--header-height);
-  background: rgba(10, 14, 26, 0.8);
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;

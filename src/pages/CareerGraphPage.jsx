@@ -1,10 +1,10 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CytoscapeComponent from 'react-cytoscapejs'
 import { usePersona } from '../App'
 import { JOB_NODES, toCytoscapeElements, getScenarioRecommendations } from '../data/careerData'
 
-// Cytoscape 스타일시트 (외부 격리를 통한 메모리/GC 및 렌더링 성능 최적화)
+// Cytoscape 스타일시트 (외부 격리를 통한 메모리/GC 및 렌더링 성능 최적화 - 프리미엄 화이트 테마 맞춤형 색조 적용)
 const CYTOSCAPE_STYLESHEET = [
   {
     selector: 'node',
@@ -12,13 +12,13 @@ const CYTOSCAPE_STYLESHEET = [
       'label': 'data(label)',
       'text-valign': 'center',
       'text-halign': 'center',
-      'background-color': '#1f2937',
-      'color': '#f1f5f9',
+      'background-color': '#cbd5e1', // Slate-300: Soft gray in light mode
+      'color': '#0f172a',            // Slate-900: Deep slate text
       'font-size': '11px',
       'width': 55,
       'height': 55,
       'border-width': 2,
-      'border-color': 'rgba(255, 255, 255, 0.1)',
+      'border-color': 'rgba(0, 0, 0, 0.06)',
       'text-wrap': 'wrap',
       'text-max-width': '80px',
       'font-family': 'Inter, sans-serif',
@@ -28,57 +28,61 @@ const CYTOSCAPE_STYLESHEET = [
   {
     selector: 'node[nodeType="current"]',
     style: {
-      'background-color': '#06b6d4',
+      'background-color': '#0891b2', // Deeper cyan for contrast
       'border-color': '#22d3ee',
       'border-width': 4,
       'width': 70,
       'height': 70,
       'font-size': '12px',
       'font-weight': 'bold',
+      'color': '#ffffff'            // High contrast text inside node
     }
   },
   {
     selector: 'node[nodeType="hub"]',
     style: {
-      'background-color': '#059669',
-      'border-color': '#34d399',
+      'background-color': '#10b981', // Emerald-500
+      'border-color': '#6ee7b7',
       'border-width': 3,
       'width': 65,
       'height': 65,
       'font-size': '11px',
       'font-weight': 'bold',
+      'color': '#ffffff'
     }
   },
   {
     selector: 'node[nodeType="leadership"]',
     style: {
-      'background-color': '#2563eb',
-      'border-color': '#60a5fa',
+      'background-color': '#3b82f6', // Blue-500
+      'border-color': '#93c5fd',
       'border-width': 3,
       'shape': 'diamond',
       'width': 65,
       'height': 65,
       'font-size': '11px',
       'font-weight': 'bold',
+      'color': '#ffffff'
     }
   },
   {
     selector: 'node[nodeType="deadend"]',
     style: {
-      'background-color': '#dc2626',
-      'border-color': '#f87171',
+      'background-color': '#ef4444', // Red-500
+      'border-color': '#fca5a5',
       'border-width': 2,
       'width': 50,
       'height': 50,
       'font-size': '10px',
+      'color': '#ffffff'
     }
   },
   {
     selector: 'edge',
     style: {
       'width': 'data(width)',
-      'line-color': 'rgba(255, 255, 255, 0.15)',
-      'target-arrow-color': 'rgba(255, 255, 255, 0.25)',
+      'line-color': 'rgba(15, 23, 42, 0.12)', // Soft dark slate edge line
+      'target-arrow-color': 'rgba(15, 23, 42, 0.18)',
       'target-arrow-shape': 'triangle',
       'curve-style': 'bezier',
       'arrow-scale': 0.8,
@@ -116,11 +120,14 @@ export default function CareerGraphPage() {
   }, [persona.currentJobId, selectedScenario])
 
 
+  const cyRef = useRef(null)
+
   // Cytoscape 초기화 콜백
   const handleCyInit = useCallback((cy) => {
+    cyRef.current = cy
     cy.on('tap', 'node', (evt) => {
       const node = evt.target
-      setSelectedNode(node.data())
+      setSelectedNode(evt.target.data())
     })
     cy.on('tap', (evt) => {
       if (evt.target === cy) {
@@ -128,6 +135,26 @@ export default function CareerGraphPage() {
       }
     })
   }, [])
+
+  // 물리 조작 버튼용 Zoom/Pan API 핸들러
+  const handleZoomIn = () => {
+    if (cyRef.current) {
+      cyRef.current.zoom(cyRef.current.zoom() * 1.2)
+    }
+  }
+
+  const handleZoomOut = () => {
+    if (cyRef.current) {
+      cyRef.current.zoom(cyRef.current.zoom() * 0.8)
+    }
+  }
+
+  const handleFitView = () => {
+    if (cyRef.current) {
+      cyRef.current.fit()
+      cyRef.current.center()
+    }
+  }
 
   const handleSelectTarget = (jobId) => {
     setTargetJobId(jobId)
@@ -235,7 +262,7 @@ export default function CareerGraphPage() {
       </div>
 
       {/* Center Graph Canvas */}
-      <div className="graph-canvas" style={{ background: 'rgba(10, 14, 26, 0.4)', position: 'relative', overflow: 'hidden' }}>
+      <div className="graph-canvas" style={{ background: 'rgba(255, 255, 255, 0.35)', position: 'relative', overflow: 'hidden' }}>
         <CytoscapeComponent
           key={`${persona.currentJobId}-${selectedScenario}`}
           elements={elements}
@@ -244,7 +271,92 @@ export default function CareerGraphPage() {
           style={{ width: '100%', height: '100%' }}
           cy={handleCyInit}
         />
-        <div style={{ position: 'absolute', bottom: '16px', left: '16px', background: 'rgba(0, 0, 0, 0.6)', padding: '6px 12px', borderRadius: '4px', fontSize: '10px', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.05)', pointerEvents: 'none' }}>
+        
+        {/* Floating Zoom / Pan Controls (➕, ➖, 🔄) - 프리미엄 아크릴릭 프로스트 플로팅 버튼 */}
+        <div style={{
+          position: 'absolute',
+          bottom: '16px',
+          right: '16px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          zIndex: 10
+        }}>
+          <button
+            onClick={handleZoomIn}
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-medium)',
+              boxShadow: 'var(--shadow-sm)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              fontSize: '13px',
+              color: 'var(--text-primary)',
+              transition: 'all var(--transition-fast) ease',
+              backdropFilter: 'blur(10px)'
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.background = 'var(--bg-card-hover)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.background = 'var(--bg-card)'; e.currentTarget.style.transform = 'scale(1)'; }}
+            title="확대"
+          >
+            ➕
+          </button>
+          <button
+            onClick={handleZoomOut}
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-medium)',
+              boxShadow: 'var(--shadow-sm)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              fontSize: '13px',
+              color: 'var(--text-primary)',
+              transition: 'all var(--transition-fast) ease',
+              backdropFilter: 'blur(10px)'
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.background = 'var(--bg-card-hover)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.background = 'var(--bg-card)'; e.currentTarget.style.transform = 'scale(1)'; }}
+            title="축소"
+          >
+            ➖
+          </button>
+          <button
+            onClick={handleFitView}
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-medium)',
+              boxShadow: 'var(--shadow-sm)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              fontSize: '13px',
+              color: 'var(--text-primary)',
+              transition: 'all var(--transition-fast) ease',
+              backdropFilter: 'blur(10px)'
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.background = 'var(--bg-card-hover)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.background = 'var(--bg-card)'; e.currentTarget.style.transform = 'scale(1)'; }}
+            title="화면 맞춤"
+          >
+            🔄
+          </button>
+        </div>
+
+        <div style={{ position: 'absolute', bottom: '16px', left: '16px', background: 'rgba(255, 255, 255, 0.75)', padding: '6px 12px', borderRadius: '4px', fontSize: '10px', color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)', pointerEvents: 'none', boxShadow: 'var(--shadow-sm)', backdropFilter: 'blur(4px)' }}>
           * 노드를 마우스로 드래그하여 배치 조절 가능 / 직무 노드 탭하여 상세 정보 확인
         </div>
       </div>

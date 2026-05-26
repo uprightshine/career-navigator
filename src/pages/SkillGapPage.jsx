@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { usePersona } from '../App'
 import { JOB_NODES, JOB_REQUIRED_SKILLS, LEARNING_RESOURCES, getScenarioRecommendations } from '../data/careerData'
 import rawTrainings from '../data/trainings.json'
@@ -6,6 +7,50 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip } from 
 
 export default function SkillGapPage() {
   const { persona, targetJobId, selectedScenario } = usePersona()
+  const navigate = useNavigate()
+
+  // 목표 직무 미설정 시 고급스럽고 화사한 Empty State 렌더링 (경로 안내 UX 고도화)
+  if (!targetJobId) {
+    return (
+      <div className="premium-spinner-container" style={{ minHeight: 'calc(100vh - var(--header-height) - 100px)' }}>
+        <div className="glass-card glow-cyan animate-fade-in-up" style={{ 
+          maxWidth: '540px', 
+          padding: '40px', 
+          textAlign: 'center',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border-medium)',
+          boxShadow: 'var(--shadow-lg)'
+        }}>
+          <div style={{ fontSize: '48px', marginBottom: '20px' }}>🎯</div>
+          <h2 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '12px' }}>
+            목표 직무가 설정되지 않았습니다
+          </h2>
+          <p style={{ fontSize: 'var(--font-size-base)', color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '28px' }}>
+            나에게 딱 맞는 스킬 갭(Skill Gap) 분석과 솔루션을 진단받으려면, 먼저 <strong>Career Graph</strong>에서 진로 경로를 탐색하고 원하는 목표 직무를 탭하여 목표로 설정해주세요!
+          </p>
+          <button
+            onClick={() => navigate('/graph')}
+            style={{
+              padding: '12px 24px',
+              fontSize: '13px',
+              fontWeight: 'bold',
+              background: 'linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%)',
+              color: '#ffffff',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              boxShadow: 'var(--shadow-glow-cyan)',
+              border: 'none',
+              transition: 'all var(--transition-fast) ease'
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 25px rgba(8, 145, 178, 0.35)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'var(--shadow-glow-cyan)'; }}
+          >
+            목표 직무 설정하러 가기 ➡️
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   // 기본 타겟 설정 (선택된 타겟이 없으면 T자형 추천 직무를 디폴트로 사용)
   const defaultTargetId = useMemo(() => {

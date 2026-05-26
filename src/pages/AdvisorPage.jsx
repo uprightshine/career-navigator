@@ -5,7 +5,16 @@ import { MENTORS, JOB_NODES } from '../data/careerData'
 export default function AdvisorPage() {
   const { persona } = usePersona()
   const [activeTab, setActiveTab] = useState('internal') // 'internal' | 'external'
-  const [requestedMentorId, setRequestedMentorId] = useState(null)
+  // 1on1 및 커피챗 요청 상태의 localStorage 기반 영속적 보존 탑재
+  const [requestedMentorIds, setRequestedMentorIds] = useState(() => {
+    const saved = localStorage.getItem('requestedMentorIds')
+    return saved ? JSON.parse(saved) : []
+  })
+  const [requestedCoffeeChatIds, setRequestedCoffeeChatIds] = useState(() => {
+    const saved = localStorage.getItem('requestedCoffeeChatIds')
+    return saved ? JSON.parse(saved) : []
+  })
+  const [isRequestingId, setIsRequestingId] = useState(null) // 1on1 요청 처리 중인 임시 스피너 상태
   
   // 외부 벤치마크 페이지네이션 및 모달 상태
   const [visibleExternalCount, setVisibleExternalCount] = useState(6)
@@ -54,11 +63,14 @@ export default function AdvisorPage() {
 
 
   const handleRequestMeeting = (mentorId) => {
-    setRequestedMentorId(mentorId)
+    setIsRequestingId(mentorId)
     setTimeout(() => {
+      const updated = [...requestedMentorIds, mentorId]
+      setRequestedMentorIds(updated)
+      localStorage.setItem('requestedMentorIds', JSON.stringify(updated))
       alert('1on1 미팅 신청이 완료되었습니다! 멘토가 수락하면 메일과 캘린더로 연동됩니다.')
-      setRequestedMentorId(null)
-    }, 500)
+      setIsRequestingId(null)
+    }, 600)
   }
 
   // 커피챗 템플릿 변경
@@ -79,6 +91,14 @@ export default function AdvisorPage() {
     setTimeout(() => {
       setIsSendingCoffee(false)
       setCoffeeSuccess(true)
+      
+      // 커피챗 완료 상태 저장
+      if (selectedProfile) {
+        const updated = [...requestedCoffeeChatIds, selectedProfile.id]
+        setRequestedCoffeeChatIds(updated)
+        localStorage.setItem('requestedCoffeeChatIds', JSON.stringify(updated))
+      }
+      
       setTimeout(() => {
         setIsModalOpen(false)
         setCoffeeSuccess(false)
@@ -175,13 +195,23 @@ export default function AdvisorPage() {
                   </div>
                 </div>
                 
-                <button
-                  className="btn btn-primary btn-sm"
-                  onClick={() => handleRequestMeeting(mentor.id)}
-                  disabled={requestedMentorId === mentor.id}
-                >
-                  {requestedMentorId === mentor.id ? '신청 중...' : '🤝 1on1 티타임 요청'}
-                </button>
+                {requestedMentorIds.includes(mentor.id) ? (
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    style={{ background: 'var(--scenario-safe-bg)', color: 'var(--scenario-safe)', border: '1px solid var(--scenario-safe)', cursor: 'default' }}
+                    disabled={true}
+                  >
+                    ✔️ 요청 완료 (대기 중)
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => handleRequestMeeting(mentor.id)}
+                    disabled={isRequestingId === mentor.id}
+                  >
+                    {isRequestingId === mentor.id ? '신청 중...' : '🤝 1on1 티타임 요청'}
+                  </button>
+                )}
               </div>
 
               {/* Match Basis */}
@@ -280,13 +310,23 @@ export default function AdvisorPage() {
                       >
                         🔍 상세 이력
                       </button>
-                      <button
-                        className="btn btn-primary btn-sm"
-                        style={{ background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)', borderColor: '#8b5cf6' }}
-                        onClick={() => openModal(profile, 'coffeechat')}
-                      >
-                        ☕ 커피챗 제안
-                      </button>
+                      {requestedCoffeeChatIds.includes(profile.id) ? (
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          style={{ background: 'var(--scenario-t-shape-bg)', color: 'var(--scenario-t-shape)', border: '1px solid var(--scenario-t-shape)', cursor: 'default' }}
+                          disabled={true}
+                        >
+                          ✔️ 제안 완료
+                        </button>
+                      ) : (
+                        <button
+                          className="btn btn-primary btn-sm"
+                          style={{ background: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)', borderColor: '#8b5cf6' }}
+                          onClick={() => openModal(profile, 'coffeechat')}
+                        >
+                          ☕ 커피챗 제안
+                        </button>
+                      )}
                     </div>
                   </div>
 

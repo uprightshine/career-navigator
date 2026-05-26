@@ -127,13 +127,13 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
     }))
   }
 
-  // 레벨 설명 매핑
+  // 레벨 설명 매핑 (HR 학술 체계 및 테크 기업 실무 용어를 기반으로 고품질 리파인)
   const levelDescriptions = {
-    1: '인지 (L1) — 기본 개념과 용어를 알고 이해하는 단계',
-    2: '적용 (L2) — 가이드라인에 따라 실무 작업을 수행하는 단계',
-    3: '자립 (L3) — 도움 없이 스스로 책임지고 업무를 완수하는 단계',
-    4: '전문 (L4) — 심화된 해결책 제시 및 타인을 멘토링하는 단계',
-    5: '혁신 (L5) — 새로운 방법론 설계 및 전사 표준을 제시하는 단계'
+    1: '인지 (L1) — 기초 지식 보유 (용어 및 대략적인 개념 이해 수준)',
+    2: '적용 (L2) — 가이드 기반 적용 (실무 템플릿과 선배의 도움을 받아 실무 수행)',
+    3: '자립 (L3) — 단독 실무 수행 (도움 없이 스스로 책임지고 업무를 완결하는 수준)',
+    4: '전문 (L4) — 전문 지도 가능 (심화 트러블 슈팅 해결 및 타인의 업무 코칭 주도)',
+    5: '혁신 (L5) — 원천 설계 및 혁신 (전사 표준 수립 및 사외 기술/제도 벤치마킹 대상)'
   }
 
   // 최종 동적 페르소나 객체 조립
@@ -622,9 +622,9 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   {currentRequiredSkills.map(skill => (
-                    <div key={skill.skillId} style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '14px', borderRadius: '8px' }}>
+                    <div key={skill.skillId} style={{ background: 'var(--bg-glass)', border: '1px solid var(--border-subtle)', padding: '14px', borderRadius: '8px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#f1f5f9' }}>{skill.name}</span>
+                        <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{skill.name}</span>
                         <span className="badge badge-cyan" style={{ fontSize: '10px' }}>
                           숙련도: {skillLevels[skill.skillId] ? `L${skillLevels[skill.skillId]}` : 'L3'}
                         </span>
@@ -639,7 +639,7 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
                         style={{
                           width: '100%',
                           accentColor: 'var(--accent-cyan)',
-                          background: 'rgba(255,255,255,0.1)',
+                          background: 'var(--border-medium)',
                           height: '5px',
                           borderRadius: '3px',
                           cursor: 'pointer',
@@ -647,7 +647,7 @@ export default function OnboardingFlow({ onComplete, onSkip }) {
                         }}
                       />
 
-                      <div style={{ fontSize: '10px', color: '#94a3b8', lineHeight: '1.4', fontStyle: 'italic', background: 'rgba(0,0,0,0.2)', padding: '6px 10px', borderRadius: '4px' }}>
+                      <div style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.4', fontStyle: 'italic', background: 'var(--bg-glass-hover)', padding: '8px 12px', borderRadius: '4px', borderLeft: '3px solid var(--accent-cyan)' }}>
                         {levelDescriptions[skillLevels[skill.skillId] || 3]}
                       </div>
                     </div>
