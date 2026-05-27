@@ -1,14 +1,15 @@
-import { useState, createContext, useContext, lazy, Suspense } from 'react'
+import { useState, createContext, useContext, Suspense, useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import OnboardingFlow from './components/onboarding/OnboardingFlow'
+import { injectHsData } from './data/careerData'
 
-// lazy-loaded pages for routing-level code splitting
-const Dashboard = lazy(() => import('./pages/Dashboard'))
-const CareerGraphPage = lazy(() => import('./pages/CareerGraphPage'))
-const SkillGapPage = lazy(() => import('./pages/SkillGapPage'))
-const AdvisorPage = lazy(() => import('./pages/AdvisorPage'))
-const DataRequirementsPage = lazy(() => import('./pages/DataRequirementsPage'))
+// Statically import pages to allow 100% single HTML file packaging without CORS / filesystem limitations
+import Dashboard from './pages/Dashboard'
+import CareerGraphPage from './pages/CareerGraphPage'
+import SkillGapPage from './pages/SkillGapPage'
+import AdvisorPage from './pages/AdvisorPage'
+import DataRequirementsPage from './pages/DataRequirementsPage'
 
 // Premium loading spinner fallback for route transitions
 function PageLoader() {
@@ -24,15 +25,22 @@ function PageLoader() {
   )
 }
 
-
-// Persona context
+// ─── Contexts ──────────────────────────────────────────────────
 const PersonaContext = createContext()
 
 export function usePersona() {
   return useContext(PersonaContext)
 }
 
-const PERSONAS = {
+// 🔒 AI 설정 컨텍스트 (외부 API 차단 토글)
+const AiContext = createContext()
+
+export function useAiConfig() {
+  return useContext(AiContext)
+}
+
+// ─── 기본 데모 페르소나 (실 데이터 없을 때 사용) ──────────────
+const DEMO_PERSONAS = {
   'EMP001': {
     id: 'EMP001',
     name: '김선영',
@@ -111,11 +119,126 @@ const PERSONAS = {
   }
 }
 
+// ─── HS 실 데이터 로드 (단일 HTML 패키징을 위한 정적 로드) ─────
+import hsPersonasData from './data/hs-personas.json'
+import hsJobsData from './data/hs-jobs.json'
+import hsMovementsData from './data/hs-movements.json'
+
+async function loadHsEmployees() {
+  return hsPersonasData
+}
+
+async function loadHsJobs() {
+  return hsJobsData
+}
+
+async function loadHsMovements() {
+  return hsMovementsData
+}
+
+// ─── 보안 배너: 실 데이터 모드 표시 ──────────────────────────
+function SecurityBanner({ dataMode, aiEnabled, onToggleAi }) {
+  if (dataMode !== 'hs-real') return null
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999,
+      background: aiEnabled ? '#1a1a2e' : '#0a0a0a',
+      borderBottom: `2px solid ${aiEnabled ? '#f59e0b' : '#22c55e'}`,
+      padding: '6px 20px',
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      fontSize: '11px', fontFamily: 'monospace',
+      transition: 'border-color 0.3s ease',
+    }}>
+      <span style={{ color: '#22c55e', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <strong>HS 실 데이터 모드</strong>
+        <span style={{ color: '#6b7280' }}>— 로컬 전용 실행 중 | 네트워크 전송 없음 | 사번 익명화 완료</span>
+      </span>
+      <button
+        onClick={onToggleAi}
+        title={aiEnabled ? 'AI API 차단하기' : 'AI API 활성화 (외부 전송 발생)'}
+        style={{
+          background: aiEnabled ? 'rgba(245,158,11,0.15)' : 'rgba(34,197,94,0.1)',
+          border: `1px solid ${aiEnabled ? '#f59e0b' : '#22c55e'}`,
+          color: aiEnabled ? '#f59e0b' : '#22c55e',
+          padding: '3px 10px', borderRadius: '4px', cursor: 'pointer',
+          fontSize: '10px', fontFamily: 'monospace', fontWeight: 'bold',
+          display: 'flex', alignItems: 'center', gap: '5px',
+        }}
+      >
+        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          {aiEnabled
+            ? <path d="M12 3v4M12 17v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/>
+            : <><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></>
+          }
+        </svg>
+        AI {aiEnabled ? 'ON (외부 API 사용 중)' : 'OFF (차단됨)'}
+      </button>
+    </div>
+  )
+}
+
+// ─── HS 직원 데이터를 앱 포맷으로 정규화 ──────────────────────
+function normalizeHsEmployee(emp) {
+  return {
+    id: emp.id,
+    name: emp.name,
+    age: emp.joinYear ? (2025 - emp.joinYear + 25) : 35,
+    joinYear: emp.joinYear || 2016,
+    currentJobId: emp.currentJob || 'JOB_UNKNOWN',
+    currentJobName: emp.currentJobName || emp._jobgroup || '직무 미분류',
+    department: emp.department || 'HS전자',
+    businessUnit: emp.businessUnit || 'HS전자',
+    grade: emp.grade || '선임',
+    yearsInRole: emp.yearsInRole || 1,
+    totalYears: emp.totalYears || 1,
+    evaluationGrade: emp.evaluationGrade || 'A',
+    evaluationHistory: [],
+    leadershipPercentile: emp.leadershipPercentile || 50,
+    primarySkill: emp.primarySkill || emp._family || '전문기술',
+    skills: emp.skills || [],
+    certifications: emp.certifications || [],
+    education: emp.education || { degree: '학사', major: '', school: '' },
+    careerIntent: emp.careerIntent || 'explorer',
+    cohortPercentile: emp.cohortPercentile || 50,
+    movementHistory: emp.movementHistory || [],
+    _family: emp._family,
+    _jobgroup: emp._jobgroup,
+  }
+}
+
+// ─── 메인 App ─────────────────────────────────────────────────
 function App() {
-  const [persona, setPersona] = useState(PERSONAS['EMP001'])
+  const [persona, setPersona] = useState(DEMO_PERSONAS['EMP001'])
   const [showOnboarding, setShowOnboarding] = useState(true)
   const [targetJobId, setTargetJobId] = useState(null)
   const [selectedScenario, setSelectedScenario] = useState('t-shape')
+
+  // 🔒 실 데이터 모드 상태
+  const [dataMode, setDataMode] = useState('demo')   // 'demo' | 'hs-real'
+  const [hsPersonas, setHsPersonas] = useState(null) // HS 직원 목록
+  const [aiEnabled, setAiEnabled] = useState(true)   // 초기값: AI 활성 (demo 모드)
+
+  // HS 실 데이터 로드 시도 (앱 초기화 시 1회)
+  useEffect(() => {
+    Promise.all([loadHsEmployees(), loadHsJobs(), loadHsMovements()]).then(([empData, jobData, moveData]) => {
+      if (empData && empData.length > 0 && jobData && moveData) {
+        // careerData.js에 실 데이터 노드/엣지/스킬 갭 요건 런타임 주입
+        injectHsData(jobData, moveData)
+
+        setHsPersonas(empData)
+        setDataMode('hs-real')
+        setAiEnabled(false) // 🔒 실 데이터 모드: AI 기본 차단
+        setPersona(normalizeHsEmployee(empData[0]))
+        console.log(`[보안] HS 실 데이터 로드 완료: 직원 ${empData.length}명, 직무 ${jobData.length}개, 이동 ${moveData.length}개 — AI API 차단 모드`)
+      } else {
+        setDataMode('demo')
+        setAiEnabled(true) // 데모 모드: AI 활성
+      }
+    })
+  }, [])
 
   const resetOnboarding = () => {
     setShowOnboarding(true)
@@ -127,48 +250,85 @@ function App() {
     setPersona(newPersona)
     setShowOnboarding(false)
     setTargetJobId(null)
-    // 사용자가 온보딩에서 성향을 선택했다면 해당 성향을 기본 시나리오로 세팅
     if (newPersona.careerIntent) {
       setSelectedScenario(newPersona.careerIntent)
     }
   }
 
-  const value = {
+  // 페르소나 컨텍스트
+  const personaValue = {
     persona,
     resetOnboarding,
-    switchPersona: resetOnboarding, // Sidebar 호환성을 위해 유지
+    switchPersona: resetOnboarding,
     currentPersonaId: persona.id,
     targetJobId,
     setTargetJobId,
     selectedScenario,
     setSelectedScenario,
+    dataMode,
+    hsPersonas,
+    setPersonaById: (id) => {
+      if (dataMode === 'hs-real' && hsPersonas) {
+        const emp = hsPersonas.find(e => e.id === id)
+        if (emp) setPersona(normalizeHsEmployee(emp))
+      } else {
+        const demo = DEMO_PERSONAS[id]
+        if (demo) setPersona(demo)
+      }
+    },
   }
 
+  // 🔒 AI 컨텍스트 — 실 데이터 모드에서 외부 호출 차단
+  const aiValue = {
+    aiEnabled,
+    dataMode,
+    callAi: async (fn) => {
+      if (!aiEnabled) {
+        console.warn('[보안] AI API 호출 차단됨. 상단 배너에서 AI ON으로 전환하세요.')
+        return null
+      }
+      return fn()
+    },
+  }
+
+  const bannerHeight = dataMode === 'hs-real' ? 32 : 0
+
   return (
-    <PersonaContext.Provider value={value}>
-      {showOnboarding && (
-        <OnboardingFlow
-          persona={persona}
-          onComplete={handleOnboardingComplete}
-          onSkip={() => {
-            setPersona(PERSONAS['EMP001'])
-            setShowOnboarding(false)
-          }}
+    <AiContext.Provider value={aiValue}>
+      <PersonaContext.Provider value={personaValue}>
+        <SecurityBanner
+          dataMode={dataMode}
+          aiEnabled={aiEnabled}
+          onToggleAi={() => setAiEnabled(prev => !prev)}
         />
-      )}
-      <Layout>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/graph" element={<CareerGraphPage />} />
-            <Route path="/skill-gap" element={<SkillGapPage />} />
-            <Route path="/advisor" element={<AdvisorPage />} />
-            <Route path="/data-requirements" element={<DataRequirementsPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Suspense>
-      </Layout>
-    </PersonaContext.Provider>
+        <div style={{ paddingTop: bannerHeight }}>
+          {showOnboarding && (
+            <OnboardingFlow
+              persona={persona}
+              onComplete={handleOnboardingComplete}
+              onSkip={() => {
+                setPersona(dataMode === 'hs-real' && hsPersonas
+                  ? normalizeHsEmployee(hsPersonas[0])
+                  : DEMO_PERSONAS['EMP001'])
+                setShowOnboarding(false)
+              }}
+            />
+          )}
+          <Layout>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/graph" element={<CareerGraphPage />} />
+                <Route path="/skill-gap" element={<SkillGapPage />} />
+                <Route path="/advisor" element={<AdvisorPage />} />
+                <Route path="/data-requirements" element={<DataRequirementsPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
+          </Layout>
+        </div>
+      </PersonaContext.Provider>
+    </AiContext.Provider>
   )
 }
 

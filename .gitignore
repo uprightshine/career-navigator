@@ -22,3 +22,24 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔒 보안: 실 데이터 파일 — git에서 완전 제외
+# 개인정보를 포함하며 절대 외부에 노출되어서는 안 됩니다.
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 원본 엑셀 데이터
+*.xlsx
+*.xls
+*.csv
+
+# 변환된 실 데이터 JSON (익명화되었으나 내부 데이터이므로 제외)
+src/data/hs-employees.json
+src/data/hs-employees-compressed.json
+src/data/hs-personas.json
+src/data/hs-jobs.json
+src/data/hs-movements.json
+
+# 환경 변수
+.env.local
+.env.production
