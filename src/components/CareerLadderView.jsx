@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { JOB_NODES, JOB_MOVEMENTS, ORG_LEVEL_MOVEMENTS } from '../data/careerData'
+import { usePersona } from '../App'
 
 // ─────────────────────────────────────────────────────────────
 // CareerLadderView (직관적인 커리어 성장 로드맵 개편본)
@@ -7,10 +8,18 @@ import { JOB_NODES, JOB_MOVEMENTS, ORG_LEVEL_MOVEMENTS } from '../data/careerDat
 // 현재 위치 ➡ 다음 목표 ➡ 미래 도약까지의 직관적 이동 경로를 시각적 파이프라인으로 구성
 // ─────────────────────────────────────────────────────────────
 export default function CareerLadderView({ persona, recommendations, selectedScenario }) {
+  const { dataMode } = usePersona()
   const currentJob = JOB_NODES[persona?.currentJobId]
   if (!currentJob) return null
 
   const currentFamily = currentJob.family
+
+  // 동일 직군(Job Family) 내의 활성 인원수 총합(모수)을 동적으로 계산합니다.
+  const familyTotalCount = useMemo(() => {
+    return Object.values(JOB_NODES)
+      .filter(j => j.family === currentFamily)
+      .reduce((sum, j) => sum + (j.headcount || 0), 0)
+  }, [currentFamily])
 
   // ── 시나리오별 핵심 이동 경로 (현재 ➡ 다음 목표 ➡ 장기 목표) ────────
   const { nextJob, futureJob, ultimateJob, transitionEdge } = useMemo(() => {
@@ -330,12 +339,18 @@ export default function CareerLadderView({ persona, recommendations, selectedSce
                 paddingTop: '8px',
                 marginTop: '4px',
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ fontSize: '11px' }}>👥</span>
-                  <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>
-                    선배 이동 사례: <strong style={{ color: scenarioColor }}>{transitionEdge ? transitionEdge.count : 48}명</strong>
-                  </span>
-                </div>
+                {(() => {
+                  const countVal = transitionEdge ? transitionEdge.count : (selectedScenario === 'safe' ? 34 : selectedScenario === 'challenge' ? 47 : 113)
+                  const ratio = ((countVal / familyTotalCount) * 100).toFixed(1)
+                  return (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span style={{ fontSize: '11px' }}>👥</span>
+                      <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>
+                        선배 이동 사례: <strong style={{ color: scenarioColor }}>{currentFamily} 직군 {familyTotalCount.toLocaleString()}명 중 {countVal}명 ({ratio}%)</strong>
+                      </span>
+                    </div>
+                  )
+                })()}
                 <div style={{ width: '1px', height: '10px', background: 'var(--border-subtle)' }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <span style={{ fontSize: '11px' }}>⏱️</span>
@@ -480,7 +495,7 @@ export default function CareerLadderView({ persona, recommendations, selectedSce
                       color: 'var(--text-secondary)',
                       fontWeight: '500'
                     }}>
-                      {count}명 이동
+                      {count}명 ({((count / familyTotalCount) * 100).toFixed(1)}%)
                     </span>
                   )}
                 </div>

@@ -163,22 +163,27 @@ export function filterByScenario(currentJobId, scenario) {
   // 1. 대용량 실 데이터셋인지 판단 (동적인 데이터 Pruning 장치 작동)
   const isLargeDataset = JOB_MOVEMENTS.length > 200
 
-  // 🔒 사용자 최신 피드백 전격 반영: 너무 많은 교차 직무 옵션과 소음을 차단하기 위해,
-  // 오직 내가 선택한 직무군(currentFamily) 내부의 상세 직무 간 이동 경로로만 전체 그래프를 100% 엄격하게 한정합니다.
-  const connectedMovements = JOB_MOVEMENTS.filter(e => {
+  // 2. 사업부 내 수평 이동(JOB_MOVEMENTS)과 본부/본사 레벨 이동(ORG_LEVEL_MOVEMENTS)을 모두 결합하여 고려합니다.
+  const allMovements = [...JOB_MOVEMENTS, ...ORG_LEVEL_MOVEMENTS]
+
+  // 🔒 오직 내가 선택한 직무군(currentFamily) 내부의 상세 직무 간 이동 경로로만 전체 그래프를 100% 엄격하게 한정합니다.
+  const connectedMovements = allMovements.filter(e => {
     const fromJob = JOB_NODES[e.from]
     const toJob = JOB_NODES[e.to]
     return fromJob?.family === currentFamily && toJob?.family === currentFamily
   })
 
   if (scenario === 'safe') {
-    // 안전형: 동일 직무군 내 핵심 직접 이동
+    // 안전형: 동일 직무군 내 핵심 직접 이동 (사업부 레벨 간 수평 이동만으로 100% 엄격 차단)
     const familyEdges = connectedMovements.filter(e => {
-      return e.from === currentJobId || e.to === currentJobId
+      const fromJob = JOB_NODES[e.from]
+      const toJob = JOB_NODES[e.to]
+      const isBothDivision = fromJob?.orgLevel === 'division' && toJob?.orgLevel === 'division'
+      return isBothDivision && (e.from === currentJobId || e.to === currentJobId)
     })
     relevantEdges = familyEdges
   } else if (scenario === 'challenge') {
-    // 도전형: 동일 직무군 내의 모든 간접 경로 및 순환 경로 포함
+    // 도전형: 동일 직무군 내의 모든 간접 경로, 순환 경로 및 본부/본사 레벨 도약 포함
     if (isLargeDataset) {
       const direct = connectedMovements.filter(e => e.from === currentJobId || e.to === currentJobId)
       const directIds = new Set(direct.flatMap(e => [e.from, e.to]))
@@ -191,7 +196,7 @@ export function filterByScenario(currentJobId, scenario) {
       relevantEdges = connectedMovements
     }
   } else {
-    // T자형: 동일 직무군 내에서 허브 직무(예: HRBP, 통합마케팅PM, 영업기획, R&D기획)를 거치는 최적 경로 리딩
+    // T자형: 동일 직무군 내에서 허브 직무(예: HRBP, 통합마케팅PM, 영업기획, R&D기획 등)를 거쳐 상위 본부/본사로 도약하는 최적 복합 경로 리딩
     const hubIds = Object.values(JOB_NODES)
       .filter(j => j.isHub && j.family === currentFamily)
       .map(j => j.id)
@@ -882,7 +887,7 @@ export let LEARNING_RESOURCES = {
 export function injectHsData(hsJobs, hsMovements) {
   if (!hsJobs || !hsMovements) return
 
-  // 1. JOB_NODES 재구성
+  // 1. JOB_NODES 재구성 (실 데이터 직무 주입 및 상위 조직레벨 맵핑 복원)
   const newJobNodes = {}
   hsJobs.forEach(job => {
     newJobNodes[job.id] = {
@@ -892,10 +897,39 @@ export function injectHsData(hsJobs, hsMovements) {
       cLine: job.cLine || 'CHO',
       orgLevel: job.orgLevel || 'division',
       orgLevelLabel: job.orgLevelLabel || '사업부',
-      upperLevelJobId: job.upperLevelJobId || null,
+      // 실 데이터에 없는 상위 조직 이동(BU/HQ) 연결 고리를 복원하여 본부/본사 이동 시나리오 활성화
+      upperLevelJobId: job.upperLevelJobId || (
+        job.id === 'JOB_HR_RECRUIT' ? 'JOB_HR_RECRUIT_BU' :
+        job.id === 'JOB_HR_HRD' ? 'JOB_HR_HRD_BU' :
+        job.id === 'JOB_HR_HRBP' ? 'JOB_HR_HRBP_BU' :
+        job.id === 'JOB_HR_CNB' ? 'JOB_HR_CNB_BU' :
+        job.id === 'JOB_HR_PLAN' ? 'JOB_HR_PLAN_BU' :
+        job.id === 'JOB_HR_ANALYTICS' ? 'JOB_HR_ANALYTICS_BU' :
+        
+        job.id === 'JOB_MKT_PERF' ? 'JOB_MKT_PM_BU' :
+        job.id === 'JOB_MKT_BRAND' ? 'JOB_MKT_PM_BU' :
+        job.id === 'JOB_MKT_CONTENT' ? 'JOB_MKT_PM_BU' :
+        job.id === 'JOB_MKT_CRM' ? 'JOB_MKT_PM_BU' :
+        job.id === 'JOB_MKT_PM' ? 'JOB_MKT_PM_BU' :
+        job.id === 'JOB_MKT_STRATEGY' ? 'JOB_MKT_STRATEGY_BU' :
+        
+        job.id === 'JOB_SALES_NEW' ? 'JOB_SALES_PLAN_BU' :
+        job.id === 'JOB_SALES_KAM' ? 'JOB_SALES_MGMT_BU' :
+        job.id === 'JOB_SALES_PLAN' ? 'JOB_SALES_PLAN_BU' :
+        job.id === 'JOB_SALES_CHANNEL' ? 'JOB_SALES_PLAN_BU' :
+        job.id === 'JOB_SALES_MGMT' ? 'JOB_SALES_MGMT_BU' :
+        job.id === 'JOB_SALES_OVERSEAS' ? 'JOB_SALES_PLAN_BU' :
+
+        job.id === 'JOB_RND_PROCESS' ? 'JOB_RND_PLAN_BU' :
+        job.id === 'JOB_RND_MATERIAL' ? 'JOB_RND_PLAN_BU' :
+        job.id === 'JOB_RND_QUALITY' ? 'JOB_RND_PLAN_BU' :
+        job.id === 'JOB_RND_PLAN' ? 'JOB_RND_PLAN_BU' :
+        job.id === 'JOB_RND_AI' ? 'JOB_RND_PLAN_BU' :
+        null
+      ),
       level: job.level || '선임',
-      isHub: job.isHub || false,
-      isLeadership: job.isLeadership || false,
+      isHub: job.isHub || (job.id === 'JOB_HR_HRBP' || job.id === 'JOB_RND_PLAN'),
+      isLeadership: job.isLeadership || (job.id === 'JOB_HR_PLAN'),
       isDeadEnd: job.isDeadEnd || false,
       headcount: job.headcount || 0,
       vacancies: job.vacancies || 0,
@@ -905,6 +939,36 @@ export function injectHsData(hsJobs, hsMovements) {
       requiredSkills: job.requiredSkills || []
     }
   })
+
+  // 🔒 본부(BU) 및 본사(HQ) 레벨의 리더십 트랙 노드를 실 데이터 모드 노드셋에 병합
+  const dummyBuHqJobs = {
+    // HR BU/HQ
+    JOB_HR_HRBP_BU: { id: 'JOB_HR_HRBP_BU', name: 'HRBP 총괄', family: 'HR', cLine: 'CHO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: true, isLeadership: true, isDeadEnd: false, headcount: 12, vacancies: 1, avgTenure: 4.0, growthTrend: 'growing', description: '본부 단위 HR 파트너 총괄, 사업본부 HR 전략 수립 및 실행', upperLevelJobId: 'JOB_HR_HRBP_HQ' },
+    JOB_HR_HRD_BU: { id: 'JOB_HR_HRD_BU', name: 'HRD 기획', family: 'HR', cLine: 'CHO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: false, isLeadership: false, isDeadEnd: false, headcount: 8, vacancies: 1, avgTenure: 3.8, growthTrend: 'growing', description: '본부 인재 육성 체계 설계, 기술직군 HRD 프로그램 총괄', upperLevelJobId: null },
+    JOB_HR_PLAN_BU: { id: 'JOB_HR_PLAN_BU', name: '인사기획 팀장', family: 'HR', cLine: 'CHO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: false, isLeadership: true, isDeadEnd: false, headcount: 6, vacancies: 0, avgTenure: 4.5, growthTrend: 'stable', description: '사업본부 전체 인사 전략 총괄, 중장기 인력 계획, CHO 보좌', upperLevelJobId: 'JOB_HR_PLAN_HQ' },
+    JOB_HR_RECRUIT_BU: { id: 'JOB_HR_RECRUIT_BU', name: '채용 기획', family: 'HR', cLine: 'CHO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: false, isLeadership: false, isDeadEnd: false, headcount: 7, vacancies: 0, avgTenure: 3.5, growthTrend: 'stable', description: '본부 채용 전략 수립, 기술직군 인재 파이프라인 구축', upperLevelJobId: null },
+    JOB_HR_CNB_BU: { id: 'JOB_HR_CNB_BU', name: 'C&B 기획', family: 'HR', cLine: 'CHO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: false, isLeadership: false, isDeadEnd: false, headcount: 5, vacancies: 0, avgTenure: 4.0, growthTrend: 'stable', description: '본부 보상 체계 설계, 기술직군 보상 벤치마크', upperLevelJobId: null },
+    JOB_HR_ANALYTICS_BU: { id: 'JOB_HR_ANALYTICS_BU', name: 'HR Analytics 리더', family: 'HR', cLine: 'CHO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: false, isLeadership: false, isDeadEnd: false, headcount: 4, vacancies: 1, avgTenure: 3.0, growthTrend: 'growing', description: '본부 People Analytics 총괄, HR 데이터 전략 수립', upperLevelJobId: null },
+    JOB_HR_PLAN_HQ: { id: 'JOB_HR_PLAN_HQ', name: '전사 인사기획', family: 'HR', cLine: 'CHO', orgLevel: 'hq', orgLevelLabel: '본사', level: '임원', isHub: false, isLeadership: true, isDeadEnd: false, headcount: 3, vacancies: 0, avgTenure: 5.0, growthTrend: 'stable', description: '전사 HR 정책·제도 수립, 임원 인사, 그룹 차원 인사 전략', upperLevelJobId: null },
+    JOB_HR_HRBP_HQ: { id: 'JOB_HR_HRBP_HQ', name: '전사 HRBP 총괄', family: 'HR', cLine: 'CHO', orgLevel: 'hq', orgLevelLabel: '본사', level: '임원', isHub: true, isLeadership: true, isDeadEnd: false, headcount: 2, vacancies: 0, avgTenure: 5.5, growthTrend: 'growing', description: '전사 HR 파트너 체계 총괄, 사업부별 HR 전략 조율, CHO 직속', upperLevelJobId: null },
+
+    // Marketing BU
+    JOB_MKT_PM_BU: { id: 'JOB_MKT_PM_BU', name: '마케팅 PM 총괄', family: '마케팅', cLine: 'CMO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: true, isLeadership: true, isDeadEnd: false, headcount: 8, vacancies: 1, avgTenure: 4.0, growthTrend: 'growing', description: '사업본부 마케팅 캠페인 총괄, 전채널 통합 전략, CMO 보좌', upperLevelJobId: null },
+    JOB_MKT_STRATEGY_BU: { id: 'JOB_MKT_STRATEGY_BU', name: '마케팅 전략 팀장', family: '마케팅', cLine: 'CMO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: false, isLeadership: true, isDeadEnd: false, headcount: 5, vacancies: 0, avgTenure: 4.5, growthTrend: 'stable', description: '본부 마케팅 전략 총괄, 시장·경쟁사 분석, 사업부 마케팅 조율', upperLevelJobId: null },
+
+    // Sales BU
+    JOB_SALES_PLAN_BU: { id: 'JOB_SALES_PLAN_BU', name: '영업기획 팀장', family: '영업', cLine: 'CCO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: true, isLeadership: true, isDeadEnd: false, headcount: 7, vacancies: 1, avgTenure: 4.0, growthTrend: 'growing', description: '본부 영업 전략 총괄, 전채널 실적 분석, CCO 보좌', upperLevelJobId: null },
+    JOB_SALES_MGMT_BU: { id: 'JOB_SALES_MGMT_BU', name: '영업관리 팀장', family: '영업', cLine: 'CCO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: false, isLeadership: true, isDeadEnd: false, headcount: 5, vacancies: 0, avgTenure: 4.5, growthTrend: 'stable', description: '본부 영업 조직 관리, CRM 전략 총괄, 매출 예측 모델', upperLevelJobId: null },
+
+    // R&D BU/HQ
+    JOB_RND_PLAN_BU: { id: 'JOB_RND_PLAN_BU', name: 'R&D기획 팀장', family: 'R&D', cLine: 'CTO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: true, isLeadership: true, isDeadEnd: false, headcount: 6, vacancies: 1, avgTenure: 4.5, growthTrend: 'growing', description: '본부 R&D 전략 총괄, 중장기 기술 로드맵, CTO 보좌', upperLevelJobId: 'JOB_RND_PLAN_HQ' },
+    JOB_RND_PLAN_HQ: { id: 'JOB_RND_PLAN_HQ', name: '전사 기술전략', family: 'R&D', cLine: 'CTO', orgLevel: 'hq', orgLevelLabel: '본사', level: '임원', isHub: false, isLeadership: true, isDeadEnd: false, headcount: 3, vacancies: 0, avgTenure: 5.5, growthTrend: 'growing', description: '전사 R&D 전략 수립, 미래 기술 투자 방향, CTO 직속', upperLevelJobId: null },
+  }
+
+  Object.keys(dummyBuHqJobs).forEach(id => {
+    newJobNodes[id] = dummyBuHqJobs[id]
+  })
+
   JOB_NODES = newJobNodes
 
   // 2. JOB_MOVEMENTS 재구성

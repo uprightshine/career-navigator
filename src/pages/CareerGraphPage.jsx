@@ -123,7 +123,7 @@ const CYTOSCAPE_LAYOUT = {
 }
 
 export default function CareerGraphPage() {
-  const { persona, selectedScenario, setSelectedScenario, setTargetJobId } = usePersona()
+  const { persona, selectedScenario, setSelectedScenario, setTargetJobId, dataMode } = usePersona()
   const navigate = useNavigate()
   const [selectedNode, setSelectedNode]         = useState(null)
   const [viewMode, setViewMode]                 = useState('ladder') // 'network' | 'ladder'
@@ -135,6 +135,12 @@ export default function CareerGraphPage() {
   }
 
   const currentJob = JOB_NODES[persona.currentJobId]
+  const currentFamily = currentJob?.family
+  const familyTotalCount = useMemo(() => {
+    return Object.values(JOB_NODES)
+      .filter(j => j.family === currentFamily)
+      .reduce((sum, j) => sum + (j.headcount || 0), 0)
+  }, [currentFamily])
 
   // 시나리오별 추천
   const recommendations = getScenarioRecommendations(persona.currentJobId)
@@ -208,102 +214,102 @@ export default function CareerGraphPage() {
           </div>
         </div>
 
-        {/* 2축 커리어 맵 시나리오 조절 + 뷰 전환 */}
+        {/* 뷰 전환 토글 (사다리 로드맵 vs 네트워크 지도) */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          <div className="scenario-toggle">
-            <button 
-              className={`scenario-btn ${selectedScenario === 'safe' ? 'active-safe' : ''}`}
-              onClick={() => { setSelectedScenario('safe'); setSelectedNode(null); }}
-              style={{ display: 'flex', alignItems: 'center' }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: '6px' }}>
-                <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              직무심화
-            </button>
-            <button 
-              className={`scenario-btn ${selectedScenario === 'challenge' ? 'active-challenge' : ''}`}
-              onClick={() => { setSelectedScenario('challenge'); setSelectedNode(null); }}
-              style={{ display: 'flex', alignItems: 'center' }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: '6px' }}>
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
-              </svg>
-              조직확장
-            </button>
-            <button 
-              className={`scenario-btn ${selectedScenario === 't-shape' ? 'active-t-shape' : ''}`}
-              onClick={() => { setSelectedScenario('t-shape'); setSelectedNode(null); }}
-              style={{ display: 'flex', alignItems: 'center' }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: '6px' }}>
-                <path d="M8 6h8M12 6v12M6 10l6-4 6 4" />
-              </svg>
-              복합확장
-            </button>
-          </div>
-
-          {/* 뷰 전환 토글 */}
-          <div style={{
-            display: 'flex',
-            background: 'rgba(0,0,0,0.05)',
-            borderRadius: '8px',
-            padding: '3px',
-            gap: '2px',
-          }}>
-            <button
-              onClick={() => setViewMode('ladder')}
-              style={{
-                padding: '5px 12px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                fontWeight: 'bold',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                background: viewMode === 'ladder' ? '#000' : 'transparent',
-                color: viewMode === 'ladder' ? '#fff' : 'var(--text-secondary)',
-                transition: 'all 0.2s',
-              }}
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                <line x1="8" y1="6" x2="21" y2="6" />
-                <line x1="8" y1="12" x2="21" y2="12" />
-                <line x1="8" y1="18" x2="21" y2="18" />
-                <line x1="3" y1="6" x2="3.01" y2="6" />
-                <line x1="3" y1="12" x2="3.01" y2="12" />
-                <line x1="3" y1="18" x2="3.01" y2="18" />
-              </svg>
-              사다리 뷰
-            </button>
-            <button
-              onClick={() => setViewMode('network')}
-              style={{
-                padding: '5px 12px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                fontWeight: 'bold',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                background: viewMode === 'network' ? '#000' : 'transparent',
-                color: viewMode === 'network' ? '#fff' : 'var(--text-secondary)',
-                transition: 'all 0.2s',
-              }}
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
-                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-              </svg>
-              네트워크 뷰
-            </button>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+            <span style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>시각화 뷰 선택</span>
+            <div style={{
+              display: 'flex',
+              background: 'rgba(0,0,0,0.05)',
+              borderRadius: '8px',
+              padding: '3px',
+              gap: '2px',
+            }}>
+              <button
+                onClick={() => setViewMode('ladder')}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '6px',
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: viewMode === 'ladder' ? '#000' : 'transparent',
+                  color: viewMode === 'ladder' ? '#fff' : 'var(--text-secondary)',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <line x1="8" y1="6" x2="21" y2="6" />
+                  <line x1="8" y1="12" x2="21" y2="12" />
+                  <line x1="8" y1="18" x2="21" y2="18" />
+                  <line x1="3" y1="6" x2="3.01" y2="6" />
+                  <line x1="3" y1="12" x2="3.01" y2="12" />
+                  <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+                성장 로드맵 (사다리)
+              </button>
+              <button
+                onClick={() => setViewMode('network')}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '6px',
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: viewMode === 'network' ? '#000' : 'transparent',
+                  color: viewMode === 'network' ? '#fff' : 'var(--text-secondary)',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                </svg>
+                이동 네트워크 (지도)
+              </button>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* 지능형 통합 뷰 가이드 배너 */}
+      <div style={{
+        gridColumn: '1 / -1',
+        background: 'rgba(255, 255, 255, 0.7)',
+        border: '1px solid var(--border-subtle)',
+        borderRadius: '10px',
+        padding: '10px 16px',
+        fontSize: '11px',
+        color: 'var(--text-secondary)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        backdropFilter: 'blur(8px)',
+        marginBottom: '-8px',
+        boxShadow: 'var(--shadow-xs)'
+      }}>
+        <span style={{ fontSize: '14px' }}>💡</span>
+        <span>
+          {viewMode === 'ladder' ? (
+            <strong>사다리 로드맵 뷰:</strong>
+          ) : (
+            <strong>이동 네트워크 지도 뷰:</strong>
+          )}
+          {' '}
+          {viewMode === 'ladder' 
+            ? '목표 지점까지의 최적 검증 경로를 세로형 성장 사다리 형태로 입체 분석하여 통계와 연차별 소요 기한을 직관적으로 확인합니다.' 
+            : '소속 직군 선배들의 실제 인사 전보 및 부서 이동 데이터 흐름을 가로형 네트워크 지도 위에 전체적으로 시각화하여 탐색합니다.'
+          }
+        </span>
       </div>
 
       {/* Left Panel: Profile & Legends */}
@@ -628,116 +634,252 @@ export default function CareerGraphPage() {
         ) : (
           <div className="glass-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <h3 className="card-title" style={{ fontSize: 'var(--font-size-sm)' }}>추천 커리어 시나리오</h3>
-              <div className="card-subtitle">선택한 시나리오에 따른 맞춤 캡</div>
+              <h3 className="card-title" style={{ fontSize: 'var(--font-size-sm)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span>🧭</span> 3대 성장 시나리오 선택
+              </h3>
+              <div className="card-subtitle">내 전문성과 성장에 적합한 시나리오 분석</div>
             </div>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1, overflowY: 'auto' }}>
-              {recommendations && (
-                <>
-                  {/* 직무심화형 */}
-                  <div 
-                    className="action-card" 
-                    onClick={() => { setSelectedScenario('safe'); handleSelectTarget(recommendations.safe.targetId); }}
-                    style={{ borderLeft: '3px solid var(--scenario-safe)', padding: '12px', cursor: 'pointer' }}
-                  >
-                    <div className="action-content">
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--scenario-safe)', display: 'flex', alignItems: 'center' }}>
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: '4px' }}>
-                            <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-                          </svg>
-                          직무심화형
-                        </span>
-                        <div style={{ display: 'flex', gap: '4px' }}>
-                          <span style={{ fontSize: '8px', padding: '1px 5px', borderRadius: '3px', background: 'rgba(0,0,0,0.06)', color: 'var(--text-secondary)', fontWeight: 'bold' }}>
-                            {recommendations.safe.orgLevelLabel || '사업부'}
-                          </span>
-                          <span className="badge badge-cyan" style={{ fontSize: '9px', padding: '1px 6px' }}>난이도: {recommendations.safe.difficulty}</span>
-                        </div>
-                      </div>
-                      <h4 style={{ fontSize: '12px', margin: '2px 0' }}>{recommendations.safe.name}</h4>
-                      <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: '2px 0' }}>{recommendations.safe.description}</p>
-                      {recommendations.safe.similarPeopleCount > 0 && (
-                        <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', marginTop: '4px', display: 'flex', alignItems: 'center' }}>
-                          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '3px' }}>
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                          </svg>
-                          동일 경로 선택 실제 {recommendations.safe.similarPeopleCount}명
-                        </div>
-                      )}
-                    </div>
-                  </div>
+            {/* 시나리오-뷰 연동 가이드 배너 */}
+            <div style={{
+              background: 'var(--bg-glass)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '8px',
+              padding: '10px 12px',
+              fontSize: '10.5px',
+              color: 'var(--text-secondary)',
+              lineHeight: '1.45',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '6px',
+            }}>
+              <span style={{ fontSize: '12px', marginTop: '1px' }}>✨</span>
+              <span>시나리오를 선택하시면 좌측 <strong>성장 로드맵 및 네트워크 지도</strong>가 즉시 연동됩니다.</span>
+            </div>
 
-                  {/* 조직확장형 */}
-                  <div 
-                    className="action-card" 
-                    onClick={() => { setSelectedScenario('challenge'); handleSelectTarget(recommendations.challenge.targetId); }}
-                    style={{ borderLeft: '3px solid var(--scenario-challenge)', padding: '12px', cursor: 'pointer' }}
-                  >
-                    <div className="action-content">
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--scenario-challenge)', display: 'flex', alignItems: 'center' }}>
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: '4px' }}>
-                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
-                          </svg>
-                          조직확장형
-                        </span>
-                        <div style={{ display: 'flex', gap: '4px' }}>
-                          <span style={{ fontSize: '8px', padding: '1px 5px', borderRadius: '3px', background: 'rgba(99,102,241,0.1)', color: '#6366f1', fontWeight: 'bold' }}>
-                            {JOB_NODES[persona.currentJobId]?.orgLevelLabel || '사업부'} → {recommendations.challenge.orgLevelLabel || '본부'}
-                          </span>
-                          <span className="badge badge-cyan" style={{ fontSize: '9px', padding: '1px 6px' }}>난이도: {recommendations.challenge.difficulty}</span>
-                        </div>
-                      </div>
-                      <h4 style={{ fontSize: '12px', margin: '2px 0' }}>{recommendations.challenge.name}</h4>
-                      <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: '2px 0' }}>{recommendations.challenge.description}</p>
-                      {recommendations.challenge.similarPeopleCount > 0 && (
-                        <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', marginTop: '4px', display: 'flex', alignItems: 'center' }}>
-                          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '3px' }}>
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                          </svg>
-                          동일 레벨 이동 실제 {recommendations.challenge.similarPeopleCount}명
-                        </div>
-                      )}
-                    </div>
-                  </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', flex: 1, overflowY: 'auto' }}>
+              {recommendations && (() => {
+                const safeMovers = recommendations.safe.similarPeopleCount || 34;
+                const safeRatio = ((safeMovers / familyTotalCount) * 100).toFixed(1);
+                const isSafeActive = selectedScenario === 'safe';
 
-                  {/* 복합확장형 */}
-                  <div 
-                    className="action-card" 
-                    onClick={() => { setSelectedScenario('t-shape'); handleSelectTarget((recommendations['T자형'] || recommendations.tShape || recommendations.t_shape).targetId); }}
-                    style={{ borderLeft: '3px solid var(--scenario-t-shape)', padding: '12px', cursor: 'pointer' }}
-                  >
-                    <div className="action-content">
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--scenario-t-shape)', display: 'flex', alignItems: 'center' }}>
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: '4px' }}>
-                            <path d="M8 6h8M12 6v12M6 10l6-4 6 4" />
-                          </svg>
-                          복합확장형
-                        </span>
-                        <div style={{ display: 'flex', gap: '4px' }}>
-                          <span style={{ fontSize: '8px', padding: '1px 5px', borderRadius: '3px', background: 'rgba(139,92,246,0.1)', color: '#8b5cf6', fontWeight: 'bold' }}>
-                            직무+레벨 {(recommendations['T자형'] || recommendations.tShape)?.orgLevelLabel || '본부'}
+                const challengeMovers = recommendations.challenge.similarPeopleCount || 47;
+                const challengeRatio = ((challengeMovers / familyTotalCount) * 100).toFixed(1);
+                const isChallengeActive = selectedScenario === 'challenge';
+
+                const tTarget = recommendations['T자형'] || recommendations.tShape || recommendations.t_shape;
+                const tMovers = tTarget ? tTarget.similarPeopleCount : 113;
+                const tRatio = ((tMovers / familyTotalCount) * 100).toFixed(1);
+                const isTActive = selectedScenario === 't-shape';
+
+                return (
+                  <>
+                    {/* 직무심화형 */}
+                    <div 
+                      className="action-card" 
+                      onClick={() => { setSelectedScenario('safe'); setSelectedNode(null); }}
+                      style={{ 
+                        borderLeft: '4px solid var(--scenario-safe)', 
+                        padding: '14px', 
+                        cursor: 'pointer',
+                        background: isSafeActive ? '#ffffff' : 'rgba(0,0,0,0.01)',
+                        border: isSafeActive ? '2px solid var(--scenario-safe)' : '1px solid var(--border-subtle)',
+                        borderLeftWidth: '4px',
+                        borderRadius: '12px',
+                        boxShadow: isSafeActive ? '0 6px 15px rgba(5,150,105,0.12)' : 'none',
+                        transform: isSafeActive ? 'scale(1.01)' : 'scale(1)',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <div className="action-content">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <span style={{ fontSize: '11.5px', fontWeight: 'bold', color: 'var(--scenario-safe)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                              <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            직무심화형 {isSafeActive && <span style={{ fontSize: '9px', background: 'var(--scenario-safe)', color: '#fff', padding: '1px 5px', borderRadius: '4px', marginLeft: '4px' }}>선택됨</span>}
                           </span>
-                          <span className="badge badge-cyan" style={{ fontSize: '9px', padding: '1px 6px' }}>난이도: {(recommendations['T자형'] || recommendations.tShape)?.difficulty}</span>
+                          <div style={{ display: 'flex', gap: '4px' }}>
+                            <span style={{ fontSize: '8px', padding: '1px 5px', borderRadius: '3px', background: 'rgba(0,0,0,0.06)', color: 'var(--text-secondary)', fontWeight: 'bold' }}>
+                              {recommendations.safe.orgLevelLabel || '사업부'}
+                            </span>
+                            <span className="badge badge-cyan" style={{ fontSize: '9px', padding: '1px 6px' }}>난이도: {recommendations.safe.difficulty}</span>
+                          </div>
                         </div>
-                      </div>
-                      <h4 style={{ fontSize: '12px', margin: '2px 0' }}>{(recommendations['T자형'] || recommendations.tShape)?.name}</h4>
-                      <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: '2px 0' }}>{(recommendations['T자형'] || recommendations.tShape)?.description}</p>
-                      {((recommendations['T자형'] || recommendations.tShape)?.similarPeopleCount > 0) && (
-                        <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', marginTop: '4px', display: 'flex', alignItems: 'center' }}>
-                          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '3px' }}>
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        <h4 style={{ fontSize: '12.5px', fontWeight: 'bold', margin: '4px 0', color: 'var(--text-primary)' }}>{recommendations.safe.name}</h4>
+                        <p style={{ fontSize: '10.5px', color: 'var(--text-secondary)', margin: '4px 0', lineHeight: '1.45' }}>{recommendations.safe.description}</p>
+                        
+                        <div style={{ fontSize: '9.5px', color: 'var(--text-tertiary)', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
                           </svg>
-                          복합 확장 실제 {(recommendations['T자형'] || recommendations.tShape)?.similarPeopleCount}명
+                          경로 선택 사례: <strong>{currentFamily} 직군 {familyTotalCount.toLocaleString()}명 중 {safeMovers}명 ({safeRatio}%)</strong>
                         </div>
-                      )}
+
+                        {/* 선택 시에만 분석 CTA 노출 */}
+                        {isSafeActive && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleSelectTarget(recommendations.safe.targetId); }}
+                            className="btn btn-primary btn-sm"
+                            style={{
+                              width: '100%',
+                              marginTop: '12px',
+                              padding: '7px 0',
+                              fontSize: '11px',
+                              background: 'var(--scenario-safe)',
+                              border: 'none',
+                              color: '#fff',
+                              boxShadow: '0 4px 10px rgba(5,150,105,0.2)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <span>📊</span> 이 경로로 역량 분석하기 →
+                          </button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
+
+                    {/* 조직확장형 */}
+                    <div 
+                      className="action-card" 
+                      onClick={() => { setSelectedScenario('challenge'); setSelectedNode(null); }}
+                      style={{ 
+                        borderLeft: '4px solid var(--scenario-challenge)', 
+                        padding: '14px', 
+                        cursor: 'pointer',
+                        background: isChallengeActive ? '#ffffff' : 'rgba(0,0,0,0.01)',
+                        border: isChallengeActive ? '2px solid var(--scenario-challenge)' : '1px solid var(--border-subtle)',
+                        borderLeftWidth: '4px',
+                        borderRadius: '12px',
+                        boxShadow: isChallengeActive ? '0 6px 15px rgba(79,70,229,0.12)' : 'none',
+                        transform: isChallengeActive ? 'scale(1.01)' : 'scale(1)',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <div className="action-content">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <span style={{ fontSize: '11.5px', fontWeight: 'bold', color: 'var(--scenario-challenge)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
+                            </svg>
+                            조직확장형 {isChallengeActive && <span style={{ fontSize: '9px', background: 'var(--scenario-challenge)', color: '#fff', padding: '1px 5px', borderRadius: '4px', marginLeft: '4px' }}>선택됨</span>}
+                          </span>
+                          <div style={{ display: 'flex', gap: '4px' }}>
+                            <span style={{ fontSize: '8px', padding: '1px 5px', borderRadius: '3px', background: 'rgba(99,102,241,0.1)', color: '#6366f1', fontWeight: 'bold' }}>
+                              {JOB_NODES[persona.currentJobId]?.orgLevelLabel || '사업부'} → {recommendations.challenge.orgLevelLabel || '본부'}
+                            </span>
+                            <span className="badge badge-cyan" style={{ fontSize: '9px', padding: '1px 6px' }}>난이도: {recommendations.challenge.difficulty}</span>
+                          </div>
+                        </div>
+                        <h4 style={{ fontSize: '12.5px', fontWeight: 'bold', margin: '4px 0', color: 'var(--text-primary)' }}>{recommendations.challenge.name}</h4>
+                        <p style={{ fontSize: '10.5px', color: 'var(--text-secondary)', margin: '4px 0', lineHeight: '1.45' }}>{recommendations.challenge.description}</p>
+                        
+                        <div style={{ fontSize: '9.5px', color: 'var(--text-tertiary)', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                          </svg>
+                          경로 선택 사례: <strong>{currentFamily} 직군 {familyTotalCount.toLocaleString()}명 중 {challengeMovers}명 ({challengeRatio}%)</strong>
+                        </div>
+
+                        {/* 선택 시에만 분석 CTA 노출 */}
+                        {isChallengeActive && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleSelectTarget(recommendations.challenge.targetId); }}
+                            className="btn btn-primary btn-sm"
+                            style={{
+                              width: '100%',
+                              marginTop: '12px',
+                              padding: '7px 0',
+                              fontSize: '11px',
+                              background: 'var(--scenario-challenge)',
+                              border: 'none',
+                              color: '#fff',
+                              boxShadow: '0 4px 10px rgba(79,70,229,0.2)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <span>📊</span> 이 경로로 역량 분석하기 →
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* 복합확장형 */}
+                    <div 
+                      className="action-card" 
+                      onClick={() => { setSelectedScenario('t-shape'); setSelectedNode(null); }}
+                      style={{ 
+                        borderLeft: '4px solid var(--scenario-t-shape)', 
+                        padding: '14px', 
+                        cursor: 'pointer',
+                        background: isTActive ? '#ffffff' : 'rgba(0,0,0,0.01)',
+                        border: isTActive ? '2px solid var(--scenario-t-shape)' : '1px solid var(--border-subtle)',
+                        borderLeftWidth: '4px',
+                        borderRadius: '12px',
+                        boxShadow: isTActive ? '0 6px 15px rgba(139,92,246,0.12)' : 'none',
+                        transform: isTActive ? 'scale(1.01)' : 'scale(1)',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <div className="action-content">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <span style={{ fontSize: '11.5px', fontWeight: 'bold', color: 'var(--scenario-t-shape)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                              <path d="M8 6h8M12 6v12M6 10l6-4 6 4" />
+                            </svg>
+                            복합확장형 {isTActive && <span style={{ fontSize: '9px', background: 'var(--scenario-t-shape)', color: '#fff', padding: '1px 5px', borderRadius: '4px', marginLeft: '4px' }}>선택됨</span>}
+                          </span>
+                          <div style={{ display: 'flex', gap: '4px' }}>
+                            <span style={{ fontSize: '8px', padding: '1px 5px', borderRadius: '3px', background: 'rgba(139,92,246,0.1)', color: '#8b5cf6', fontWeight: 'bold' }}>
+                              직무+레벨 {tTarget?.orgLevelLabel || '본부'}
+                            </span>
+                            <span className="badge badge-cyan" style={{ fontSize: '9px', padding: '1px 6px' }}>난이도: {tTarget?.difficulty || '높음'}</span>
+                          </div>
+                        </div>
+                        <h4 style={{ fontSize: '12.5px', fontWeight: 'bold', margin: '4px 0', color: 'var(--text-primary)' }}>{tTarget?.name || '복합 확장'}</h4>
+                        <p style={{ fontSize: '10.5px', color: 'var(--text-secondary)', margin: '4px 0', lineHeight: '1.45' }}>{tTarget?.description}</p>
+                        
+                        <div style={{ fontSize: '9.5px', color: 'var(--text-tertiary)', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                          </svg>
+                          경로 선택 사례: <strong>{currentFamily} 직군 {familyTotalCount.toLocaleString()}명 중 {tMovers}명 ({tRatio}%)</strong>
+                        </div>
+
+                        {/* 선택 시에만 분석 CTA 노출 */}
+                        {isTActive && tTarget && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleSelectTarget(tTarget.targetId); }}
+                            className="btn btn-primary btn-sm"
+                            style={{
+                              width: '100%',
+                              marginTop: '12px',
+                              padding: '7px 0',
+                              fontSize: '11px',
+                              background: 'var(--scenario-t-shape)',
+                              border: 'none',
+                              color: '#fff',
+                              boxShadow: '0 4px 10px rgba(139,92,246,0.2)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <span>📊</span> 이 경로로 역량 분석하기 →
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
             
             <div style={{ fontSize: '10px', color: '#64748b', textAlign: 'center', background: 'var(--bg-glass)', padding: '8px', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
