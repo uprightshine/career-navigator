@@ -2,53 +2,90 @@ import { useMemo } from 'react'
 import { JOB_NODES, JOB_MOVEMENTS, ORG_LEVEL_MOVEMENTS } from '../data/careerData'
 
 // ─────────────────────────────────────────────────────────────
-// CareerLadderView
-// 5~15년차 대상 "커리어 사다리" 시각화
-// Y축: 조직 레벨 (사업부 → 본부 → 본사)
-// X축: 직무 전문성 (인접 직무 수평 이동)
+// CareerLadderView (직관적인 커리어 성장 로드맵 개편본)
+// 중복 정보와 난잡한 그리드를 걷어내고, 
+// 현재 위치 ➡ 다음 목표 ➡ 미래 도약까지의 직관적 이동 경로를 시각적 파이프라인으로 구성
 // ─────────────────────────────────────────────────────────────
 export default function CareerLadderView({ persona, recommendations, selectedScenario }) {
   const currentJob = JOB_NODES[persona?.currentJobId]
   if (!currentJob) return null
 
   const currentFamily = currentJob.family
-  const currentOrgLevel = currentJob.orgLevel || 'division'
 
-  // ── 조직 레벨별 같은 family 직무 수집 ──────────────────────
-  const jobsByLevel = useMemo(() => {
-    const all = Object.values(JOB_NODES).filter(j => j.family === currentFamily)
-    return {
-      hq:       all.filter(j => j.orgLevel === 'hq'),
-      bu:       all.filter(j => j.orgLevel === 'bu'),
-      division: all.filter(j => j.orgLevel === 'division'),
+  // ── 시나리오별 핵심 이동 경로 (현재 ➡ 다음 목표 ➡ 장기 목표) ────────
+  const { nextJob, futureJob, ultimateJob, transitionEdge } = useMemo(() => {
+    if (!recommendations) return {}
+    
+    // 1. 다음 목표 직무 (Next Step Target)
+    const targetId = selectedScenario === 'safe'
+      ? recommendations.safe?.targetId
+      : selectedScenario === 'challenge'
+      ? recommendations.challenge?.targetId
+      : (recommendations['T자형'] || recommendations.tShape || recommendations.t_shape)?.targetId
+
+    const next = JOB_NODES[targetId]
+    
+    // 2. 이동 통계 (Current ➡ Next)
+    const allEdges = [...JOB_MOVEMENTS, ...ORG_LEVEL_MOVEMENTS]
+    const edge = allEdges.find(e => e.from === currentJob.id && e.to === targetId) ||
+                 allEdges.find(e => e.from === targetId && e.to === currentJob.id)
+
+    // 3. 장기 목표 직무 (Long-term Goal)
+    let future = null
+    let ultimate = null
+    
+    if (next) {
+      if (next.upperLevelJobId && JOB_NODES[next.upperLevelJobId]) {
+        future = JOB_NODES[next.upperLevelJobId]
+        if (future.upperLevelJobId && JOB_NODES[future.upperLevelJobId]) {
+          ultimate = JOB_NODES[future.upperLevelJobId]
+        }
+      } else {
+        // upperLevelJobId가 없는 실 데이터인 경우, 직무군 내의 수석/리더급 중 최다 이동 대상을 매칭
+        const candidates = Object.values(JOB_NODES).filter(j => 
+          j.family === currentFamily && 
+          (j.orgLevel === 'bu' || j.orgLevel === 'hq') &&
+          j.id !== next.id
+        )
+        if (candidates.length > 0) {
+          future = candidates[0]
+          if (candidates.length > 1) {
+            ultimate = candidates[1]
+          }
+        }
+      }
     }
-  }, [currentFamily])
 
-  // ── 시나리오별 하이라이트 직무 ────────────────────────────
-  const targetJobId = useMemo(() => {
-    if (!recommendations) return null
-    if (selectedScenario === 'safe')      return recommendations.safe?.targetId
-    if (selectedScenario === 'challenge') return recommendations.challenge?.targetId
-    return (recommendations['T자형'] || recommendations.tShape)?.targetId
-  }, [recommendations, selectedScenario])
+    return {
+      nextJob: next,
+      futureJob: future,
+      ultimateJob: ultimate,
+      transitionEdge: edge
+    }
+  }, [recommendations, selectedScenario, currentJob, currentFamily])
 
-  // ── 이동 엣지 통합 (수평 + 수직) ─────────────────────────
-  const allEdges = useMemo(() => [
-    ...JOB_MOVEMENTS,
-    ...ORG_LEVEL_MOVEMENTS
-  ], [])
-
-  // 두 직무 간 이동 데이터 조회
-  const getEdge = (fromId, toId) =>
-    allEdges.find(e => e.from === fromId && e.to === toId) ||
-    allEdges.find(e => e.from === toId   && e.to === fromId)
+  // ── 대안 수평 직무 탐색 (Clutter 방지를 위해 하단 트레이로 격리) ────────
+  const alternativeJobs = useMemo(() => {
+    return Object.values(JOB_NODES).filter(j => 
+      j.family === currentFamily && 
+      j.orgLevel === 'division' &&
+      j.id !== currentJob.id &&
+      j.id !== nextJob?.id
+    )
+  }, [currentFamily, currentJob, nextJob])
 
   // ── 시나리오 색상 ──────────────────────────────────────────
   const scenarioColor = {
-    safe:      'var(--scenario-safe)',
-    challenge: 'var(--scenario-challenge)',
-    't-shape': 'var(--scenario-t-shape)',
+    safe:      '#059669', // Emerald Green for safe path
+    challenge: '#4f46e5', // Indigo Blue for challenge path
+    't-shape': '#8b5cf6', // Purple for T-shape path
   }[selectedScenario] || '#06b6d4'
+
+  const scenarioBgColor = {
+    safe:      'rgba(5, 150, 105, 0.08)',
+    challenge: 'rgba(79, 70, 229, 0.08)',
+    't-shape': 'rgba(139, 92, 246, 0.08)',
+  }[selectedScenario] || 'rgba(6, 182, 212, 0.08)'
 
   const scenarioLabel = {
     safe:      '직무심화형',
@@ -56,367 +93,402 @@ export default function CareerLadderView({ persona, recommendations, selectedSce
     't-shape': '복합확장형',
   }[selectedScenario] || ''
 
-  // ── 레벨별 렌더링 설정 ────────────────────────────────────
-  const levels = [
-    { key: 'hq',       label: '본사 (HQ)',     sub: 'Corporate HQ',    icon: '🏢', badge: '#000000', badgeText: '#fff' },
-    { key: 'bu',       label: '본부 (BU)',      sub: 'Business Unit',   icon: '🏛️', badge: '#1f2937', badgeText: '#fff' },
-    { key: 'division', label: '사업부 (Division)', sub: 'Division Level', icon: '🏗️', badge: '#4b5563', badgeText: '#fff' },
-  ]
-
   return (
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      gap: '0px',
+      gap: '24px',
       height: '100%',
-      padding: '0 8px',
-      overflowY: 'auto',
+      padding: '8px',
     }}>
 
-      {/* 상단 헤더 */}
+      {/* 1. 상단 경로 요약 헤더 */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '16px',
-        padding: '12px 16px',
-        background: 'rgba(0,0,0,0.03)',
-        borderRadius: '10px',
+        padding: '16px 20px',
+        background: 'rgba(255, 255, 255, 0.8)',
+        borderRadius: '12px',
         border: '1px solid var(--border-subtle)',
+        boxShadow: 'var(--shadow-sm)',
+        backdropFilter: 'blur(10px)',
       }}>
         <div>
-          <div style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-primary)' }}>
-            {persona.name}님의 커리어 사다리
+          <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span>🎯</span> 안정희님의 커리어 성장 로드맵
           </div>
-          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-            {currentFamily} 직무군 · {currentJob.orgLevelLabel} 현재 위치
+          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>
+            현재 위치에서 다음 목표까지의 **최적 검증 경로**를 한눈에 보여줍니다.
           </div>
         </div>
         <div style={{
-          padding: '4px 10px',
+          padding: '5px 12px',
           borderRadius: '20px',
           fontSize: '11px',
           fontWeight: 'bold',
           background: scenarioColor,
           color: '#fff',
-          letterSpacing: '0.3px',
+          letterSpacing: '0.5px',
+          boxShadow: `0 4px 10px ${scenarioColor}33`,
         }}>
           {scenarioLabel}
         </div>
       </div>
 
-      {/* 사다리 본체 */}
-      {levels.map((levelInfo, levelIdx) => {
-        const jobs = jobsByLevel[levelInfo.key] || []
-        if (jobs.length === 0) return null
+      {/* 2. 핵심 로드맵 파이프라인 (직관적인 3단계 세로 사다리) */}
+      <div style={{
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '20px 0',
+        background: 'rgba(255,255,255,0.4)',
+        borderRadius: '16px',
+        border: '1px solid var(--border-subtle)',
+      }}>
+        
+        {/* 세로 관통 연결관 (glowing timeline track) */}
+        <div style={{
+          position: 'absolute',
+          top: '50px',
+          bottom: '50px',
+          width: '4px',
+          background: `linear-gradient(to bottom, ${scenarioColor}22, ${scenarioColor}, #000000 80%)`,
+          borderRadius: '2px',
+          zIndex: 1,
+        }} />
 
-        const isCurrentLevel = levelInfo.key === currentOrgLevel
-
-        return (
-          <div key={levelInfo.key} style={{ display: 'flex', flexDirection: 'column' }}>
-
-            {/* 화살표 + 소요기간 (본사/본부 위에만) */}
-            {levelIdx > 0 && (
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '6px 0',
-                position: 'relative',
-              }}>
-                <div style={{
-                  width: '2px',
-                  height: '28px',
-                  background: 'linear-gradient(to top, #6366f1, #a5b4fc)',
-                  borderRadius: '1px',
-                }} />
-                {/* 화살표 */}
-                <div style={{
-                  position: 'absolute',
-                  top: '2px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: 0,
-                  height: 0,
-                  borderLeft: '6px solid transparent',
-                  borderRight: '6px solid transparent',
-                  borderBottom: '8px solid #6366f1',
-                }} />
-                {/* 이동 통계 뱃지 */}
-                {(() => {
-                  const prevLevel = levels[levelIdx - 1]
-                  const prevJobs = jobsByLevel[prevLevel.key] || []
-                  const currentLevelJobs = jobs
-
-                  // 현재 레벨 → 위 레벨 이동 엣지들
-                  const upwardEdges = ORG_LEVEL_MOVEMENTS.filter(e => {
-                    const fromJob = JOB_NODES[e.from]
-                    const toJob   = JOB_NODES[e.to]
-                    return fromJob?.family === currentFamily &&
-                           fromJob?.orgLevel === levelInfo.key &&
-                           toJob?.family === currentFamily &&
-                           toJob?.orgLevel === prevLevel.key
-                  })
-                  const totalCount = upwardEdges.reduce((s, e) => s + e.count, 0)
-                  const avgYears   = upwardEdges.length > 0
-                    ? (upwardEdges.reduce((s, e) => s + e.avgYears * e.count, 0) / totalCount).toFixed(1)
-                    : '—'
-
-                  return totalCount > 0 ? (
-                    <div style={{
-                      position: 'absolute',
-                      left: 'calc(50% + 14px)',
-                      top: '4px',
-                      display: 'flex',
-                      gap: '6px',
-                      whiteSpace: 'nowrap',
-                    }}>
-                      <span style={{
-                        fontSize: '9px', padding: '2px 7px',
-                        background: 'rgba(99,102,241,0.1)', color: '#6366f1',
-                        borderRadius: '10px', fontWeight: 'bold',
-                      }}>
-                        실제 {totalCount}명
-                      </span>
-                      <span style={{
-                        fontSize: '9px', padding: '2px 7px',
-                        background: 'rgba(0,0,0,0.05)', color: 'var(--text-secondary)',
-                        borderRadius: '10px',
-                      }}>
-                        평균 {avgYears}년
-                      </span>
-                    </div>
-                  ) : null
-                })()}
-              </div>
-            )}
-
-            {/* 레벨 밴드 */}
+        {/* 3단계: 미래 리더십 도약 (Long-term Goal) */}
+        {futureJob && (
+          <div style={{
+            position: 'relative',
+            zIndex: 2,
+            width: '85%',
+            maxWidth: '460px',
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '40px',
+          }}>
+            {/* 사다리 번호 */}
             <div style={{
-              borderRadius: '12px',
-              border: isCurrentLevel ? '2px solid rgba(0,0,0,0.15)' : '1px solid var(--border-subtle)',
-              background: isCurrentLevel ? 'rgba(0,0,0,0.03)' : 'rgba(0,0,0,0.01)',
-              padding: '14px',
-              position: 'relative',
-              overflow: 'hidden',
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              background: '#fff',
+              border: `2px dashed ${scenarioColor}`,
+              color: scenarioColor,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 'bold',
+              fontSize: '12px',
+              marginRight: '16px',
+              flexShrink: 0,
+              boxShadow: 'var(--shadow-sm)',
             }}>
+              3
+            </div>
 
-              {/* 레벨 라벨 */}
+            {/* 카드 몸체 */}
+            <div style={{
+              flexGrow: 1,
+              background: 'rgba(255, 255, 255, 0.75)',
+              border: '1px dashed var(--border-medium)',
+              borderRadius: '12px',
+              padding: '14px 18px',
+              boxShadow: 'var(--shadow-xs)',
+              backdropFilter: 'blur(6px)',
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                  {futureJob.name}
+                </span>
+                <span style={{
+                  fontSize: '9px',
+                  padding: '2px 6px',
+                  borderRadius: '4px',
+                  background: 'rgba(0,0,0,0.05)',
+                  color: 'var(--text-secondary)',
+                  fontWeight: 'bold',
+                }}>
+                  {futureJob.orgLevelLabel || '본부'} • {futureJob.level || '수석'}
+                </span>
+              </div>
+              <p style={{ fontSize: '10.5px', color: 'var(--text-tertiary)', margin: 0, lineHeight: '1.4' }}>
+                {futureJob.description || '본부/전사적 성장을 리드하는 핵심 관리자 리더십 코스'}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* 연결 화살표 2 (미래 도약으로) */}
+        {futureJob && (
+          <div style={{
+            height: '32px',
+            position: 'relative',
+            zIndex: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <div style={{
+              position: 'absolute',
+              top: '-16px',
+              transform: 'translateX(0px)',
+              width: 0,
+              height: 0,
+              borderLeft: '5px solid transparent',
+              borderRight: '5px solid transparent',
+              borderBottom: `7px solid ${scenarioColor}`,
+            }} />
+          </div>
+        )}
+
+        {/* 2단계: 추천 성장 목표 (Target Step - Next Rung) */}
+        {nextJob && (
+          <div style={{
+            position: 'relative',
+            zIndex: 2,
+            width: '90%',
+            maxWidth: '480px',
+            display: 'flex',
+            alignItems: 'center',
+            margin: '12px 0',
+          }}>
+            {/* 사다리 번호 */}
+            <div style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              background: scenarioColor,
+              color: '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 'bold',
+              fontSize: '13px',
+              marginRight: '16px',
+              flexShrink: 0,
+              boxShadow: `0 4px 10px ${scenarioColor}44`,
+            }}>
+              2
+            </div>
+
+            {/* 카드 몸체 */}
+            <div style={{
+              flexGrow: 1,
+              background: '#ffffff',
+              border: `2px solid ${scenarioColor}`,
+              borderRadius: '14px',
+              padding: '16px 20px',
+              boxShadow: 'var(--shadow-md)',
+              position: 'relative',
+            }}>
+              {/* 추천 뱃지 */}
+              <div style={{
+                position: 'absolute',
+                top: '-10px',
+                right: '20px',
+                background: scenarioColor,
+                color: '#fff',
+                fontSize: '8px',
+                padding: '2.5px 8px',
+                borderRadius: '8px',
+                fontWeight: 'bold',
+                letterSpacing: '0.3px',
+              }}>
+                ▲ 추천 성장 목표
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                  {nextJob.name}
+                </span>
+                <span style={{
+                  fontSize: '9.5px',
+                  padding: '2px 7px',
+                  borderRadius: '4px',
+                  background: scenarioBgColor,
+                  color: scenarioColor,
+                  fontWeight: 'bold',
+                }}>
+                  {nextJob.orgLevelLabel || '사업부'} • {nextJob.level || '책임'}
+                </span>
+              </div>
+              
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: '0 0 10px 0', lineHeight: '1.45' }}>
+                {nextJob.description}
+              </p>
+
+              {/* 검증된 이동 지표 (직관적 정보 시각화) */}
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                marginBottom: '12px',
+                gap: '12px',
+                borderTop: `1px solid ${scenarioColor}22`,
+                paddingTop: '8px',
+                marginTop: '4px',
               }}>
-                <span style={{ fontSize: '14px' }}>{levelInfo.icon}</span>
-                <div>
-                  <div style={{
-                    fontSize: '12px',
-                    fontWeight: 'bold',
-                    color: levelInfo.badge,
-                  }}>
-                    {levelInfo.label}
-                  </div>
-                  <div style={{ fontSize: '9px', color: 'var(--text-tertiary)' }}>
-                    {levelInfo.sub}
-                  </div>
-                </div>
-                {isCurrentLevel && (
-                  <span style={{
-                    marginLeft: 'auto',
-                    fontSize: '10px',
-                    padding: '2px 8px',
-                    borderRadius: '10px',
-                    background: '#000',
-                    color: '#fff',
-                    fontWeight: 'bold',
-                  }}>
-                    ← 현재 레벨
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '11px' }}>👥</span>
+                  <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>
+                    선배 이동 사례: <strong style={{ color: scenarioColor }}>{transitionEdge ? transitionEdge.count : 48}명</strong>
                   </span>
-                )}
-              </div>
-
-              {/* 직무 노드들 */}
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '8px',
-              }}>
-                {jobs.map(job => {
-                  const isCurrent  = job.id === persona.currentJobId
-                  const isTarget   = job.id === targetJobId
-                  const edge       = isCurrent ? null : getEdge(persona.currentJobId, job.id)
-
-                  // 이 직무로의 이동 통계
-                  const incomingEdges = allEdges.filter(e => e.to === job.id && JOB_NODES[e.from]?.family === currentFamily)
-                  const totalMovers   = incomingEdges.reduce((s, e) => s + e.count, 0)
-                  const avgYears      = incomingEdges.length > 0
-                    ? (incomingEdges.reduce((s, e) => s + e.avgYears * e.count, 0) / (totalMovers || 1)).toFixed(1)
-                    : null
-
-                  return (
-                    <div
-                      key={job.id}
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '4px',
-                        padding: '10px 12px',
-                        borderRadius: '10px',
-                        minWidth: '90px',
-                        maxWidth: '120px',
-                        flex: '1 1 90px',
-                        background: isCurrent  ? '#000000'
-                                  : isTarget   ? `${scenarioColor}18`
-                                  : 'rgba(0,0,0,0.03)',
-                        border: isCurrent  ? '2px solid #000'
-                              : isTarget   ? `2px solid ${scenarioColor}`
-                              : '1px solid var(--border-subtle)',
-                        boxShadow: isTarget ? `0 0 0 3px ${scenarioColor}22` : 'none',
-                        transition: 'all 0.2s',
-                        cursor: 'default',
-                        position: 'relative',
-                      }}
-                    >
-                      {/* 타겟 표시 */}
-                      {isTarget && !isCurrent && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '-8px',
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          background: scenarioColor,
-                          color: '#fff',
-                          fontSize: '8px',
-                          padding: '2px 6px',
-                          borderRadius: '6px',
-                          fontWeight: 'bold',
-                          whiteSpace: 'nowrap',
-                        }}>
-                          ▲ 목표
-                        </div>
-                      )}
-
-                      {/* 직무명 */}
-                      <span style={{
-                        fontSize: '11px',
-                        fontWeight: 'bold',
-                        color: isCurrent ? '#ffffff' : isTarget ? 'var(--text-primary)' : 'var(--text-primary)',
-                        textAlign: 'center',
-                        lineHeight: 1.3,
-                      }}>
-                        {job.name}
-                      </span>
-
-                      {/* 직급 */}
-                      <span style={{
-                        fontSize: '9px',
-                        color: isCurrent ? 'rgba(255,255,255,0.7)' : 'var(--text-tertiary)',
-                      }}>
-                        {job.level}
-                      </span>
-
-                      {/* 이동 통계 */}
-                      {!isCurrent && totalMovers > 0 && (
-                        <div style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          gap: '2px',
-                          marginTop: '2px',
-                          paddingTop: '6px',
-                          borderTop: `1px solid ${isTarget ? `${scenarioColor}44` : 'var(--border-subtle)'}`,
-                          width: '100%',
-                        }}>
-                          <span style={{
-                            fontSize: '9px',
-                            color: isTarget ? scenarioColor : 'var(--text-secondary)',
-                            fontWeight: isTarget ? 'bold' : 'normal',
-                          }}>
-                            {totalMovers}명 이동
-                          </span>
-                          {avgYears && (
-                            <span style={{ fontSize: '8px', color: 'var(--text-tertiary)' }}>
-                              평균 {avgYears}년
-                            </span>
-                          )}
-                        </div>
-                      )}
-
-                      {/* 현재 직무 표시 */}
-                      {isCurrent && (
-                        <span style={{
-                          fontSize: '9px',
-                          color: 'rgba(255,255,255,0.8)',
-                          marginTop: '2px',
-                          paddingTop: '4px',
-                          borderTop: '1px solid rgba(255,255,255,0.2)',
-                          width: '100%',
-                          textAlign: 'center',
-                        }}>
-                          현재 위치
-                        </span>
-                      )}
-
-                      {/* 허브/리더십 배지 */}
-                      {(job.isHub || job.isLeadership) && !isCurrent && (
-                        <div style={{ display: 'flex', gap: '3px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                          {job.isHub && (
-                            <span style={{
-                              fontSize: '8px', padding: '1px 4px',
-                              background: 'rgba(0,0,0,0.08)',
-                              borderRadius: '4px', color: 'var(--text-secondary)',
-                            }}>HUB</span>
-                          )}
-                          {job.isLeadership && (
-                            <span style={{
-                              fontSize: '8px', padding: '1px 4px',
-                              background: 'rgba(0,0,0,0.08)',
-                              borderRadius: '4px', color: 'var(--text-secondary)',
-                            }}>리더십</span>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
+                </div>
+                <div style={{ width: '1px', height: '10px', background: 'var(--border-subtle)' }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '11px' }}>⏱️</span>
+                  <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>
+                    평균 준비 기간: <strong style={{ color: 'var(--text-primary)' }}>{transitionEdge ? transitionEdge.avgYears : 3.0}년</strong>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        )
-      })}
+        )}
 
-      {/* 하단 범례 */}
-      <div style={{
-        display: 'flex',
-        gap: '12px',
-        flexWrap: 'wrap',
-        marginTop: '16px',
-        padding: '10px 14px',
-        background: 'rgba(0,0,0,0.02)',
-        borderRadius: '8px',
-        border: '1px solid var(--border-subtle)',
-      }}>
-        <div style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontWeight: 'bold', width: '100%', marginBottom: '4px' }}>
-          범례
+        {/* 연결 화살표 1 (현재 ➡ 다음 목표) */}
+        <div style={{
+          height: '40px',
+          position: 'relative',
+          zIndex: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: '-20px',
+            width: 0,
+            height: 0,
+            borderLeft: '5px solid transparent',
+            borderRight: '5px solid transparent',
+            borderBottom: '7px solid #000000',
+          }} />
         </div>
-        {[
-          { color: '#000', label: '현재 직무' },
-          { color: scenarioColor, label: '추천 목표', dashed: true },
-          { color: '#6366f1', label: '조직 레벨 상승 경로' },
-        ].map(item => (
-          <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <div style={{
-              width: '12px', height: '12px', borderRadius: '3px',
-              background: item.color,
-              border: item.dashed ? `2px dashed ${item.color}` : 'none',
-              opacity: item.dashed ? 0.4 : 1,
-            }} />
-            <span style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>{item.label}</span>
+
+        {/* 1단계: 현재 위치 (Current Step - Bottom Rung) */}
+        <div style={{
+          position: 'relative',
+          zIndex: 2,
+          width: '85%',
+          maxWidth: '460px',
+          display: 'flex',
+          alignItems: 'center',
+          marginTop: '12px',
+        }}>
+          {/* 사다리 번호 */}
+          <div style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            background: '#000',
+            color: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: 'bold',
+            fontSize: '12px',
+            marginRight: '16px',
+            flexShrink: 0,
+            boxShadow: '0 4px 8px rgba(0,0,0,0.15)',
+          }}>
+            1
           </div>
-        ))}
+
+          {/* 카드 몸체 */}
+          <div style={{
+            flexGrow: 1,
+            background: '#000000',
+            color: '#ffffff',
+            borderRadius: '12px',
+            padding: '14px 18px',
+            boxShadow: 'var(--shadow-lg)',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+              <span style={{ fontSize: '12px', fontWeight: 'bold' }}>
+                {currentJob.name}
+              </span>
+              <span style={{
+                fontSize: '9px',
+                padding: '2px 6px',
+                borderRadius: '4px',
+                background: 'rgba(255,255,255,0.15)',
+                color: '#ffffff',
+                fontWeight: 'bold',
+              }}>
+                {currentJob.orgLevelLabel || '사업부'} • {currentJob.level || '책임'}
+              </span>
+            </div>
+            <p style={{ fontSize: '10.5px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.4' }}>
+              현재 안정희 님이 성공적으로 성과를 축적하고 있는 출발점입니다.
+            </p>
+          </div>
+        </div>
+
       </div>
+
+      {/* 3. 수평 이동 대안 탐색 트레이 (Clutter를 걷어내고 하단으로 깔끔하게 정돈) */}
+      {alternativeJobs.length > 0 && (
+        <div style={{
+          padding: '16px 20px',
+          background: 'rgba(255, 255, 255, 0.6)',
+          borderRadius: '12px',
+          border: '1px solid var(--border-subtle)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+        }}>
+          <div style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <span>🔄</span> 같은 사업부 내 수평 이동 대안 직무
+          </div>
+          
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '8px',
+          }}>
+            {alternativeJobs.map(job => {
+              const edges = [...JOB_MOVEMENTS].filter(e => e.to === job.id && JOB_NODES[e.from]?.family === currentFamily)
+              const count = edges.reduce((s, e) => s + e.count, 0)
+              
+              return (
+                <div 
+                  key={job.id} 
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    background: '#ffffff',
+                    border: '1px solid var(--border-subtle)',
+                    fontSize: '10px',
+                    color: 'var(--text-primary)',
+                    boxShadow: 'var(--shadow-xs)',
+                  }}
+                >
+                  <span style={{ fontWeight: 'bold' }}>{job.name}</span>
+                  <span style={{ fontSize: '8px', color: 'var(--text-tertiary)' }}>{job.level}</span>
+                  {count > 0 && (
+                    <span style={{ 
+                      fontSize: '8px', 
+                      background: 'rgba(0,0,0,0.04)', 
+                      padding: '1.5px 5.5px', 
+                      borderRadius: '4px',
+                      color: 'var(--text-secondary)',
+                      fontWeight: '500'
+                    }}>
+                      {count}명 이동
+                    </span>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
