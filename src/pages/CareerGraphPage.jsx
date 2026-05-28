@@ -391,91 +391,34 @@ export default function CareerGraphPage() {
           </div>
         </div>
 
-        {/* Legend */}
-        <div className="glass-card">
-          <h4 className="card-title" style={{ fontSize: 'var(--font-size-sm)', marginBottom: '12px' }}>노드 구분 범례</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--font-size-xs)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#000000', display: 'inline-block' }}></span>
-              <span>현재 위치 (내 직무)</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#1f2937', display: 'inline-block' }}></span>
-              <span>허브 직무 (이동 활발)</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '2px', backgroundColor: '#4b5563', display: 'inline-block', transform: 'rotate(45deg)' }}></span>
-              <span>리더십 트랙 (관리자 육성)</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#9ca3af', display: 'inline-block' }}></span>
-              <span>이동 사례 적음 (고립 영역)</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#e5e7eb', border: '1px solid rgba(0,0,0,0.05)', display: 'inline-block' }}></span>
-              <span>일반 직무</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Org Level 2-Axis Diagram Card */}
-        <div className="glass-card" style={{ fontSize: 'var(--font-size-xs)', padding: '14px' }}>
-          <h4 className="card-title" style={{ fontSize: 'var(--font-size-sm)', marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: '6px' }}>
-              <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
-            </svg>
-            커리어 성장 2축 지도
-          </h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {/* Y축: 조직 레벨 */}
-            {['hq','bu','division'].map((level, idx) => {
-              const labels = { hq: '본사', bu: '본부', division: '사업부' }
-              const colors = { hq: '#000000', bu: '#374151', division: '#9ca3af' }
-              const isCurrent = level === (JOB_NODES[persona.currentJobId]?.orgLevel || 'division')
-              const targetLevel = (
-                selectedScenario === 'safe' ? 'division' :
-                selectedScenario === 'challenge' ? recommendations?.challenge?.orgLevelLabel === '본사' ? 'hq' : 'bu' :
-                recommendations?.tShape?.orgLevelLabel === '본사' ? 'hq' : 'bu'
-              )
-              const isTarget = level === targetLevel && selectedScenario !== 'safe'
-              return (
-                <div key={level} style={{
-                  display: 'flex', alignItems: 'center', gap: '8px',
-                  padding: '6px 8px', borderRadius: '6px',
-                  background: isCurrent ? 'rgba(0,0,0,0.06)' : isTarget ? 'rgba(0,0,0,0.03)' : 'transparent',
-                  border: isCurrent ? '1.5px solid rgba(0,0,0,0.15)' : isTarget ? '1px dashed rgba(0,0,0,0.2)' : '1px solid transparent'
-                }}>
-                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: colors[level], flexShrink: 0 }} />
-                  <span style={{ fontWeight: isCurrent || isTarget ? 'bold' : 'normal', color: colors[level], fontSize: '10px' }}>
-                    {labels[level]}
-                  </span>
-                  {isCurrent && <span style={{ fontSize: '9px', color: '#059669', marginLeft: 'auto', fontWeight: 'bold' }}>◄ 현재</span>}
-                  {isTarget && !isCurrent && <span style={{ fontSize: '9px', color: '#6366f1', marginLeft: 'auto', fontWeight: 'bold' }}>▲ 목표</span>}
-                </div>
-              )
-            })}
-            <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '6px', marginTop: '2px', fontSize: '9px', color: 'var(--text-tertiary)' }}>
-              Y축: 조직 레벨 ↑ &nbsp; X축: 직무 전문성 →
+        {/* 노드 구분 범례: 오직 복잡한 '네트워크 뷰'에서 노드 색상 해석이 필요할 때만 노출되도록 지능형 조건부 렌더링 적용 (사다리 뷰 진입 시 자동 격리되어 공간 극대화) */}
+        {viewMode === 'network' && (
+          <div className="glass-card">
+            <h4 className="card-title" style={{ fontSize: 'var(--font-size-sm)', marginBottom: '12px' }}>노드 구분 범례</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--font-size-xs)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#000000', display: 'inline-block' }}></span>
+                <span>현재 위치 (내 직무)</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#1f2937', display: 'inline-block' }}></span>
+                <span>허브 직무 (이동 활발)</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '2px', backgroundColor: '#4b5563', display: 'inline-block', transform: 'rotate(45deg)' }}></span>
+                <span>리더십 트랙 (관리자 육성)</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#9ca3af', display: 'inline-block' }}></span>
+                <span>이동 사례 적음 (고립 영역)</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#e5e7eb', border: '1px solid rgba(0,0,0,0.05)', display: 'inline-block' }}></span>
+                <span>일반 직무</span>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Scenario description */}
-        <div className="glass-card glow-cyan" style={{ fontSize: 'var(--font-size-xs)' }}>
-          <h4 className="card-title" style={{ fontSize: 'var(--font-size-sm)', marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: '6px' }}>
-              <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
-            {selectedScenario === 'safe' ? '직무심화형 시나리오' : selectedScenario === 'challenge' ? '조직확장형 시나리오' : '복합확장형 시나리오'}
-          </h4>
-          <p className="text-secondary" style={{ lineHeight: '1.4' }}>
-            {selectedScenario === 'safe' 
-              ? '동일 사업부 레벨, 동일 CHO/CTO/CCO 라인 내에서 인접한 직무로 수평 확장. 동료들의 실제 이동 데이터 기반으로 전문성을 단계적으로 켜우는 가장 현실적인 경로입니다.'
-              : selectedScenario === 'challenge'
-              ? '동일 직무 기능을 더 큰 스케일(사업부 → 본부 → 본사)에서 수행. C-Suite 라인은 유지하면서 조직 영향력과 책임 스코프를 확대하는 성장 경로입니다.'
-              : '직무 전환과 조직 레벨 상승을 동시에 달성하는 도전적 시나리오. 허브 직무를 경유해 본부/본사 수준의 전략적 역할로 도약하는 복합 성장 경로입니다.'}
-          </p>
-        </div>
+        )}
       </div>
 
       {/* Center: Graph Canvas or Ladder View */}
