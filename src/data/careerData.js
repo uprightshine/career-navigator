@@ -81,6 +81,8 @@ export let JOB_NODES = {
   // R&D 직무군 — 본부/본사 레벨
   JOB_RND_PLAN_BU: { id: 'JOB_RND_PLAN_BU', name: 'R&D기획 팀장', family: 'R&D', cLine: 'CTO', orgLevel: 'bu', orgLevelLabel: '본부', level: '수석', isHub: true, isLeadership: true, isDeadEnd: false, headcount: 6, vacancies: 1, avgTenure: 4.5, growthTrend: 'growing', description: '본부 R&D 전략 총괄, 중장기 기술 로드맵, CTO 보좌', upperLevelJobId: 'JOB_RND_PLAN_HQ' },
   JOB_RND_PLAN_HQ: { id: 'JOB_RND_PLAN_HQ', name: '전사 기술전략', family: 'R&D', cLine: 'CTO', orgLevel: 'hq', orgLevelLabel: '본사', level: '임원', isHub: false, isLeadership: true, isDeadEnd: false, headcount: 3, vacancies: 0, avgTenure: 5.5, growthTrend: 'growing', description: '전사 R&D 전략 수립, 미래 기술 투자 방향, CTO 직속', upperLevelJobId: null },
+  JOB_RND_RESEARCH_LEADER_BU: { id: 'JOB_RND_RESEARCH_LEADER_BU', name: '선행연구소장', family: 'R&D', cLine: 'CTO', orgLevel: 'bu', orgLevelLabel: '본부', level: '임원', isHub: false, isLeadership: true, isDeadEnd: false, headcount: 4, vacancies: 0, avgTenure: 5.0, growthTrend: 'growing', description: '사업본부 산하 선행연구소 총괄, 차세대 기술 연구 리딩', upperLevelJobId: 'JOB_RND_CENTER_LEADER_HQ' },
+  JOB_RND_CENTER_LEADER_HQ: { id: 'JOB_RND_CENTER_LEADER_HQ', name: 'HS연구센터장', family: 'R&D', cLine: 'CTO', orgLevel: 'hq', orgLevelLabel: '본사', level: '임원', isHub: true, isLeadership: true, isDeadEnd: false, headcount: 2, vacancies: 0, avgTenure: 6.0, growthTrend: 'growing', description: 'HS본부 R&D 영역 총괄 책임자, 전사 기술센터 관리 및 임원 보임', upperLevelJobId: null },
 }
 
 // 직무 이동 엣지 (from -> to, count, source)

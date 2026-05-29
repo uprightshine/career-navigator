@@ -4,6 +4,7 @@ import CytoscapeComponent from 'react-cytoscapejs'
 import { usePersona } from '../App'
 import { JOB_NODES, ORG_LEVEL_MOVEMENTS, toCytoscapeElements, getScenarioRecommendations } from '../data/careerData'
 import CareerLadderView from '../components/CareerLadderView'
+import LgeSlideRoadmapView from '../components/LgeSlideRoadmapView'
 
 // Cytoscape 스타일시트 (외부 격리를 통한 메모리/GC 및 렌더링 성능 최적화 - 프리미엄 블랙 & 화이트 모노크롬 테마 맞춤형 색조 적용)
 const CYTOSCAPE_STYLESHEET = [
@@ -204,7 +205,7 @@ export default function CareerGraphPage() {
   const targetJobName = targetForScenario ? targetForScenario.name : '다음 단계 직무';
 
   return (
-    <div className="graph-page-layout">
+    <div className="graph-page-layout" style={{ gridTemplateColumns: viewMode === 'slide' ? '1fr' : '260px 1fr 300px' }}>
       {/* Top Controls */}
       <div className="graph-controls">
         <div>
@@ -214,7 +215,7 @@ export default function CareerGraphPage() {
           </div>
         </div>
 
-        {/* 뷰 전환 토글 (사다리 로드맵 vs 네트워크 지도) */}
+        {/* 뷰 전환 토글 (사다리 로드맵 vs 네트워크 지도 vs LGE 슬라이드형) */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
             <span style={{ fontSize: '9px', color: 'var(--text-tertiary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>시각화 뷰 선택</span>
@@ -276,6 +277,30 @@ export default function CareerGraphPage() {
                 </svg>
                 이동 네트워크 (지도)
               </button>
+              <button
+                onClick={() => setViewMode('slide')}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '6px',
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: viewMode === 'slide' ? '#000' : 'transparent',
+                  color: viewMode === 'slide' ? '#fff' : 'var(--text-secondary)',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <line x1="9" y1="3" x2="9" y2="21" />
+                  <line x1="9" y1="9" x2="21" y2="9" />
+                </svg>
+                LGE 슬라이드형 (PPT)
+              </button>
             </div>
           </div>
         </div>
@@ -299,21 +324,27 @@ export default function CareerGraphPage() {
       }}>
         <span style={{ fontSize: '14px' }}>💡</span>
         <span>
-          {viewMode === 'ladder' ? (
-            <strong>사다리 로드맵 뷰:</strong>
-          ) : (
-            <strong>이동 네트워크 지도 뷰:</strong>
+          {viewMode === 'ladder' && (
+            <>
+              <strong>사다리 로드맵 뷰:</strong> 목표 지점까지의 최적 검증 경로를 세로형 성장 사다리 형태로 입체 분석하여 통계와 연차별 소요 기한을 직관적으로 확인합니다.
+            </>
           )}
-          {' '}
-          {viewMode === 'ladder' 
-            ? '목표 지점까지의 최적 검증 경로를 세로형 성장 사다리 형태로 입체 분석하여 통계와 연차별 소요 기한을 직관적으로 확인합니다.' 
-            : '소속 직군 선배들의 실제 인사 전보 및 부서 이동 데이터 흐름을 가로형 네트워크 지도 위에 전체적으로 시각화하여 탐색합니다.'
-          }
+          {viewMode === 'network' && (
+            <>
+              <strong>이동 네트워크 지도 뷰:</strong> 소속 직군 선배들의 실제 인사 전보 및 부서 이동 데이터 흐름을 가로형 네트워크 지도 위에 전체적으로 시각화하여 탐색합니다.
+            </>
+          )}
+          {viewMode === 'slide' && (
+            <>
+              <strong>LGE 슬라이드형 로드맵 뷰:</strong> LGE 핵심인재 육성 장표 형식에 최적화된 양식입니다. 텍스트 박스를 직접 클릭하여 내용을 편집하고, [PDF 다운로드/슬라이드 인쇄] 버튼으로 1페이지 가로형 보고 문서를 완성해 부서장 면담에 바로 활용할 수 있습니다.
+            </>
+          )}
         </span>
       </div>
 
       {/* Left Panel: Profile & Legends */}
-      <div className="graph-left-panel">
+      {viewMode !== 'slide' && (
+        <div className="graph-left-panel">
         {/* Chronological Career Timeline Card */}
         <div className="glass-card">
           <div className="persona-info" style={{ marginBottom: '16px' }}>
@@ -426,15 +457,21 @@ export default function CareerGraphPage() {
           </div>
         )}
       </div>
+      )}
 
-      {/* Center: Graph Canvas or Ladder View */}
+      {/* Center: Graph Canvas or Ladder View or LGE Slide View */}
       <div className="graph-canvas" style={{
-        background: viewMode === 'ladder' ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.35)',
+        background: viewMode === 'slide' ? 'transparent' : viewMode === 'ladder' ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.35)',
         position: 'relative',
-        overflow: viewMode === 'ladder' ? 'auto' : 'hidden',
-        padding: viewMode === 'ladder' ? '20px 16px' : '0',
+        overflow: viewMode === 'network' ? 'hidden' : 'auto',
+        padding: viewMode === 'slide' ? '0' : viewMode === 'ladder' ? '20px 16px' : '0',
+        border: viewMode === 'slide' ? 'none' : '1px solid var(--border-subtle)',
       }}>
-        {viewMode === 'ladder' ? (
+        {viewMode === 'slide' ? (
+          <LgeSlideRoadmapView
+            persona={persona}
+          />
+        ) : viewMode === 'ladder' ? (
           <CareerLadderView
             persona={persona}
             recommendations={recommendations}
@@ -547,7 +584,8 @@ export default function CareerGraphPage() {
       </div>
 
       {/* Right Panel: Detail or Recommendations */}
-      <div className="graph-right-panel" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      {viewMode !== 'slide' && (
+        <div className="graph-right-panel" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {selectedNode ? (
           <div className="glass-card glow-cyan" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
@@ -893,6 +931,7 @@ export default function CareerGraphPage() {
           </div>
         )}
       </div>
+      )}
     </div>
   )
 }

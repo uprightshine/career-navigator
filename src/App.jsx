@@ -116,6 +116,44 @@ const DEMO_PERSONAS = {
     movementHistory: [
       { year: 2021, jobId: 'JOB_HR_RECRUIT', jobName: '채용' }
     ]
+  },
+  'EMP003': {
+    id: 'EMP003',
+    name: '윤지현',
+    age: 44,
+    joinYear: 2008,
+    currentJobId: 'JOB_RND_PLAN',
+    currentJobName: 'R&D기획',
+    department: 'CTO HS선행연구소',
+    businessUnit: 'CTO',
+    grade: '책임',
+    yearsInRole: 6,
+    totalYears: 16,
+    evaluationGrade: 'S',
+    evaluationHistory: [
+      { year: 2024, grade: 'S' },
+      { year: 2025, grade: 'S' },
+      { year: 2026, grade: 'S' },
+    ],
+    leadershipPercentile: 92,
+    primarySkill: 'R&D 전략',
+    skills: [
+      { skillId: 'SK_RND_05', name: 'R&D 기획', level: 5 },
+      { skillId: 'SK_RND_02', name: '공정 개발', level: 4 },
+      { skillId: 'SK_RND_01', name: '소재 연구', level: 4 },
+      { skillId: 'SK_COMMON_02', name: '프로젝트 관리', level: 5 },
+      { skillId: 'SK_COMMON_01', name: '데이터 분석', level: 3 },
+      { skillId: 'SK_COMMON_03', name: '커뮤니케이션', level: 5 },
+    ],
+    certifications: ['기술지도사', 'PMP'],
+    education: { degree: '석사', major: '기계공학', school: 'KAIST' },
+    careerIntent: 't-shape',
+    cohortPercentile: 95,
+    movementHistory: [
+      { year: 2008, jobId: 'JOB_RND_MASS', jobName: '양산기술' },
+      { year: 2014, jobId: 'JOB_RND_PROCESS', jobName: '공정개발' },
+      { year: 2020, jobId: 'JOB_RND_PLAN', jobName: 'R&D기획' }
+    ]
   }
 }
 
