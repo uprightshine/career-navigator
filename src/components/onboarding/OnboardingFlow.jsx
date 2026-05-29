@@ -79,7 +79,7 @@ const DEFAULT_PERSONAS = [
   },
   {
     id: 'EMP003',
-    name: '윤지현',
+    name: '윤*현',
     currentJobId: 'JOB_RND_PLAN',
     currentJobName: 'R&D기획',
     department: 'CTO HS선행연구소',

@@ -119,7 +119,7 @@ const DEMO_PERSONAS = {
   },
   'EMP003': {
     id: 'EMP003',
-    name: '윤지현',
+    name: '윤*현',
     age: 44,
     joinYear: 2008,
     currentJobId: 'JOB_RND_PLAN',

@@ -299,7 +299,7 @@ export default function CareerGraphPage() {
                   <line x1="9" y1="3" x2="9" y2="21" />
                   <line x1="9" y1="9" x2="21" y2="9" />
                 </svg>
-                LGE 슬라이드형 (PPT)
+                개인성장로드맵 (PPT)
               </button>
             </div>
           </div>
@@ -336,7 +336,7 @@ export default function CareerGraphPage() {
           )}
           {viewMode === 'slide' && (
             <>
-              <strong>LGE 슬라이드형 로드맵 뷰:</strong> LGE 핵심인재 육성 장표 형식에 최적화된 양식입니다. 텍스트 박스를 직접 클릭하여 내용을 편집하고, [PDF 다운로드/슬라이드 인쇄] 버튼으로 1페이지 가로형 보고 문서를 완성해 부서장 면담에 바로 활용할 수 있습니다.
+              <strong>개인성장로드맵 뷰:</strong> 핵심인재 육성 장표 형식에 최적화된 양식입니다. 텍스트 박스를 직접 클릭하여 내용을 편집하고, [PDF 다운로드/슬라이드 인쇄] 버튼으로 1페이지 가로형 보고 문서를 완성해 부서장 면담에 바로 활용할 수 있습니다.
             </>
           )}
         </span>
