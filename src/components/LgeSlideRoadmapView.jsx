@@ -81,7 +81,7 @@ function generateDynamicGoals(persona, selectedScenario, targetJobName) {
   return {
     short: `• 현재 직무인 [${currentJobName}] 영역에서의 핵심 실무 역량을 완벽히 내재화하고, ${scenarioLabel} 성장에 발맞추어 [${targetJobName}]로의 성공적인 연계 전환을 달성함\n• 소속 직군 내 선배들의 실제 이동 성공 선례 통계를 분석하여, 해당 직무 전보에 필요한 1차 역량 요건(스킬 갭)의 보완 계획 수립 및 자가개발 완료`,
     medium: `• [${family}] 직군 내 허브 직무를 경험하며 본부 단위의 기술적/사업적 조율 역량을 배양하고, 주요 사업본부의 대형 크로스 펑셔널(Cross-functional) 프로젝트 리더를 역임함\n• 4~6년 내에 임직원 리더급 지위를 확보하고, Signature 제품 개발 또는 본부 전략 기획 PMO를 리딩하여 사업가적 역량을 조기에 육성/강화함`,
-    long: `• 최종 육성 목표인 [${targetJobName}] 직무 보임을 마침내 달성하고, LGE [${family}] 부문의 미래 기술/사업 전략적 의사결정을 리딩하는 총괄 책임자(임원 및 소장)로서의 최고 리더십을 발휘하고자 함`
+    long: `• 최종 육성 목표인 [${targetJobName}] 직무 보임을 마침내 달성하고, [${family}] 부문의 미래 기술/사업 전략적 의사결정을 리딩하는 총괄 책임자(임원 및 소장)로서의 최고 리더십을 발휘하고자 함`
   }
 }
 
@@ -287,7 +287,7 @@ export default function LgeSlideRoadmapView({ persona, selectedScenario, recomme
             {persona.name} {persona.grade} 개인성장 로드맵
           </div>
           <div className="lge-slide-marker">
-            LGE Internal Use Only
+            INTERNAL USE ONLY
           </div>
         </div>
         <div className="lge-slide-divider"></div>

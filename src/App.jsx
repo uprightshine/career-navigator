@@ -220,9 +220,22 @@ function SecurityBanner({ dataMode, aiEnabled, onToggleAi }) {
 
 // ─── HS 직원 데이터를 앱 포맷으로 정규화 ──────────────────────
 function normalizeHsEmployee(emp) {
+  // 보안 및 익명성 강화: 실 데이터 상의 모든 민감인력 실명 비식별화 처리 (특히 윤지현 -> 윤*현 강제 마스킹)
+  let rawName = emp.name || '임직원';
+  let maskedName = rawName;
+  if (rawName === '윤지현') {
+    maskedName = '윤*현';
+  } else if (rawName.length === 3) {
+    maskedName = rawName[0] + '*' + rawName[2];
+  } else if (rawName.length === 2) {
+    maskedName = rawName[0] + '*';
+  } else if (rawName.length > 3) {
+    maskedName = rawName[0] + '*'.repeat(rawName.length - 2) + rawName[rawName.length - 1];
+  }
+
   return {
     id: emp.id,
-    name: emp.name,
+    name: maskedName,
     age: emp.joinYear ? (2025 - emp.joinYear + 25) : 35,
     joinYear: emp.joinYear || 2016,
     currentJobId: emp.currentJob || 'JOB_UNKNOWN',
