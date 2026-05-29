@@ -470,6 +470,8 @@ export default function CareerGraphPage() {
         {viewMode === 'slide' ? (
           <LgeSlideRoadmapView
             persona={persona}
+            selectedScenario={selectedScenario}
+            recommendations={recommendations}
           />
         ) : viewMode === 'ladder' ? (
           <CareerLadderView
